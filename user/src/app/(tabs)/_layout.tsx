@@ -4,7 +4,10 @@ import { Ionicons } from '@expo/vector-icons';
 
 export default function TabLayout() {
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: '#0080FF' }}>
+    <Tabs screenOptions={{ 
+      tabBarActiveTintColor: '#0080FF',
+      headerShown: true, // Menampilkan judul di atas
+    }}>
       <Tabs.Screen
         name="index"
         options={{
@@ -24,6 +27,20 @@ export default function TabLayout() {
         options={{
           title: 'Tiket',
           tabBarIcon: ({ color }) => <Ionicons name="ticket" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="galeri"
+        options={{
+          title: 'Galeri',
+          tabBarIcon: ({ color }) => <Ionicons name="images" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="info"
+        options={{
+          title: 'Info',
+          tabBarIcon: ({ color }) => <Ionicons name="information-circle" size={24} color={color} />,
         }}
       />
     </Tabs>
