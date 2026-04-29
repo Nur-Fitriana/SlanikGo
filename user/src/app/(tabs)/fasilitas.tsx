@@ -1,70 +1,72 @@
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image, ImageBackground } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons'; // Icon bawaan Expo
 
-// Data dummy disamakan dengan Prisma: id, nama, ikon, deskripsi
-const DUMMY_FASILITAS = [
+const WAHANA_DATA = [
   { 
     id: 1, 
     nama: 'Dragon River', 
-    ikon: '🌊', 
-    deskripsi: 'Nikmati sensasi menyusuri sungai dengan pemandangan naga raksasa.' 
+    image: 'https://images.unsplash.com/photo-1582650625119-3a31f8fa2699?q=80&w=500', // Foto dummy air
+    desc: 'Menelusuri sungai buatan terpanjang dengan ban.' 
   },
   { 
     id: 2, 
     nama: 'Crazy Slide', 
-    ikon: '🎢', 
-    deskripsi: 'Perosotan ekstrem untuk memacu adrenalin kamu!' 
-  },
-  { 
-    id: 3, 
-    nama: 'Olympic Pool', 
-    ikon: '🏊', 
-    deskripsi: 'Kolam renang standar olimpiade untuk yang hobi olahraga air.' 
+    image: 'https://images.unsplash.com/photo-1519331379826-f10be5486c6f?q=80&w=500',
+    desc: 'Seluncuran tinggi yang memacu adrenalin.' 
   },
 ];
 
 export default function FasilitasScreen() {
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Wahana Slanik Waterpark</Text>
-      
-      {DUMMY_FASILITAS.map((item) => (
-        <View key={item.id} style={styles.card}>
-          <View style={styles.iconContainer}>
-            <Text style={styles.iconText}>{item.ikon}</Text>
+      {/* Header yang lebih menarik */}
+      <View style={styles.headerBox}>
+        <Text style={styles.headerTitle}>Jelajahi Slanik</Text>
+        <Text style={styles.headerSub}>Temukan keseruan di setiap sudut</Text>
+      </View>
+
+      <View style={styles.content}>
+        {WAHANA_DATA.map((item) => (
+          <View key={item.id} style={styles.card}>
+            <Image source={{ uri: item.image }} style={styles.imageCard} />
+            <View style={styles.overlay}>
+              <Text style={styles.cardTitle}>{item.nama}</Text>
+              <View style={styles.tag}>
+                <MaterialCommunityIcons name="water" size={14} color="#fff" />
+                <Text style={styles.tagText}>Wahana Air</Text>
+              </View>
+            </View>
           </View>
-          <View style={styles.info}>
-            <Text style={styles.title}>{item.nama}</Text>
-            <Text style={styles.desc}>{item.deskripsi}</Text>
-          </View>
-        </View>
-      ))}
+        ))}
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#fff' },
-  header: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, color: '#0080FF' },
+  container: { flex: 1, backgroundColor: '#F8FBFF' },
+  headerBox: { padding: 30, backgroundColor: '#0080FF', borderBottomRightRadius: 50 },
+  headerTitle: { fontSize: 28, fontWeight: '900', color: '#fff' },
+  headerSub: { fontSize: 14, color: '#E0F0FF', marginTop: 5 },
+  content: { padding: 20 },
   card: { 
-    flexDirection: 'row', 
-    backgroundColor: '#f9f9f9', 
-    borderRadius: 12, 
-    marginBottom: 15, 
-    padding: 15,
-    elevation: 2,
-    alignItems: 'center'
+    height: 200, 
+    borderRadius: 20, 
+    marginBottom: 20, 
+    overflow: 'hidden',
+    elevation: 5,
+    backgroundColor: '#fff'
   },
-  iconContainer: { 
-    width: 60, 
-    height: 60, 
-    backgroundColor: '#E0F0FF', 
-    borderRadius: 30, 
-    justifyContent: 'center', 
-    alignItems: 'center',
-    marginRight: 15
+  imageCard: { width: '100%', height: '100%' },
+  overlay: { 
+    position: 'absolute', 
+    bottom: 0, 
+    left: 0, 
+    right: 0, 
+    padding: 15, 
+    backgroundColor: 'rgba(0,0,0,0.4)' // Gradasi gelap agar teks terbaca
   },
-  iconText: { fontSize: 30 },
-  info: { flex: 1 },
-  title: { fontSize: 18, fontWeight: 'bold', color: '#333' },
-  desc: { color: '#666', fontSize: 13, marginTop: 4 }
+  cardTitle: { color: '#fff', fontSize: 20, fontWeight: 'bold' },
+  tag: { flexDirection: 'row', alignItems: 'center', marginTop: 5 },
+  tagText: { color: '#fff', fontSize: 12, marginLeft: 5 }
 });
