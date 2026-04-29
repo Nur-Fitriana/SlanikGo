@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingVi
 import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const { width } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -11,58 +11,56 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    // Logika dummy
-    if (email === 'admin@gmail.com' && password === '123456') {
+    // Dummy login
+    if (email === 'admin' || email === 'admin@gmail.com') {
       router.replace('/(tabs)');
     } else {
-      alert('Coba: admin@gmail.com / 123456');
+      alert('Gunakan username: admin');
     }
   };
 
   return (
-    <KeyboardAvoidingView 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-      style={styles.container}
-    >
-      {/* Elemen Dekoratif Soft (Lingkaran di belakang) */}
-      <View style={styles.circleDecorator} />
+    <View style={styles.container}>
+      {/* Dekorasi Background Biru di Atas */}
+      <View style={styles.topDecoration} />
       
-      <View style={styles.inner}>
-        <View style={styles.headerSection}>
-          <View style={styles.logoContainer}>
-            <MaterialCommunityIcons name="waves" size={40} color="#0080FF" />
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+        style={styles.centering}
+      >
+        <View style={styles.loginCard}>
+          <View style={styles.header}>
+            <View style={styles.iconCircle}>
+              <MaterialCommunityIcons name="water" size={32} color="#0080FF" />
+            </View>
+            <Text style={styles.title}>Masuk</Text>
+            <Text style={styles.subtitle}>Selamat datang kembali di SlanikGo</Text>
           </View>
-          <Text style={styles.brand}>SLANIK<Text style={{color: '#4DA6FF'}}>GO</Text></Text>
-          <Text style={styles.subtitle}>Silahkan masuk untuk memulai liburanmu</Text>
-        </View>
 
-        <View style={styles.formCard}>
-          <View style={styles.inputWrapper}>
-            <Text style={styles.label}>Email Address</Text>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Email atau Username</Text>
             <View style={styles.inputContainer}>
-              <MaterialCommunityIcons name="email-outline" size={20} color="#A0AEC0" />
+              <MaterialCommunityIcons name="account-outline" size={20} color="#A0AEC0" />
               <TextInput 
                 style={styles.input} 
-                placeholder="fitri@example.com" 
-                placeholderTextColor="#CBD5E0"
-                value={email}
+                placeholder="Masukkan email/username" 
+                value={email} 
                 onChangeText={setEmail}
                 autoCapitalize="none"
               />
             </View>
           </View>
 
-          <View style={styles.inputWrapper}>
+          <View style={styles.inputGroup}>
             <Text style={styles.label}>Password</Text>
             <View style={styles.inputContainer}>
               <MaterialCommunityIcons name="lock-outline" size={20} color="#A0AEC0" />
               <TextInput 
                 style={styles.input} 
                 placeholder="••••••••" 
-                placeholderTextColor="#CBD5E0"
-                value={password}
-                onChangeText={setPassword}
                 secureTextEntry 
+                value={password} 
+                onChangeText={setPassword} 
               />
             </View>
           </View>
@@ -70,132 +68,121 @@ export default function LoginScreen() {
           <TouchableOpacity style={styles.btnLogin} onPress={handleLogin}>
             <Text style={styles.btnText}>Masuk Sekarang</Text>
           </TouchableOpacity>
-        </View>
 
-        <TouchableOpacity 
-          onPress={() => router.push('/(auth)/register')} 
-          style={styles.footer}
-        >
-          <Text style={styles.footerText}> Belum punya akun? 
-            <Text style={styles.registerText}> Daftar</Text>
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+          <TouchableOpacity 
+            onPress={() => router.push('/(auth)/register')} 
+            style={styles.footer}
+          >
+            <Text style={styles.footerText}>Belum punya akun? 
+              <Text style={styles.registerText}> Registrasi</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F7FF', // Biru sangat muda (Soft)
+    backgroundColor: '#F0F7FF',
   },
-  circleDecorator: {
+  topDecoration: {
     position: 'absolute',
-    top: -50,
-    right: -50,
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: '#E1EFFF',
+    top: 0,
+    width: '100%',
+    height: height * 0.4,
+    backgroundColor: '#0080FF',
+    borderBottomLeftRadius: 60,
+    borderBottomRightRadius: 60,
   },
-  inner: {
+  centering: {
     flex: 1,
-    paddingHorizontal: 30,
-    justifyContent: 'center',
-  },
-  headerSection: {
-    alignItems: 'center',
-    marginBottom: 40,
-  },
-  logoContainer: {
-    width: 80,
-    height: 80,
-    backgroundColor: '#FFF',
-    borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 15,
-    // Soft Shadow
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
+    paddingHorizontal: 25,
   },
-  brand: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#1A365D',
-    letterSpacing: 1,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#718096',
-    marginTop: 5,
-    textAlign: 'center',
-  },
-  formCard: {
+  loginCard: {
+    width: '100%',
+    maxWidth: 400,
     backgroundColor: '#FFF',
     borderRadius: 30,
-    padding: 25,
-    // Very Soft Shadow
-    shadowColor: "#0080FF",
+    padding: 30,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.1,
     shadowRadius: 20,
-    elevation: 5,
+    elevation: 10,
   },
-  inputWrapper: {
-    marginBottom: 20,
+  header: {
+    alignItems: 'center',
+    marginBottom: 25,
+  },
+  iconCircle: {
+    width: 60,
+    height: 60,
+    backgroundColor: '#F0F7FF',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#1A365D',
+  },
+  subtitle: {
+    fontSize: 13,
+    color: '#718096',
+    marginTop: 5,
+  },
+  inputGroup: {
+    marginBottom: 15,
   },
   label: {
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: 12,
+    fontWeight: '700',
     color: '#4A5568',
-    marginBottom: 8,
+    marginBottom: 6,
     marginLeft: 4,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F8FAFC',
-    borderRadius: 15,
+    borderRadius: 12,
     paddingHorizontal: 15,
     borderWidth: 1,
     borderColor: '#EDF2F7',
   },
   input: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 10,
     paddingHorizontal: 10,
+    fontSize: 14,
     color: '#2D3748',
-    fontSize: 15,
   },
   btnLogin: {
     backgroundColor: '#0080FF',
-    paddingVertical: 16,
-    borderRadius: 15,
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: 'center',
-    marginTop: 10,
-    shadowColor: "#0080FF",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 3,
+    marginTop: 15,
   },
   btnText: {
     color: '#FFF',
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold',
   },
   footer: {
-    marginTop: 30,
+    marginTop: 20,
     alignItems: 'center',
   },
   footerText: {
     color: '#718096',
-    fontSize: 14,
+    fontSize: 13,
   },
   registerText: {
     color: '#0080FF',

@@ -1,57 +1,165 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+const { height } = Dimensions.get('window');
 
 export default function RegisterScreen() {
   const router = useRouter();
-  const [form, setForm] = useState({ nama: '', email: '', password: '' });
-
-  const handleRegister = () => {
-    // Nanti di sini kita axios.post ke http://ALAMAT_IP:3000/auth/register
-    console.log("Daftar:", form);
-    router.replace('/(auth)/login');
-  };
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Buat Akun Baru</Text>
-      <Text style={styles.subtitle}>Gabung SlanikGo untuk kemudahan pesan tiket</Text>
+    <View style={styles.container}>
+      {/* Dekorasi Background */}
+      <View style={styles.topDecoration} />
+      
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+        style={styles.centering}
+      >
+        <View style={styles.registerCard}>
+          <View style={styles.header}>
+            <Text style={styles.title}>Registrasi</Text>
+            <Text style={styles.subtitle}>Buat akun SlanikGo baru</Text>
+          </View>
 
-      <TextInput 
-        style={styles.input} 
-        placeholder="Nama Lengkap" 
-        onChangeText={(txt) => setForm({...form, nama: txt})}
-      />
-      <TextInput 
-        style={styles.input} 
-        placeholder="Email" 
-        keyboardType="email-address"
-        onChangeText={(txt) => setForm({...form, email: txt})}
-      />
-      <TextInput 
-        style={styles.input} 
-        placeholder="Password" 
-        secureTextEntry 
-        onChangeText={(txt) => setForm({...form, password: txt})}
-      />
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Nama Lengkap</Text>
+            <TextInput 
+              style={styles.input} 
+              placeholder="Nama Anda" 
+              value={name} 
+              onChangeText={setName} 
+            />
+          </View>
 
-      <TouchableOpacity style={styles.btnRegister} onPress={handleRegister}>
-        <Text style={styles.btnText}>DAFTAR</Text>
-      </TouchableOpacity>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Username</Text>
+            <TextInput 
+              style={styles.input} 
+              placeholder="Username" 
+              value={username} 
+              onChangeText={setUsername} 
+              autoCapitalize="none"
+            />
+          </View>
 
-      <TouchableOpacity onPress={() => router.back()}>
-        <Text style={styles.footerText}>Sudah punya akun? <Text style={{color: '#0080FF', fontWeight: 'bold'}}>Login</Text></Text>
-      </TouchableOpacity>
-    </ScrollView>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Password</Text>
+            <TextInput 
+              style={styles.input} 
+              placeholder="••••••••" 
+              secureTextEntry 
+              value={password} 
+              onChangeText={setPassword} 
+            />
+          </View>
+
+          <TouchableOpacity style={styles.btnRegister} onPress={() => alert('Registrasi Berhasil!')}>
+            <Text style={styles.btnText}>Registrasi</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => router.back()} style={styles.footer}>
+            <Text style={styles.footerText}>Sudah punya akun? <Text style={styles.loginText}>Masuk</Text></Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flexGrow: 1, justifyContent: 'center', padding: 30, backgroundColor: '#fff' },
-  title: { fontSize: 28, fontWeight: 'bold', color: '#333', marginBottom: 10 },
-  subtitle: { fontSize: 14, color: '#666', marginBottom: 30 },
-  input: { backgroundColor: '#F9F9F9', padding: 15, borderRadius: 10, marginBottom: 15, borderWidth: 1, borderColor: '#EEE' },
-  btnRegister: { backgroundColor: '#0080FF', padding: 18, borderRadius: 10, marginTop: 10 },
-  btnText: { color: '#fff', textAlign: 'center', fontWeight: 'bold' },
-  footerText: { textAlign: 'center', marginTop: 20, color: '#666' }
+  container: {
+    flex: 1,
+    backgroundColor: '#F0F7FF',
+  },
+  topDecoration: {
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    height: height * 0.4,
+    backgroundColor: '#0080FF',
+    borderBottomLeftRadius: 60,
+    borderBottomRightRadius: 60,
+  },
+  centering: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 25,
+  },
+  registerCard: {
+    width: '100%',
+    maxWidth: 400, // Supaya di web tidak terlalu lebar
+    backgroundColor: '#FFF',
+    borderRadius: 30,
+    padding: 30,
+    // Soft Shadow
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 25,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#1A365D',
+  },
+  subtitle: {
+    fontSize: 13,
+    color: '#718096',
+    marginTop: 5,
+  },
+  inputGroup: {
+    marginBottom: 15,
+  },
+  label: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#4A5568',
+    marginBottom: 6,
+    marginLeft: 4,
+  },
+  input: {
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    borderColor: '#EDF2F7',
+    fontSize: 14,
+    color: '#2D3748',
+  },
+  btnRegister: {
+    backgroundColor: '#0080FF',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  btnText: {
+    color: '#FFF',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  footer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  footerText: {
+    color: '#718096',
+    fontSize: 13,
+  },
+  loginText: {
+    color: '#0080FF',
+    fontWeight: '700',
+  },
 });
