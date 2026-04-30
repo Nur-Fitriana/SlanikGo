@@ -62,10 +62,9 @@ export default function GalleryManagement() {
         gap: "24px" 
       }}>
         {photos.map((photo, index) => (
-          <div key={photo.id} className="card-premium" style={{ 
+          <div key={photo.id} className="card-premium group" style={{ 
             overflow: "hidden", 
-            position: "relative",
-            group: "true" // For hover effects (simulated)
+            position: "relative"
           }}>
             <div style={{ position: "relative", height: "200px", overflow: "hidden" }}>
               <img 
