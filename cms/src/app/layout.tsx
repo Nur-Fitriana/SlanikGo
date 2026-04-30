@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import MainLayoutWrapper from "./components/MainLayoutWrapper";
+import { ToastProvider } from "./components/ToastProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,9 +41,11 @@ export default function RootLayout({
           padding: 0,
         }}
       >
-        <MainLayoutWrapper>
-          {children}
-        </MainLayoutWrapper>
+        <ToastProvider>
+          <MainLayoutWrapper>
+            {children}
+          </MainLayoutWrapper>
+        </ToastProvider>
       </body>
     </html>
   );
