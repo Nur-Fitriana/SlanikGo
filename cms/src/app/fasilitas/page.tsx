@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useToast } from "../components/ToastProvider";
 
 interface Facility {
   id: string;
@@ -42,6 +43,7 @@ export default function FacilityManagement() {
   const [facilities, setFacilities] = useState<Facility[]>(initialFacilities);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingFacility, setEditingFacility] = useState<Facility | null>(null);
+  const { showToast } = useToast();
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -55,6 +57,7 @@ export default function FacilityManagement() {
   const handleDelete = (id: string) => {
     if (confirm("Hapus fasilitas ini?")) {
       setFacilities(facilities.filter(f => f.id !== id));
+      showToast("Fasilitas berhasil dihapus!", "success");
     }
   };
 
@@ -158,6 +161,7 @@ export default function FacilityManagement() {
             <form style={{ display: "flex", flexDirection: "column", gap: "20px" }} onSubmit={(e) => {
               e.preventDefault();
               setIsModalOpen(false);
+              showToast(editingFacility ? "Fasilitas berhasil diperbarui!" : "Fasilitas baru ditambahkan!", "success");
             }}>
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Nama Fasilitas</label>
