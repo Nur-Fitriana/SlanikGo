@@ -140,7 +140,7 @@ export default function Sidebar() {
             <p
               style={{
                 color: "#bae6fd",
-                fontSize: "18px",
+                fontSize: "28px",
                 fontWeight: "700",
                 letterSpacing: "-0.3px",
                 lineHeight: 1,
@@ -148,7 +148,7 @@ export default function Sidebar() {
             >
               SlanikGo
             </p>
-            <p style={{ color: "rgba(186, 230, 253, 0.5)", fontSize: "11px", marginTop: "2px" }}>
+            <p style={{ color: "rgba(186, 230, 253, 0.5)", fontSize: "16px", marginTop: "2px" }}>
               Admin Panel
             </p>
           </div>
