@@ -36,14 +36,6 @@ const initialFacilities: Facility[] = [
     image: "https://images.unsplash.com/photo-1519331379826-f10be5486c6f?auto=format&fit=crop&q=80&w=400",
     status: "Aktif",
   },
-  {
-    id: "4",
-    name: "Lazy River",
-    category: "Wahana Air",
-    description: "Kolam arus santai mengelilingi area waterpark.",
-    image: "https://images.unsplash.com/photo-1590644365607-1c5a519a7a37?auto=format&fit=crop&q=80&w=400",
-    status: "Pemeliharaan",
-  },
 ];
 
 export default function FacilityManagement() {
@@ -74,7 +66,7 @@ export default function FacilityManagement() {
           <h1 className="page-title">Manajemen Fasilitas</h1>
           <p className="page-subtitle">Kelola daftar wahana, kolam renang, dan area pendukung di Slanik Waterpark.</p>
         </div>
-        <button 
+        <button
           className="btn-primary"
           style={{ display: "flex", alignItems: "center", gap: "8px" }}
           onClick={() => {
@@ -95,16 +87,16 @@ export default function FacilityManagement() {
         {facilities.map((facility) => (
           <div key={facility.id} className="card-premium" style={{ overflow: "hidden", display: "flex", flexDirection: "column" }}>
             <div style={{ position: "relative", height: "200px", width: "100%" }}>
-              <img 
-                src={facility.image} 
-                alt={facility.name} 
+              <img
+                src={facility.image}
+                alt={facility.name}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
               <div style={{ position: "absolute", top: "12px", right: "12px" }}>
                 <span className={getStatusBadge(facility.status)}>{facility.status}</span>
               </div>
             </div>
-            
+
             <div style={{ padding: "20px", flex: 1, display: "flex", flexDirection: "column" }}>
               <div style={{ marginBottom: "12px" }}>
                 <span style={{ fontSize: "11px", fontWeight: "700", color: "var(--brand-accent)", textTransform: "uppercase", letterSpacing: "0.5px" }}>
@@ -112,14 +104,14 @@ export default function FacilityManagement() {
                 </span>
                 <h3 style={{ fontSize: "18px", fontWeight: "700", color: "var(--brand-secondary)", marginTop: "4px" }}>{facility.name}</h3>
               </div>
-              
+
               <p style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: "1.6", marginBottom: "20px", flex: 1 }}>
                 {facility.description}
               </p>
-              
+
               <div style={{ display: "flex", gap: "10px", paddingTop: "16px", borderTop: "1px solid var(--divider)" }}>
-                <button 
-                  className="btn-outline" 
+                <button
+                  className="btn-outline"
                   style={{ flex: 1, padding: "8px", fontSize: "13px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
                   onClick={() => {
                     setEditingFacility(facility);
@@ -131,8 +123,8 @@ export default function FacilityManagement() {
                   </svg>
                   Edit
                 </button>
-                <button 
-                  className="btn-danger" 
+                <button
+                  className="btn-danger"
                   style={{ padding: "8px 12px" }}
                   onClick={() => handleDelete(facility.id)}
                 >
@@ -155,14 +147,14 @@ export default function FacilityManagement() {
           display: "flex", alignItems: "center", justifyContent: "center",
           zIndex: 1000, padding: "20px"
         }}>
-          <div className="card-premium" style={{ 
+          <div className="card-premium" style={{
             width: "100%", maxWidth: "600px", background: "white", padding: "32px",
             maxHeight: "90vh", overflowY: "auto"
           }}>
             <h2 style={{ fontSize: "20px", fontWeight: "700", marginBottom: "24px", color: "var(--brand-secondary)" }}>
               {editingFacility ? "Edit Fasilitas" : "Tambah Fasilitas Baru"}
             </h2>
-            
+
             <form style={{ display: "flex", flexDirection: "column", gap: "20px" }} onSubmit={(e) => {
               e.preventDefault();
               setIsModalOpen(false);
@@ -199,9 +191,9 @@ export default function FacilityManagement() {
 
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Foto Fasilitas</label>
-                <div style={{ 
-                  border: "2px dashed var(--input-border)", 
-                  borderRadius: "12px", 
+                <div style={{
+                  border: "2px dashed var(--input-border)",
+                  borderRadius: "12px",
                   padding: "24px",
                   textAlign: "center",
                   background: "#f8fafc",
