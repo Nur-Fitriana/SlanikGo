@@ -20,6 +20,8 @@ export default function MainLayoutWrapper({ children }: { children: React.ReactN
   return (
     <>
       <Sidebar />
+      {/* Overlay latar gelap (hanya muncul di HP saat sidebar terbuka) */}
+      <div className="sidebar-overlay" />
       <div
         style={{
           flex: 1,

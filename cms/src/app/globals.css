@@ -229,6 +229,12 @@ body {
     display: flex !important;
   }
   
+  /* Saat class 'open' ditambahkan, overlay akan tampil */
+  .sidebar-overlay.open {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+  
   /* Menyesuaikan padding untuk layar kecil */
   header {
     padding: 0 16px !important;
@@ -237,4 +243,19 @@ body {
   main {
     padding: 16px !important;
   }
+}
+
+/* ── Sidebar Overlay & Animasi ─────────────────── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 40;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
