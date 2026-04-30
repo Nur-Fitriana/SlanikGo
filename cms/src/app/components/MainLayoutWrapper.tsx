@@ -2,10 +2,11 @@
 
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
-import React from "react";
+import React, { useState } from "react";
 
 export default function MainLayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Jika di halaman login, jangan tampilkan sidebar dan topbar
   if (pathname === "/login") {
@@ -19,9 +20,12 @@ export default function MainLayoutWrapper({ children }: { children: React.ReactN
   // Layout untuk halaman dashboard (dengan sidebar & topbar)
   return (
     <>
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
       {/* Overlay latar gelap (hanya muncul di HP saat sidebar terbuka) */}
-      <div className="sidebar-overlay" />
+      <div 
+        className={`sidebar-overlay ${isSidebarOpen ? "open" : ""}`} 
+        onClick={() => setIsSidebarOpen(false)}
+      />
       <div
         style={{
           flex: 1,
@@ -50,6 +54,7 @@ export default function MainLayoutWrapper({ children }: { children: React.ReactN
             {/* Tombol Hamburger Menu (Akan disembunyikan di desktop via CSS nanti) */}
             <button 
               className="mobile-menu-btn" 
+              onClick={() => setIsSidebarOpen(true)}
               style={{
                 display: "none", // Sementara disembunyikan, nanti kita atur di CSS untuk versi mobile
                 alignItems: "center",

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { useEffect } from "react";
 
 const navItems = [
   {
@@ -83,8 +84,13 @@ const navItems = [
   },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, setIsOpen }: { isOpen?: boolean; setIsOpen?: (v: boolean) => void }) {
   const pathname = usePathname();
+
+  // Tutup otomatis saat admin menekan menu dan berpindah halaman
+  useEffect(() => {
+    if (setIsOpen) setIsOpen(false);
+  }, [pathname, setIsOpen]);
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -93,7 +99,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="sidebar-container"
+      className={`sidebar-container ${isOpen ? 'open' : ''}`}
       style={{
         width: "260px",
         minHeight: "100vh",
