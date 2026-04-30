@@ -116,8 +116,8 @@ export default function Sidebar() {
           {/* Logo icon */}
           <div
             style={{
-              width: "40px",
-              height: "40px",
+              width: "80px",
+              height: "80px",
               borderRadius: "50%",
               background: "white",
               display: "flex",
@@ -131,8 +131,8 @@ export default function Sidebar() {
             <Image
               src="/slatnik_logo.png"
               alt="Slanik Waterpark Logo"
-              width={40}
-              height={40}
+              width={80}
+              height={80}
               style={{ objectFit: 'cover' }}
             />
           </div>
