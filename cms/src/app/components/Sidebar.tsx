@@ -93,6 +93,7 @@ export default function Sidebar() {
 
   return (
     <aside
+      className="sidebar-container"
       style={{
         width: "260px",
         minHeight: "100vh",
