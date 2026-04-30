@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 const navItems = [
   {
@@ -112,30 +113,28 @@ export default function Sidebar() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "4px" }}>
-          {/* Wave icon */}
+          {/* Logo icon */}
           <div
             style={{
               width: "40px",
               height: "40px",
-              borderRadius: "12px",
-              background: "linear-gradient(135deg, #1565c0, #2196f3)",
+              borderRadius: "50%",
+              background: "white",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 4px 14px rgba(33, 150, 243, 0.45)",
+              boxShadow: "0 4px 14px rgba(0, 0, 0, 0.1)",
               flexShrink: 0,
+              overflow: "hidden"
             }}
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
-              <path d="M2 12c1.5-2 3-3 4.5-3s3 2 4.5 2 3-2 4.5-2 3 1 4.5 3" strokeWidth="0" />
-              <path
-                d="M2 16c1.5-2 3-3 4.5-3s3 2 4.5 2 3-2 4.5-2 3 1 4.5 3"
-                fill="none"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
+            <Image
+              src="/slatnik_logo.png"
+              alt="Slanik Waterpark Logo"
+              width={40}
+              height={40}
+              style={{ objectFit: 'cover' }}
+            />
           </div>
           <div>
             <p
