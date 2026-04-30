@@ -259,3 +259,55 @@ body {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* ── Toast Notifications ───────────────────────── */
+.toast-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 9999;
+  pointer-events: none; /* Agar klik tembus di sela-sela toast */
+}
+
+.toast-item {
+  pointer-events: auto; /* Mengizinkan klik pada kotak toast */
+  min-width: 320px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: toastSlideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes toastSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .toast-container {
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    align-items: center; /* Menengahkan toast di HP */
+  }
+  .toast-item {
+    width: 100%;
+    max-width: 400px;
+    min-width: auto;
+  }
+}
