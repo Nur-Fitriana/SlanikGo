@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useToast } from "../components/ToastProvider";
 
 interface GalleryPhoto {
   id: string;
@@ -20,6 +21,7 @@ const initialPhotos: GalleryPhoto[] = [
 
 export default function GalleryManagement() {
   const [photos, setPhotos] = useState<GalleryPhoto[]>(initialPhotos);
+  const { showToast } = useToast();
 
   const movePhoto = (index: number, direction: "up" | "down") => {
     const newPhotos = [...photos];
@@ -34,6 +36,7 @@ export default function GalleryManagement() {
   const handleDelete = (id: string) => {
     if (confirm("Hapus foto ini dari galeri?")) {
       setPhotos(photos.filter(p => p.id !== id));
+      showToast("Foto berhasil dihapus dari galeri!", "success");
     }
   };
 
@@ -45,7 +48,11 @@ export default function GalleryManagement() {
           <h1 className="page-title">Manajemen Galeri</h1>
           <p className="page-subtitle">Kelola foto-foto wisata untuk ditampilkan di landing page utama.</p>
         </div>
-        <button className="btn-primary" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <button 
+          className="btn-primary" 
+          style={{ display: "flex", alignItems: "center", gap: "8px" }}
+          onClick={() => showToast("Fitur upload foto segera hadir!", "info")}
+        >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="17 8 12 3 7 8"></polyline>
@@ -164,6 +171,7 @@ export default function GalleryManagement() {
             background: "rgba(255,255,255,0.4)",
             transition: "all 0.2s ease"
           }}
+          onClick={() => showToast("Fitur tambah foto segera hadir!", "info")}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "rgba(255,255,255,0.8)";
             e.currentTarget.style.borderColor = "var(--brand-accent)";
