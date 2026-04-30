@@ -146,11 +146,12 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen?: boolean; setIs
           <div>
             <p
               style={{
-                color: "#bae6fd",
+                color: "#ffffff",
                 fontSize: "28px",
-                fontWeight: "700",
+                fontWeight: "800",
                 letterSpacing: "-0.3px",
                 lineHeight: 1,
+                textShadow: "0 2px 4px rgba(0,0,0,0.1)"
               }}
             >
               SlanikGo
@@ -246,20 +247,21 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen?: boolean; setIs
         >
           <div
             style={{
-              width: "34px",
-              height: "34px",
+              width: "36px",
+              height: "36px",
               borderRadius: "50%",
-              background: "linear-gradient(135deg, #1565c0, #2196f3)",
+              background: "linear-gradient(135deg, #0ea5e9, #38bdf8)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "14px",
+              fontSize: "16px",
               fontWeight: "700",
               color: "white",
               flexShrink: 0,
+              boxShadow: "0 2px 8px rgba(14, 165, 233, 0.4)"
             }}
           >
-            A
+            N
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{ color: "#bae6fd", fontSize: "13px", fontWeight: "600", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>

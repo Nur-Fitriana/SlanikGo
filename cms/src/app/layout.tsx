@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   title: "SlanikGo Admin — CMS Panel",
   description:
     "Panel admin untuk mengelola konten website SlanikGo — Slanik Waterpark Lampung Selatan.",
+  icons: {
+    icon: "/slatnik_logo.png",
+  },
 };
 
 export default function RootLayout({
