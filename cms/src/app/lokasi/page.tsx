@@ -9,7 +9,7 @@ export default function LocationContactManagement() {
     phone: "",
     email: "",
     instagram: "",
-    facebook: "Slanik Waterpark Official",
+    facebook: "",
     whatsapp: "",
   });
 
