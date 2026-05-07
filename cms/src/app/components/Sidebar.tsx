@@ -261,7 +261,7 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen?: boolean; setIs
               boxShadow: "0 2px 8px rgba(14, 165, 233, 0.4)"
             }}
           >
-            N
+            A
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{ color: "#bae6fd", fontSize: "13px", fontWeight: "600", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
