@@ -10,7 +10,7 @@ export default function LocationContactManagement() {
     email: "info@slanikwaterpark.co.id",
     instagram: "@slanikwaterpark",
     facebook: "Slanik Waterpark Official",
-    whatsapp: "0812-3456-7890",
+    whatsapp: "",
   });
 
   const [isSaving, setIsSaving] = useState(false);
