@@ -14,9 +14,7 @@ const initialPhotos: GalleryPhoto[] = [
   { id: "1", url: "https://images.unsplash.com/photo-1582650625119-3a31f8fa2699?auto=format&fit=crop&q=80&w=600", caption: "Dragon Slide", order: 1 },
   { id: "2", url: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&q=80&w=600", caption: "Olympic Pool Area", order: 2 },
   { id: "3", url: "https://images.unsplash.com/photo-1519331379826-f10be5486c6f?auto=format&fit=crop&q=80&w=600", caption: "Kids Zone Splash", order: 3 },
-  { id: "4", url: "https://images.unsplash.com/photo-1590644365607-1c5a519a7a37?auto=format&fit=crop&q=80&w=600", caption: "Lazy River View", order: 4 },
-  { id: "5", url: "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&q=80&w=600", caption: "Main Entrance", order: 5 },
-  { id: "6", url: "https://images.unsplash.com/photo-1600336153113-d66c79ded3e9?auto=format&fit=crop&q=80&w=600", caption: "Night Event Lighting", order: 6 },
+  { id: "4", url: "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&q=80&w=600", caption: "Main Entrance", order: 4 },
 ];
 
 export default function GalleryManagement() {
@@ -48,8 +46,8 @@ export default function GalleryManagement() {
           <h1 className="page-title">Manajemen Galeri</h1>
           <p className="page-subtitle">Kelola foto-foto wisata untuk ditampilkan di landing page utama.</p>
         </div>
-        <button 
-          className="btn-primary" 
+        <button
+          className="btn-primary"
           style={{ display: "flex", alignItems: "center", gap: "8px" }}
           onClick={() => showToast("Fitur upload foto segera hadir!", "info")}
         >
@@ -63,25 +61,25 @@ export default function GalleryManagement() {
       </div>
 
       {/* Gallery Grid */}
-      <div style={{ 
-        display: "grid", 
-        gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", 
-        gap: "24px" 
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+        gap: "24px"
       }}>
         {photos.map((photo, index) => (
-          <div key={photo.id} className="card-premium group" style={{ 
-            overflow: "hidden", 
+          <div key={photo.id} className="card-premium group" style={{
+            overflow: "hidden",
             position: "relative"
           }}>
             <div style={{ position: "relative", height: "200px", overflow: "hidden" }}>
-              <img 
-                src={photo.url} 
-                alt={photo.caption} 
+              <img
+                src={photo.url}
+                alt={photo.caption}
                 style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s ease" }}
               />
-              <div style={{ 
-                position: "absolute", 
-                top: 0, left: 0, right: 0, bottom: 0, 
+              <div style={{
+                position: "absolute",
+                top: 0, left: 0, right: 0, bottom: 0,
                 background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%)",
                 display: "flex",
                 flexDirection: "column",
@@ -90,15 +88,15 @@ export default function GalleryManagement() {
               }}>
                 <p style={{ color: "white", fontSize: "14px", fontWeight: "600", margin: 0 }}>{photo.caption}</p>
               </div>
-              
+
               {/* Order Controls */}
               <div style={{ position: "absolute", top: "12px", left: "12px", display: "flex", gap: "4px" }}>
-                <button 
+                <button
                   onClick={() => movePhoto(index, "up")}
                   disabled={index === 0}
-                  style={{ 
-                    width: "32px", height: "32px", borderRadius: "8px", 
-                    background: "rgba(255,255,255,0.9)", border: "none", 
+                  style={{
+                    width: "32px", height: "32px", borderRadius: "8px",
+                    background: "rgba(255,255,255,0.9)", border: "none",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     cursor: index === 0 ? "default" : "pointer",
                     opacity: index === 0 ? 0.4 : 1,
@@ -109,12 +107,12 @@ export default function GalleryManagement() {
                     <polyline points="18 15 12 9 6 15"></polyline>
                   </svg>
                 </button>
-                <button 
+                <button
                   onClick={() => movePhoto(index, "down")}
                   disabled={index === photos.length - 1}
-                  style={{ 
-                    width: "32px", height: "32px", borderRadius: "8px", 
-                    background: "rgba(255,255,255,0.9)", border: "none", 
+                  style={{
+                    width: "32px", height: "32px", borderRadius: "8px",
+                    background: "rgba(255,255,255,0.9)", border: "none",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     cursor: index === photos.length - 1 ? "default" : "pointer",
                     opacity: index === photos.length - 1 ? 0.4 : 1,
@@ -128,12 +126,12 @@ export default function GalleryManagement() {
               </div>
 
               {/* Delete Button */}
-              <button 
+              <button
                 onClick={() => handleDelete(photo.id)}
-                style={{ 
+                style={{
                   position: "absolute", top: "12px", right: "12px",
-                  width: "32px", height: "32px", borderRadius: "8px", 
-                  background: "#fee2e2", border: "none", 
+                  width: "32px", height: "32px", borderRadius: "8px",
+                  background: "#fee2e2", border: "none",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   cursor: "pointer",
                   boxShadow: "0 2px 8px rgba(220,38,38,0.2)"
@@ -145,22 +143,22 @@ export default function GalleryManagement() {
                 </svg>
               </button>
             </div>
-            
+
             <div style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span style={{ fontSize: "12px", color: "var(--text-muted)", fontWeight: "600" }}>Urutan: #{photo.order}</span>
-              <button style={{ 
-                fontSize: "12px", color: "var(--brand-accent)", background: "transparent", border: "none", 
-                fontWeight: "600", cursor: "pointer" 
+              <button style={{
+                fontSize: "12px", color: "var(--brand-accent)", background: "transparent", border: "none",
+                fontWeight: "600", cursor: "pointer"
               }}>Edit Caption</button>
             </div>
           </div>
         ))}
 
         {/* Empty State / Add Card */}
-        <div 
-          style={{ 
-            height: "260px", 
-            border: "2px dashed var(--input-border)", 
+        <div
+          style={{
+            height: "260px",
+            border: "2px dashed var(--input-border)",
             borderRadius: "16px",
             display: "flex",
             flexDirection: "column",
@@ -181,9 +179,9 @@ export default function GalleryManagement() {
             e.currentTarget.style.borderColor = "var(--input-border)";
           }}
         >
-          <div style={{ 
-            width: "48px", height: "48px", borderRadius: "50%", background: "var(--blue-50)", 
-            display: "flex", alignItems: "center", justifyContent: "center" 
+          <div style={{
+            width: "48px", height: "48px", borderRadius: "50%", background: "var(--blue-50)",
+            display: "flex", alignItems: "center", justifyContent: "center"
           }}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--brand-accent)" strokeWidth="2.5">
               <line x1="12" y1="5" x2="12" y2="19"></line>
