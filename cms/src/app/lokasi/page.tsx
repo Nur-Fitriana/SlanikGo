@@ -7,7 +7,7 @@ export default function LocationContactManagement() {
     address: "Jl. Raya Variasi No.1, Bandar Lampung, Lampung 35144, Indonesia",
     googleMapsUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3971.9701831804364!2d105.25884947498427!3d-5.421453994558237!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e40db72186985a9%3A0xe54d249f70d110!2sSlanik%20Waterpark!5e0!3m2!1sen!2sid!4v1713620000000!5m2!1sen!2sid",
     phone: "",
-    email: "info@slanikwaterpark.co.id",
+    email: "",
     instagram: "@slanikwaterpark",
     facebook: "Slanik Waterpark Official",
     whatsapp: "",
