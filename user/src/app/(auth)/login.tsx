@@ -40,7 +40,7 @@ export default function LoginScreen() {
         >
           <Image 
             // Pastikan file logo.png ada di folder user/assets/images/
-            source={require('../../../assets/images/logo.png')} 
+            source={require('../../../assets/images/logo_slanik.png')} 
             style={styles.logo}
             resizeMode="contain"
           />
