@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   header: {
-    height: 350,
+    height: 300,
     justifyContent: "center",
     alignItems: "center",
     borderBottomLeftRadius: 60,
@@ -108,8 +108,8 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   logo: {
-    width: 160,
-    height: 160,
+    width: 180,
+    height: 180,
     backgroundColor: "#fff",
     borderRadius: 80,
     justifyContent: "center",
