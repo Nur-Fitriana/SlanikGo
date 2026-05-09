@@ -100,11 +100,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   header: {
-    height: 250,
+    height: 350,
     justifyContent: "center",
     alignItems: "center",
-    borderBottomLeftRadius: 50,
-    borderBottomRightRadius: 50,
+    borderBottomLeftRadius: 60,
+    borderBottomRightRadius: 60,
+    paddingBottom: 40,
   },
   logo: {
     width: 160,
