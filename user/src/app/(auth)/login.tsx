@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderBottomLeftRadius: 60,
     borderBottomRightRadius: 60,
-    paddingBottom: 40,
+    paddingBottom: 50,
   },
   logoWrapper: {
     width: 170,                
@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
     borderWidth: 8,
     borderColor: "rgba(255,255,255,0.3)",
+    marginTop: 20,
   },
   logo: {
     width: "100%",             
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
   formCard: {
     backgroundColor: "#fff",
     marginHorizontal: 45,
-    marginTop: -50, // Biar card-nya agak naik menimpa header
+    marginTop: -40, 
     borderRadius: 30,
     padding: 30,
     elevation: 8, // Shadow untuk Android
