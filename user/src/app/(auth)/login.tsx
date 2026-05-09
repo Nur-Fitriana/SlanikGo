@@ -1,46 +1,42 @@
-import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  StyleSheet, 
-  Image, 
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
   Dimensions,
   KeyboardAvoidingView,
   Platform,
-  ScrollView
-} from 'react-native';
-import { useRouter } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
+  ScrollView,
+} from "react-native";
+import { useRouter } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 export default function LoginScreen() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = () => {
     // Navigasi ke Dashboard (tabs)
-    router.replace('/(tabs)');
+    router.replace("/(tabs)");
   };
 
   return (
-    <KeyboardAvoidingView 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        
         {/* Header Biru dengan Logo */}
-        <LinearGradient
-          colors={['#004AAD', '#0093E9']}
-          style={styles.header}
-        >
-          <Image 
+        <LinearGradient colors={["#004AAD", "#0093E9"]} style={styles.header}>
+          <Image
             // Pastikan file logo.png ada di folder user/assets/images/
-            source={require('../../../assets/images/logo_slanik.png')} 
+            source={require("../../../assets/images/logo_slanik.png")}
             style={styles.logo}
             resizeMode="contain"
           />
@@ -49,13 +45,15 @@ export default function LoginScreen() {
         {/* Card Form Login */}
         <View style={styles.formCard}>
           <Text style={styles.title}>Selamat Datang!</Text>
-          <Text style={styles.subtitle}>Silakan masuk untuk melanjutkan petualangan seru di Slanik Waterpark</Text>
+          <Text style={styles.subtitle}>
+            Silakan masuk untuk melanjutkan petualangan seru di Slanik Waterpark
+          </Text>
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Email atau Username</Text>
-            <TextInput 
-              style={styles.input} 
-              placeholder="Masukkan email/username" 
+            <TextInput
+              style={styles.input}
+              placeholder="Masukkan email/username"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -65,10 +63,10 @@ export default function LoginScreen() {
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Password</Text>
-            <TextInput 
-              style={styles.input} 
-              placeholder="••••••••" 
-              secureTextEntry 
+            <TextInput
+              style={styles.input}
+              placeholder="••••••••"
+              secureTextEntry
               value={password}
               onChangeText={setPassword}
             />
@@ -78,16 +76,16 @@ export default function LoginScreen() {
             <Text style={styles.loginButtonText}>Login</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity 
-            onPress={() => router.push('/(auth)/register')}
+          <TouchableOpacity
+            onPress={() => router.push("/(auth)/register")}
             style={styles.registerLink}
           >
             <Text style={styles.footerText}>
-              Belum punya akun? <Text style={styles.registerText}>Registrasi</Text>
+              Belum punya akun?{" "}
+              <Text style={styles.registerText}>Registrasi</Text>
             </Text>
           </TouchableOpacity>
         </View>
-
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -96,56 +94,67 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: "#F8FAFC",
   },
   scrollContainer: {
     flexGrow: 1,
   },
   header: {
     height: 250,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
   },
   logo: {
     width: 160,
     height: 160,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 80,
+    justifyContent: "center",
+    alignItems: "center",
     padding: 10,
+    elevation: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
     borderWidth: 4,
-    borderColor: 'rgba(255,255,255,0.3)',
+    borderColor: "rgba(255,255,255,0.3)",
+  },
+  welcomeImage: {
+    width: "90%",
+    height: "90%",
   },
   welcomeText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 5,
     marginBottom: 20,
   },
   formCard: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     marginHorizontal: 45,
     marginTop: -50, // Biar card-nya agak naik menimpa header
     borderRadius: 30,
     padding: 30,
     elevation: 8, // Shadow untuk Android
-    shadowColor: '#000', // Shadow untuk iOS
+    shadowColor: "#000", // Shadow untuk iOS
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
   },
   title: {
     fontSize: 22,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#1E293B',
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#1E293B",
   },
   subtitle: {
     fontSize: 14,
-    color: '#64748B',
-    textAlign: 'center',
+    color: "#64748B",
+    textAlign: "center",
     marginBottom: 30,
     marginTop: 5,
     lineHeight: 20,
@@ -155,40 +164,40 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#475569',
+    fontWeight: "600",
+    color: "#475569",
     marginBottom: 5,
   },
   input: {
-    backgroundColor: '#F1F5F9',
+    backgroundColor: "#F1F5F9",
     padding: 15,
     borderRadius: 12,
     fontSize: 14,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: "#E2E8F0",
   },
   loginButton: {
-    backgroundColor: '#0081C9',
+    backgroundColor: "#0081C9",
     paddingVertical: 15,
     borderRadius: 12,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
   },
   loginButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   registerLink: {
     marginTop: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   footerText: {
-    color: '#64748B',
+    color: "#64748B",
     fontSize: 14,
   },
   registerText: {
-    color: '#0081C9',
-    fontWeight: 'bold',
+    color: "#0081C9",
+    fontWeight: "bold",
   },
 });
