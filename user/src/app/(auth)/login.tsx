@@ -126,11 +126,11 @@ const styles = StyleSheet.create({
   },
   formCard: {
     backgroundColor: '#fff',
-    marginHorizontal: 25,
-    marginTop: -40, // Biar card-nya agak naik menimpa header
-    borderRadius: 20,
-    padding: 25,
-    elevation: 5, // Shadow untuk Android
+    marginHorizontal: 45,
+    marginTop: -50, // Biar card-nya agak naik menimpa header
+    borderRadius: 30,
+    padding: 30,
+    elevation: 8, // Shadow untuk Android
     shadowColor: '#000', // Shadow untuk iOS
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
