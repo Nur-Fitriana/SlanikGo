@@ -110,11 +110,13 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 50,
   },
   logo: {
-    width: 100,
-    height: 100,
+    width: 120,
+    height: 120,
     backgroundColor: '#fff',
-    borderRadius: 50,
+    borderRadius: 60,
     padding: 10,
+    borderWidth: 4,
+    borderColor: 'rgba(255,255,255,0.3)',
   },
   welcomeText: {
     color: '#fff',
