@@ -122,7 +122,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 10,
+    marginTop: 5,
+    marginBottom: 20,
   },
   formCard: {
     backgroundColor: '#fff',
