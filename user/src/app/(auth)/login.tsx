@@ -44,7 +44,6 @@ export default function LoginScreen() {
             style={styles.logo}
             resizeMode="contain"
           />
-          <Text style={styles.welcomeText}>SlanikGo</Text>
         </LinearGradient>
 
         {/* Card Form Login */}
@@ -110,10 +109,10 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 50,
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: 160,
+    height: 160,
     backgroundColor: '#fff',
-    borderRadius: 60,
+    borderRadius: 80,
     padding: 10,
     borderWidth: 4,
     borderColor: 'rgba(255,255,255,0.3)',
