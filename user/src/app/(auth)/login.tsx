@@ -35,7 +35,7 @@ export default function LoginScreen() {
         
         {/* Header Biru dengan Logo */}
         <LinearGradient
-          colors={['#004AAD', '#0081C9']}
+          colors={['#004AAD', '#0093E9']}
           style={styles.header}
         >
           <Image 
@@ -49,8 +49,8 @@ export default function LoginScreen() {
 
         {/* Card Form Login */}
         <View style={styles.formCard}>
-          <Text style={styles.title}>Masuk</Text>
-          <Text style={styles.subtitle}>Selamat datang kembali di Slanik Waterpark</Text>
+          <Text style={styles.title}>Selamat Datang!</Text>
+          <Text style={styles.subtitle}>Silakan masuk untuk melanjutkan petualangan seru di Slanik Waterpark</Text>
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Email atau Username</Text>
