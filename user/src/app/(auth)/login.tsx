@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  StyleSheet, 
+  Image, 
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView
+} from 'react-native';
 import { useRouter } from 'expo-router';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
-const { height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -11,181 +22,170 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    // Dummy login
-    if (email === 'user' || email === 'user@gmail.com') {
-      router.replace('/(tabs)');
-    } else {
-      alert('Gunakan username: user');
-    }
+    // Navigasi ke Dashboard (tabs)
+    router.replace('/(tabs)');
   };
 
   return (
-    <View style={styles.container}>
-      {/* Dekorasi Background Biru di Atas */}
-      <View style={styles.topDecoration} />
-      
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-        style={styles.centering}
-      >
-        <View style={styles.loginCard}>
-          <View style={styles.header}>
-            <View style={styles.iconCircle}>
-              <MaterialCommunityIcons name="water" size={32} color="#0080FF" />
-            </View>
-            <Text style={styles.title}>Masuk</Text>
-            <Text style={styles.subtitle}>Selamat datang kembali di SlanikGo</Text>
-          </View>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        
+        {/* Header Biru dengan Logo */}
+        <LinearGradient
+          colors={['#0093E9', '#80D0C7']}
+          style={styles.header}
+        >
+          <Image 
+            // Pastikan file logo.png ada di folder user/assets/images/
+            source={require('../../../assets/images/logo.png')} 
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <Text style={styles.welcomeText}>SlanikGo</Text>
+        </LinearGradient>
 
-          <View style={styles.inputGroup}>
+        {/* Card Form Login */}
+        <View style={styles.formCard}>
+          <Text style={styles.title}>Masuk</Text>
+          <Text style={styles.subtitle}>Selamat datang kembali di Slanik Waterpark</Text>
+
+          <View style={styles.inputContainer}>
             <Text style={styles.label}>Email atau Username</Text>
-            <View style={styles.inputContainer}>
-              <MaterialCommunityIcons name="account-outline" size={20} color="#A0AEC0" />
-              <TextInput 
-                style={styles.input} 
-                placeholder="Masukkan email/username" 
-                value={email} 
-                onChangeText={setEmail}
-                autoCapitalize="none"
-              />
-            </View>
+            <TextInput 
+              style={styles.input} 
+              placeholder="Masukkan email/username" 
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
           </View>
 
-          <View style={styles.inputGroup}>
+          <View style={styles.inputContainer}>
             <Text style={styles.label}>Password</Text>
-            <View style={styles.inputContainer}>
-              <MaterialCommunityIcons name="lock-outline" size={20} color="#A0AEC0" />
-              <TextInput 
-                style={styles.input} 
-                placeholder="••••••••" 
-                secureTextEntry 
-                value={password} 
-                onChangeText={setPassword} 
-              />
-            </View>
+            <TextInput 
+              style={styles.input} 
+              placeholder="••••••••" 
+              secureTextEntry 
+              value={password}
+              onChangeText={setPassword}
+            />
           </View>
 
-          <TouchableOpacity style={styles.btnLogin} onPress={handleLogin}>
-            <Text style={styles.btnText}>Login</Text>
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+            <Text style={styles.loginButtonText}>Login</Text>
           </TouchableOpacity>
 
           <TouchableOpacity 
-            onPress={() => router.push('/(auth)/register')} 
-            style={styles.footer}
+            onPress={() => router.push('/(auth)/register')}
+            style={styles.registerLink}
           >
-            <Text style={styles.footerText}>Belum punya akun? 
-              <Text style={styles.registerText}> Registrasi</Text>
+            <Text style={styles.footerText}>
+              Belum punya akun? <Text style={styles.registerText}>Registrasi</Text>
             </Text>
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
-    </View>
+
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F7FF',
+    backgroundColor: '#F8FAFC',
   },
-  topDecoration: {
-    position: 'absolute',
-    top: 0,
-    width: '100%',
-    height: height * 0.4,
-    backgroundColor: '#0080FF',
-    borderBottomLeftRadius: 60,
-    borderBottomRightRadius: 60,
-  },
-  centering: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 25,
-  },
-  loginCard: {
-    width: '100%',
-    maxWidth: 400,
-    backgroundColor: '#FFF',
-    borderRadius: 30,
-    padding: 30,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    elevation: 10,
+  scrollContainer: {
+    flexGrow: 1,
   },
   header: {
-    alignItems: 'center',
-    marginBottom: 25,
-  },
-  iconCircle: {
-    width: 60,
-    height: 60,
-    backgroundColor: '#F0F7FF',
-    borderRadius: 20,
+    height: 250,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+  },
+  logo: {
+    width: 100,
+    height: 100,
+    backgroundColor: '#fff',
+    borderRadius: 50,
+    padding: 10,
+  },
+  welcomeText: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  formCard: {
+    backgroundColor: '#fff',
+    marginHorizontal: 25,
+    marginTop: -40, // Biar card-nya agak naik menimpa header
+    borderRadius: 20,
+    padding: 25,
+    elevation: 5, // Shadow untuk Android
+    shadowColor: '#000', // Shadow untuk iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#1A365D',
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#1E293B',
   },
   subtitle: {
-    fontSize: 13,
-    color: '#718096',
+    fontSize: 14,
+    color: '#64748B',
+    textAlign: 'center',
+    marginBottom: 25,
     marginTop: 5,
   },
-  inputGroup: {
+  inputContainer: {
     marginBottom: 15,
   },
   label: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#4A5568',
-    marginBottom: 6,
-    marginLeft: 4,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F8FAFC',
-    borderRadius: 12,
-    paddingHorizontal: 15,
-    borderWidth: 1,
-    borderColor: '#EDF2F7',
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#475569',
+    marginBottom: 5,
   },
   input: {
-    flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
+    backgroundColor: '#F1F5F9',
+    padding: 15,
+    borderRadius: 12,
     fontSize: 14,
-    color: '#2D3748',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
-  btnLogin: {
-    backgroundColor: '#0080FF',
-    paddingVertical: 14,
+  loginButton: {
+    backgroundColor: '#0081C9',
+    paddingVertical: 15,
     borderRadius: 12,
     alignItems: 'center',
-    marginTop: 15,
+    marginTop: 10,
   },
-  btnText: {
-    color: '#FFF',
-    fontSize: 15,
+  loginButtonText: {
+    color: '#fff',
+    fontSize: 16,
     fontWeight: 'bold',
   },
-  footer: {
+  registerLink: {
     marginTop: 20,
     alignItems: 'center',
   },
   footerText: {
-    color: '#718096',
-    fontSize: 13,
+    color: '#64748B',
+    fontSize: 14,
   },
   registerText: {
-    color: '#0080FF',
-    fontWeight: '700',
+    color: '#0081C9',
+    fontWeight: 'bold',
   },
 });
