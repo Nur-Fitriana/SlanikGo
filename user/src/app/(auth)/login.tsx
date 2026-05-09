@@ -34,12 +34,13 @@ export default function LoginScreen() {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Header Biru dengan Logo */}
         <LinearGradient colors={["#004AAD", "#0093E9"]} style={styles.header}>
-          <Image
-            // Pastikan file logo.png ada di folder user/assets/images/
-            source={require("../../../assets/images/logo_slanik.png")}
-            style={styles.logo}
-            resizeMode="contain"
-          />
+          <View style={styles.logoWrapper}>
+            <Image
+              source={require("../../../assets/images/logo_slanik.png")}
+              style={styles.logo}
+              resizeMode="cover" // Pakai cover biar memenuhi ruang
+            />
+          </View>
         </LinearGradient>
 
         {/* Card Form Login */}
@@ -107,15 +108,14 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 60,
     paddingBottom: 40,
   },
-  logo: {
-    width: 180,
-    height: 180,
+  logoWrapper: {
+    width: 170,                
+    height: 170,
     backgroundColor: "#fff",
-    borderRadius: 90,
+    borderRadius: 85,          
     justifyContent: "center",
     alignItems: "center",
-    overflow: 'hidden',
-    padding: 10,
+    overflow: "hidden",        
     elevation: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },
@@ -124,9 +124,10 @@ const styles = StyleSheet.create({
     borderWidth: 8,
     borderColor: "rgba(255,255,255,0.3)",
   },
-  welcomeImage: {
-    width: "100%",
-    height: "100%",
+  logo: {
+    width: "100%",             
+    height: "100%",           
+    transform: [{ scale: 1.6 }], 
   },
   welcomeText: {
     color: "#fff",
