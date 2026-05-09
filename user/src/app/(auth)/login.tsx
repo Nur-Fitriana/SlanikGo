@@ -12,10 +12,10 @@ export default function LoginScreen() {
 
   const handleLogin = () => {
     // Dummy login
-    if (email === 'admin' || email === 'admin@gmail.com') {
+    if (email === 'user' || email === 'user@gmail.com') {
       router.replace('/(tabs)');
     } else {
-      alert('Gunakan username: admin');
+      alert('Gunakan username: user');
     }
   };
 
