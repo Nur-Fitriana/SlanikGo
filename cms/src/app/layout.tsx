@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import MainLayoutWrapper from "./components/MainLayoutWrapper";
+import { ToastProvider } from "./components/ToastProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,6 +18,9 @@ export const metadata: Metadata = {
   title: "SlanikGo Admin — CMS Panel",
   description:
     "Panel admin untuk mengelola konten website SlanikGo — Slanik Waterpark Lampung Selatan.",
+  icons: {
+    icon: "/slatnik_logo.png",
+  },
 };
 
 export default function RootLayout({
@@ -40,9 +44,11 @@ export default function RootLayout({
           padding: 0,
         }}
       >
-        <MainLayoutWrapper>
-          {children}
-        </MainLayoutWrapper>
+        <ToastProvider>
+          <MainLayoutWrapper>
+            {children}
+          </MainLayoutWrapper>
+        </ToastProvider>
       </body>
     </html>
   );

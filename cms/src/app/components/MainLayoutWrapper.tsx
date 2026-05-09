@@ -2,10 +2,11 @@
 
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
-import React from "react";
+import React, { useState } from "react";
 
 export default function MainLayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Jika di halaman login, jangan tampilkan sidebar dan topbar
   if (pathname === "/login") {
@@ -19,7 +20,12 @@ export default function MainLayoutWrapper({ children }: { children: React.ReactN
   // Layout untuk halaman dashboard (dengan sidebar & topbar)
   return (
     <>
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+      {/* Overlay latar gelap (hanya muncul di HP saat sidebar terbuka) */}
+      <div 
+        className={`sidebar-overlay ${isSidebarOpen ? "open" : ""}`} 
+        onClick={() => setIsSidebarOpen(false)}
+      />
       <div
         style={{
           flex: 1,
@@ -44,7 +50,32 @@ export default function MainLayoutWrapper({ children }: { children: React.ReactN
             flexShrink: 0,
           }}
         >
-          <div>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            {/* Tombol Hamburger Menu (Akan disembunyikan di desktop via CSS nanti) */}
+            <button 
+              className="mobile-menu-btn" 
+              onClick={() => setIsSidebarOpen(true)}
+              style={{
+                display: "none", // Sementara disembunyikan, nanti kita atur di CSS untuk versi mobile
+                alignItems: "center",
+                justifyContent: "center",
+                width: "40px",
+                height: "40px",
+                borderRadius: "10px",
+                background: "transparent",
+                border: "1px solid var(--card-border)",
+                color: "var(--brand-primary)",
+                cursor: "pointer",
+              }}
+              aria-label="Buka Menu Sidebar"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+
             <p
               style={{
                 fontSize: "13px",

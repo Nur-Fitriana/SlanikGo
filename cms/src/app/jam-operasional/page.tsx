@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useToast } from "../components/ToastProvider";
 
 interface OperationalHour {
   day: string;
@@ -22,6 +23,7 @@ const initialHours: OperationalHour[] = [
 export default function OperationalHours() {
   const [hours, setHours] = useState<OperationalHour[]>(initialHours);
   const [isSaving, setIsSaving] = useState(false);
+  const { showToast } = useToast();
 
   const handleToggleClosed = (index: number) => {
     const newHours = [...hours];
@@ -39,7 +41,7 @@ export default function OperationalHours() {
     setIsSaving(true);
     setTimeout(() => {
       setIsSaving(false);
-      alert("Jam operasional berhasil diperbarui!");
+      showToast("Jam operasional berhasil diperbarui!", "success");
     }, 1000);
   };
 

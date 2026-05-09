@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useToast } from "../components/ToastProvider";
 
 // Types for Ticket
 interface TicketPrice {
@@ -62,6 +63,7 @@ export default function TicketManagement() {
   const [tickets, setTickets] = useState<TicketPrice[]>(initialTickets);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTicket, setEditingTicket] = useState<TicketPrice | null>(null);
+  const { showToast } = useToast();
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -77,11 +79,13 @@ export default function TicketManagement() {
         t.id === id ? { ...t, isPromoActive: !t.isPromoActive } : t
       )
     );
+    showToast("Status promo berhasil diubah!", "success");
   };
 
   const handleDelete = (id: string) => {
     if (confirm("Apakah Anda yakin ingin menghapus harga tiket ini?")) {
       setTickets(tickets.filter((t) => t.id !== id));
+      showToast("Harga tiket berhasil dihapus!", "success");
     }
   };
 
@@ -274,6 +278,7 @@ export default function TicketManagement() {
             <form style={{ display: "flex", flexDirection: "column", gap: "20px" }} onSubmit={(e) => {
               e.preventDefault();
               setIsModalOpen(false);
+              showToast(editingTicket ? "Harga tiket berhasil diperbarui!" : "Kategori tiket baru ditambahkan!", "success");
             }}>
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Kategori Tiket</label>

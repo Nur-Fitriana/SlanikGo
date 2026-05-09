@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { useEffect } from "react";
 
 const navItems = [
   {
@@ -83,8 +84,13 @@ const navItems = [
   },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, setIsOpen }: { isOpen?: boolean; setIsOpen?: (v: boolean) => void }) {
   const pathname = usePathname();
+
+  // Tutup otomatis saat admin menekan menu dan berpindah halaman
+  useEffect(() => {
+    if (setIsOpen) setIsOpen(false);
+  }, [pathname, setIsOpen]);
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -93,6 +99,7 @@ export default function Sidebar() {
 
   return (
     <aside
+      className={`sidebar-container ${isOpen ? 'open' : ''}`}
       style={{
         width: "260px",
         minHeight: "100vh",
@@ -139,11 +146,12 @@ export default function Sidebar() {
           <div>
             <p
               style={{
-                color: "#bae6fd",
+                color: "#ffffff",
                 fontSize: "28px",
-                fontWeight: "700",
+                fontWeight: "800",
                 letterSpacing: "-0.3px",
                 lineHeight: 1,
+                textShadow: "0 2px 4px rgba(0,0,0,0.1)"
               }}
             >
               SlanikGo
@@ -239,17 +247,18 @@ export default function Sidebar() {
         >
           <div
             style={{
-              width: "34px",
-              height: "34px",
+              width: "36px",
+              height: "36px",
               borderRadius: "50%",
-              background: "linear-gradient(135deg, #1565c0, #2196f3)",
+              background: "linear-gradient(135deg, #0ea5e9, #38bdf8)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "14px",
+              fontSize: "16px",
               fontWeight: "700",
               color: "white",
               flexShrink: 0,
+              boxShadow: "0 2px 8px rgba(14, 165, 233, 0.4)"
             }}
           >
             A
@@ -262,11 +271,34 @@ export default function Sidebar() {
               Super Admin
             </p>
           </div>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(186, 230, 253, 0.4)" strokeWidth="2">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-            <polyline points="16 17 21 12 16 7" />
-            <line x1="21" y1="12" x2="9" y2="12" />
-          </svg>
+          <Link 
+            href="/login" 
+            style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              justifyContent: "center",
+              padding: "6px",
+              borderRadius: "8px",
+              transition: "all 0.2s ease",
+              cursor: "pointer",
+              color: "rgba(186, 230, 253, 0.4)"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+              e.currentTarget.style.color = "#bae6fd";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = "rgba(186, 230, 253, 0.4)";
+            }}
+            title="Logout"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+          </Link>
         </div>
       </div>
     </aside>

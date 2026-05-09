@@ -7,7 +7,7 @@ export default function LocationContactManagement() {
     address: "Jl. Raya Variasi No.1, Bandar Lampung, Lampung 35144, Indonesia",
     googleMapsUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3971.9701831804364!2d105.25884947498427!3d-5.421453994558237!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e40db72186985a9%3A0xe54d249f70d110!2sSlanik%20Waterpark!5e0!3m2!1sen!2sid!4v1713620000000!5m2!1sen!2sid",
     phone: "0812-3456-7890",
-    email: "info@slanikwaterpark.co.id",
+    email: "",
     instagram: "@slanikwaterpark",
     facebook: "Slanik Waterpark Official",
     whatsapp: "0812-3456-7890",
@@ -43,24 +43,24 @@ export default function LocationContactManagement() {
               </svg>
               Detail Alamat
             </h3>
-            
+
             <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Alamat Lengkap</label>
-                <textarea 
-                  className="input-field" 
-                  rows={3} 
+                <textarea
+                  className="input-field"
+                  rows={3}
                   value={formData.address}
-                  onChange={(e) => setFormData({...formData, address: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                 />
               </div>
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Google Maps Embed URL</label>
-                <input 
-                  type="text" 
-                  className="input-field" 
+                <input
+                  type="text"
+                  className="input-field"
                   value={formData.googleMapsUrl}
-                  onChange={(e) => setFormData({...formData, googleMapsUrl: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, googleMapsUrl: e.target.value })}
                 />
                 <p style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "6px" }}>Ambil dari Google Maps &gt; Share &gt; Embed a map &gt; src="..."</p>
               </div>
@@ -74,31 +74,31 @@ export default function LocationContactManagement() {
               </svg>
               Kontak & Media Sosial
             </h3>
-            
+
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Telepon</label>
-                <input type="text" className="input-field" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
+                <input type="text" className="input-field" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
               </div>
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>WhatsApp</label>
-                <input type="text" className="input-field" value={formData.whatsapp} onChange={(e) => setFormData({...formData, whatsapp: e.target.value})} />
+                <input type="text" className="input-field" value={formData.whatsapp} onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })} />
               </div>
             </div>
-            
+
             <div style={{ marginTop: "16px" }}>
               <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Email</label>
-              <input type="email" className="input-field" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
+              <input type="email" className="input-field" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginTop: "16px" }}>
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Instagram</label>
-                <input type="text" className="input-field" value={formData.instagram} onChange={(e) => setFormData({...formData, instagram: e.target.value})} />
+                <input type="text" className="input-field" value={formData.instagram} onChange={(e) => setFormData({ ...formData, instagram: e.target.value })} />
               </div>
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Facebook</label>
-                <input type="text" className="input-field" value={formData.facebook} onChange={(e) => setFormData({...formData, facebook: e.target.value})} />
+                <input type="text" className="input-field" value={formData.facebook} onChange={(e) => setFormData({ ...formData, facebook: e.target.value })} />
               </div>
             </div>
           </div>
@@ -108,21 +108,21 @@ export default function LocationContactManagement() {
         <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
           <div className="card-premium" style={{ flex: 1, padding: "24px", display: "flex", flexDirection: "column" }}>
             <h3 style={{ fontSize: "16px", fontWeight: "700", marginBottom: "20px", color: "var(--brand-secondary)" }}>Preview Peta Lokasi</h3>
-            <div style={{ 
-              flex: 1, 
-              background: "#f1f5f9", 
-              borderRadius: "12px", 
-              overflow: "hidden", 
+            <div style={{
+              flex: 1,
+              background: "#f1f5f9",
+              borderRadius: "12px",
+              overflow: "hidden",
               border: "1px solid var(--divider)",
               minHeight: "300px"
             }}>
-              <iframe 
-                src={formData.googleMapsUrl} 
-                width="100%" 
-                height="100%" 
-                style={{ border: 0 }} 
-                allowFullScreen={true} 
-                loading="lazy" 
+              <iframe
+                src={formData.googleMapsUrl}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               ></iframe>
             </div>
@@ -133,9 +133,9 @@ export default function LocationContactManagement() {
             </div>
           </div>
 
-          <button 
-            type="submit" 
-            className="btn-primary" 
+          <button
+            type="submit"
+            className="btn-primary"
             style={{ width: "100%", padding: "16px", fontSize: "16px" }}
             disabled={isSaving}
           >
