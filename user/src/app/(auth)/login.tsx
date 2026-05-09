@@ -146,8 +146,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#64748B',
     textAlign: 'center',
-    marginBottom: 25,
+    marginBottom: 30,
     marginTop: 5,
+    lineHeight: 20,
   },
   inputContainer: {
     marginBottom: 15,
