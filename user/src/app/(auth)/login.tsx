@@ -35,7 +35,7 @@ export default function LoginScreen() {
         
         {/* Header Biru dengan Logo */}
         <LinearGradient
-          colors={['#0093E9', '#80D0C7']}
+          colors={['#004AAD', '#0081C9']}
           style={styles.header}
         >
           <Image 
