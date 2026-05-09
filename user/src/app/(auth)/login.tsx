@@ -66,7 +66,7 @@ export default function LoginScreen() {
           </View>
 
           <TouchableOpacity style={styles.btnLogin} onPress={handleLogin}>
-            <Text style={styles.btnText}>Masuk Sekarang</Text>
+            <Text style={styles.btnText}>Login</Text>
           </TouchableOpacity>
 
           <TouchableOpacity 
