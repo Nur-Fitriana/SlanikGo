@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { authService } from "../../services/authService";
+import { setToken } from "../../utils/token";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -9,14 +11,22 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulasi loading sebelum masuk ke dashboard
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 1500);
+    try {
+      const res = await authService.login({ username, password });
+      if (res.success && res.data) {
+        setToken(res.data.username);
+        window.location.href = "/";
+      } else {
+        throw new Error(res.message || "Username atau password salah");
+      }
+    } catch (err: any) {
+      console.error(err);
+      setIsLoading(false);
+    }
   };
 
   return (
