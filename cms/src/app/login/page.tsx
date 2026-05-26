@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { authService } from "../../services/authService";
 import { setToken } from "../../utils/token";
+import { useToast } from "../components/ToastProvider";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { showToast } = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,12 +21,16 @@ export default function LoginPage() {
       const res = await authService.login({ username, password });
       if (res.success && res.data) {
         setToken(res.data.username);
-        window.location.href = "/";
+        showToast("Login berhasil! Mengalihkan...", "success");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1000);
       } else {
         throw new Error(res.message || "Username atau password salah");
       }
     } catch (err: any) {
       console.error(err);
+      showToast(err.message || "Username atau password salah", "error");
       setIsLoading(false);
     }
   };
