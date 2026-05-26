@@ -241,6 +241,9 @@ export default function LoginPage() {
               fontSize: "15px",
               position: "relative",
               overflow: "hidden",
+              opacity: isLoading ? 0.7 : 1,
+              cursor: isLoading ? "not-allowed" : "pointer",
+              transition: "all 0.2s ease-in-out",
             }}
           >
             {isLoading ? (
