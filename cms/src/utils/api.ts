@@ -6,8 +6,11 @@ export async function apiRequest<T = any>(
 ): Promise<T> {
   const url = `${API_URL}${path.startsWith("/") ? path : `/${path}`}`;
   
+  const token = typeof window !== "undefined" ? localStorage.getItem("slanik_token") : null;
+  
   const headers: HeadersInit = {
     "Content-Type": "application/json",
+    ...(token ? { "Authorization": `Bearer ${token}` } : {}),
     ...options.headers,
   };
 
