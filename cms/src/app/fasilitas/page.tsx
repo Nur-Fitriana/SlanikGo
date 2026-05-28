@@ -40,9 +40,11 @@ const initialFacilities: Facility[] = [
 ];
 
 export default function FacilityManagement() {
-  const [facilities, setFacilities] = useState<Facility[]>(initialFacilities);
+  const [facilities, setFacilities] = useState<Facility[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingFacility, setEditingFacility] = useState<Facility | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { showToast } = useToast();
 
   const getStatusBadge = (status: string) => {
