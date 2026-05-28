@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useToast } from "../components/ToastProvider";
-import { getAllTickets, TicketPrice } from "../../services/tiketService";
+import { getAllTickets, createTicket, TicketPrice } from "../../services/tiketService";
 
 export default function TicketManagement() {
   const [tickets, setTickets] = useState<TicketPrice[]>([]);
@@ -271,20 +271,50 @@ export default function TicketManagement() {
               {editingTicket ? "Edit Harga Tiket" : "Tambah Kategori Harga"}
             </h2>
             
-            <form style={{ display: "flex", flexDirection: "column", gap: "20px" }} onSubmit={(e) => {
+            <form style={{ display: "flex", flexDirection: "column", gap: "20px" }} onSubmit={async (e) => {
               e.preventDefault();
-              setIsModalOpen(false);
-              showToast(editingTicket ? "Harga tiket berhasil diperbarui!" : "Kategori tiket baru ditambahkan!", "success");
+              const formData = new FormData(e.currentTarget);
+              const category = formData.get("category") as string;
+              const type = formData.get("type") as "Weekday" | "Weekend" | "Paket";
+              const price = Number(formData.get("price"));
+              const description = formData.get("description") as string;
+              const isPromoActive = formData.get("isPromoActive") === "on";
+              const promoPriceVal = formData.get("promoPrice");
+              const promoPrice = promoPriceVal ? Number(promoPriceVal) : undefined;
+
+              const ticketData = {
+                category,
+                type,
+                price,
+                description,
+                isPromoActive,
+                promoPrice,
+              };
+
+              try {
+                if (editingTicket) {
+                  // Will be updated in Commit 70
+                  setTickets(tickets.map(t => t.id === editingTicket.id ? { ...t, ...ticketData } : t));
+                  showToast("Harga tiket berhasil diperbarui!", "success");
+                } else {
+                  const newTicket = await createTicket(ticketData);
+                  setTickets([...tickets, newTicket]);
+                  showToast("Kategori tiket baru ditambahkan!", "success");
+                }
+                setIsModalOpen(false);
+              } catch (err: any) {
+                showToast(err.message || "Gagal menyimpan tiket", "error");
+              }
             }}>
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Kategori Tiket</label>
-                <input type="text" className="input-field" placeholder="Contoh: Dewasa, Anak-anak, Pelajar..." defaultValue={editingTicket?.category} required />
+                <input type="text" name="category" className="input-field" placeholder="Contoh: Dewasa, Anak-anak, Pelajar..." defaultValue={editingTicket?.category} required />
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                 <div>
                   <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Tipe</label>
-                  <select className="input-field" defaultValue={editingTicket?.type || "Weekday"}>
+                  <select name="type" className="input-field" defaultValue={editingTicket?.type || "Weekday"}>
                     <option value="Weekday">Weekday</option>
                     <option value="Weekend">Weekend</option>
                     <option value="Paket">Paket</option>
@@ -292,13 +322,13 @@ export default function TicketManagement() {
                 </div>
                 <div>
                   <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Harga Dasar (Rp)</label>
-                  <input type="number" className="input-field" placeholder="35000" defaultValue={editingTicket?.price} required />
+                  <input type="number" name="price" className="input-field" placeholder="35000" defaultValue={editingTicket?.price} required />
                 </div>
               </div>
 
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Deskripsi Singkat</label>
-                <textarea className="input-field" rows={3} placeholder="Penjelasan mengenai tiket ini..." defaultValue={editingTicket?.description}></textarea>
+                <textarea name="description" className="input-field" rows={3} placeholder="Penjelasan mengenai tiket ini..." defaultValue={editingTicket?.description}></textarea>
               </div>
 
               <div style={{ 
@@ -312,11 +342,11 @@ export default function TicketManagement() {
               }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   <span style={{ fontSize: "13px", fontWeight: "600", color: "var(--brand-primary)" }}>Aktifkan Promo?</span>
-                  <input type="checkbox" defaultChecked={editingTicket?.isPromoActive} style={{ width: "18px", height: "18px" }} />
+                  <input type="checkbox" name="isPromoActive" defaultChecked={editingTicket?.isPromoActive} style={{ width: "18px", height: "18px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", fontSize: "12px", fontWeight: "600", marginBottom: "6px", color: "var(--text-secondary)" }}>Harga Promo (Rp)</label>
-                  <input type="number" className="input-field" placeholder="Opsional" defaultValue={editingTicket?.promoPrice} />
+                  <input type="number" name="promoPrice" className="input-field" placeholder="Opsional" defaultValue={editingTicket?.promoPrice} />
                 </div>
               </div>
 
