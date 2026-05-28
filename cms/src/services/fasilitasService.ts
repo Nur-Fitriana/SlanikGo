@@ -9,30 +9,49 @@ export interface Facility {
   status: "Aktif" | "Pemeliharaan" | "Tutup";
 }
 
-// Helper to map backend Fasilitas to frontend Facility with icon string parsing
-export function mapToFacility(backendFasilitas: any): Facility {
-  let category = "Wahana Air";
-  let image = "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&q=80&w=400";
-  let status: "Aktif" | "Pemeliharaan" | "Tutup" = "Aktif";
+// Helper to safely parse database 'ikon' string or return defaults
+export function parseFacilityIcon(iconString: string | null): { category: string; image: string; status: "Aktif" | "Pemeliharaan" | "Tutup" } {
+  const defaults = {
+    category: "Wahana Air",
+    image: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&q=80&w=400",
+    status: "Aktif" as const
+  };
 
-  if (backendFasilitas.ikon && backendFasilitas.ikon.trim().startsWith("{")) {
+  if (!iconString) return defaults;
+  
+  if (iconString.trim().startsWith("{")) {
     try {
-      const parsed = JSON.parse(backendFasilitas.ikon);
-      category = parsed.category || "Wahana Air";
-      image = parsed.image || image;
-      status = parsed.status || "Aktif";
+      const parsed = JSON.parse(iconString);
+      return {
+        category: parsed.category || defaults.category,
+        image: parsed.image || defaults.image,
+        status: (parsed.status === "Aktif" || parsed.status === "Pemeliharaan" || parsed.status === "Tutup")
+          ? parsed.status
+          : defaults.status
+      };
     } catch (e) {
-      // Graceful fallback
+      // Ignore
     }
   }
+
+  if (iconString.startsWith("http://") || iconString.startsWith("https://") || iconString.startsWith("/")) {
+    return { ...defaults, image: iconString };
+  }
+  
+  return { ...defaults, category: iconString };
+}
+
+// Helper to map backend Fasilitas to frontend Facility with icon string parsing
+export function mapToFacility(backendFasilitas: any): Facility {
+  const parsed = parseFacilityIcon(backendFasilitas.ikon);
 
   return {
     id: String(backendFasilitas.id),
     name: backendFasilitas.nama,
-    category,
+    category: parsed.category,
     description: backendFasilitas.deskripsi || "",
-    image,
-    status,
+    image: parsed.image,
+    status: parsed.status,
   };
 }
 
