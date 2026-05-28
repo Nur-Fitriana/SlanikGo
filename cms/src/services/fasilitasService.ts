@@ -111,3 +111,22 @@ export async function getAllFacilities(): Promise<Facility[]> {
   }
 }
 
+// POST a new facility to NestJS API with local fallback
+export async function createFacility(facility: Omit<Facility, "id">): Promise<Facility> {
+  try {
+    const backendData = mapToBackendFasilitas(facility);
+    const response = await apiRequest<any>("/fasilitas", {
+      method: "POST",
+      body: JSON.stringify(backendData),
+    });
+    return mapToFacility(response);
+  } catch (error) {
+    console.warn("Backend API offline or failed, simulating facility creation locally. Details:", error);
+    return {
+      ...facility,
+      id: String(Date.now()),
+    };
+  }
+}
+
+
