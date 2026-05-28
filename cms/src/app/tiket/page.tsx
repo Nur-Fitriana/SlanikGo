@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useToast } from "../components/ToastProvider";
-import { getAllTickets, createTicket, TicketPrice } from "../../services/tiketService";
+import { getAllTickets, createTicket, updateTicket, TicketPrice } from "../../services/tiketService";
 
 export default function TicketManagement() {
   const [tickets, setTickets] = useState<TicketPrice[]>([]);
@@ -293,8 +293,8 @@ export default function TicketManagement() {
 
               try {
                 if (editingTicket) {
-                  // Will be updated in Commit 70
-                  setTickets(tickets.map(t => t.id === editingTicket.id ? { ...t, ...ticketData } : t));
+                  const updated = await updateTicket(editingTicket.id, ticketData);
+                  setTickets(tickets.map(t => t.id === editingTicket.id ? updated : t));
                   showToast("Harga tiket berhasil diperbarui!", "success");
                 } else {
                   const newTicket = await createTicket(ticketData);
