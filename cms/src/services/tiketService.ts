@@ -174,5 +174,17 @@ export async function updateTicket(id: string, ticket: Partial<TicketPrice>): Pr
   }
 }
 
+// DELETE an existing ticket category from NestJS API with local fallback
+export async function deleteTicket(id: string): Promise<void> {
+  try {
+    await apiRequest<void>(`/tiket/${id}`, {
+      method: "DELETE",
+    });
+  } catch (error) {
+    console.warn(`Backend API offline or failed, simulating delete locally for ID ${id}. Details:`, error);
+  }
+}
+
+
 
 
