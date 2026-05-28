@@ -115,3 +115,22 @@ export async function getAllTickets(): Promise<TicketPrice[]> {
   }
 }
 
+// POST a new ticket category to NestJS API with local fallback
+export async function createTicket(ticket: Omit<TicketPrice, "id">): Promise<TicketPrice> {
+  try {
+    const backendData = mapToBackendTiket(ticket);
+    const response = await apiRequest<any>("/tiket", {
+      method: "POST",
+      body: JSON.stringify(backendData),
+    });
+    return mapToTicketPrice(response);
+  } catch (error) {
+    console.warn("Backend API offline or failed, simulating create locally. Details:", error);
+    return {
+      ...ticket,
+      id: String(Date.now()),
+    };
+  }
+}
+
+
