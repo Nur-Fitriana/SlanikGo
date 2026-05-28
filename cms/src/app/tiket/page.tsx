@@ -63,6 +63,8 @@ export default function TicketManagement() {
   const [tickets, setTickets] = useState<TicketPrice[]>(initialTickets);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTicket, setEditingTicket] = useState<TicketPrice | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { showToast } = useToast();
 
   const formatPrice = (price: number) => {
