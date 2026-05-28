@@ -133,4 +133,46 @@ export async function createTicket(ticket: Omit<TicketPrice, "id">): Promise<Tic
   }
 }
 
+// PATCH (update) an existing ticket category in NestJS API with local fallback
+export async function updateTicket(id: string, ticket: Partial<TicketPrice>): Promise<TicketPrice> {
+  try {
+    const backendData: any = {};
+    if (ticket.category !== undefined) backendData.kategori = ticket.category;
+    if (ticket.price !== undefined) backendData.harga = Number(ticket.price);
+
+    if (
+      ticket.description !== undefined ||
+      ticket.type !== undefined ||
+      ticket.promoPrice !== undefined ||
+      ticket.isPromoActive !== undefined
+    ) {
+      backendData.deskripsi = JSON.stringify({
+        description: ticket.description,
+        type: ticket.type,
+        promoPrice: ticket.promoPrice,
+        isPromoActive: ticket.isPromoActive,
+      });
+    }
+
+    const response = await apiRequest<any>(`/tiket/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(backendData),
+    });
+    return mapToTicketPrice(response);
+  } catch (error) {
+    console.warn(`Backend API offline or failed, simulating update locally for ID ${id}. Details:`, error);
+    return {
+      id,
+      category: ticket.category || "",
+      type: ticket.type || "Weekday",
+      price: ticket.price || 0,
+      description: ticket.description || "",
+      isPromoActive: !!ticket.isPromoActive,
+      promoPrice: ticket.promoPrice,
+      ...ticket,
+    } as TicketPrice;
+  }
+}
+
+
 
