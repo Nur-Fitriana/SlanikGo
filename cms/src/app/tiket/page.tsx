@@ -12,21 +12,22 @@ export default function TicketManagement() {
   const [error, setError] = useState<string | null>(null);
   const { showToast } = useToast();
 
-  useEffect(() => {
-    async function loadTickets() {
-      try {
-        setIsLoading(true);
-        const data = await getAllTickets();
-        setTickets(data);
-        setError(null);
-      } catch (err: any) {
-        setError(err.message || "Gagal memuat data tiket.");
-        showToast("Gagal memuat data tiket", "error");
-      } finally {
-        setIsLoading(false);
-      }
+  const fetchAndSetTickets = async (silent = false) => {
+    try {
+      if (!silent) setIsLoading(true);
+      const data = await getAllTickets();
+      setTickets(data);
+      setError(null);
+    } catch (err: any) {
+      setError(err.message || "Gagal memuat data tiket.");
+      showToast("Gagal memuat data tiket", "error");
+    } finally {
+      if (!silent) setIsLoading(false);
     }
-    loadTickets();
+  };
+
+  useEffect(() => {
+    fetchAndSetTickets();
   }, []);
 
   const formatPrice = (price: number) => {
@@ -45,6 +46,7 @@ export default function TicketManagement() {
       const updated = await updateTicket(id, { isPromoActive: !ticket.isPromoActive });
       setTickets(tickets.map((t) => (t.id === id ? updated : t)));
       showToast("Status promo berhasil diubah!", "success");
+      fetchAndSetTickets(true);
     } catch (err: any) {
       showToast(err.message || "Gagal mengubah status promo.", "error");
     }
@@ -56,6 +58,7 @@ export default function TicketManagement() {
         await deleteTicket(id);
         setTickets(tickets.filter((t) => t.id !== id));
         showToast("Harga tiket berhasil dihapus!", "success");
+        fetchAndSetTickets(true);
       } catch (err: any) {
         showToast(err.message || "Gagal menghapus harga tiket.", "error");
       }
@@ -311,6 +314,7 @@ export default function TicketManagement() {
                   showToast("Kategori tiket baru ditambahkan!", "success");
                 }
                 setIsModalOpen(false);
+                fetchAndSetTickets(true);
               } catch (err: any) {
                 showToast(err.message || "Gagal menyimpan tiket", "error");
               }
