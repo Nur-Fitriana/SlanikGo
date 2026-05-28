@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useToast } from "../components/ToastProvider";
-import { getAllTickets, createTicket, updateTicket, TicketPrice } from "../../services/tiketService";
+import { getAllTickets, createTicket, updateTicket, deleteTicket, TicketPrice } from "../../services/tiketService";
 
 export default function TicketManagement() {
   const [tickets, setTickets] = useState<TicketPrice[]>([]);
@@ -50,10 +50,15 @@ export default function TicketManagement() {
     }
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Apakah Anda yakin ingin menghapus harga tiket ini?")) {
-      setTickets(tickets.filter((t) => t.id !== id));
-      showToast("Harga tiket berhasil dihapus!", "success");
+      try {
+        await deleteTicket(id);
+        setTickets(tickets.filter((t) => t.id !== id));
+        showToast("Harga tiket berhasil dihapus!", "success");
+      } catch (err: any) {
+        showToast(err.message || "Gagal menghapus harga tiket.", "error");
+      }
     }
   };
 
