@@ -37,13 +37,17 @@ export default function TicketManagement() {
     }).format(price);
   };
 
-  const togglePromo = (id: string) => {
-    setTickets(
-      tickets.map((t) =>
-        t.id === id ? { ...t, isPromoActive: !t.isPromoActive } : t
-      )
-    );
-    showToast("Status promo berhasil diubah!", "success");
+  const togglePromo = async (id: string) => {
+    const ticket = tickets.find((t) => t.id === id);
+    if (!ticket) return;
+
+    try {
+      const updated = await updateTicket(id, { isPromoActive: !ticket.isPromoActive });
+      setTickets(tickets.map((t) => (t.id === id ? updated : t)));
+      showToast("Status promo berhasil diubah!", "success");
+    } catch (err: any) {
+      showToast(err.message || "Gagal mengubah status promo.", "error");
+    }
   };
 
   const handleDelete = (id: string) => {
