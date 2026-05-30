@@ -6,80 +6,32 @@ import {
   FlatList,
   SafeAreaView,
   StatusBar,
-  Dimensions,
   Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-const { width } = Dimensions.get("window");
-
-const getNumColumns = () => {
-  if (width > 1024) return 3; // Layar Desktop/Laptop besar
-  if (width > 768) return 2;  // Layar Laptop kecil/Tablet
-  return 1;                   // Layar Smartphone
-};
-
 const DUMMY_TIKET = [
   {
     id: "1",
-    kategori: "Tiket Anak",
-    tipe: "Weekday",
+    kategori: "Weekday",
     hari: "(Senin - Jumat)",
-    harga: 35000,
-    ket: "Tinggi Badan 90cm - 11 Tahun",
-    icon: "happy-outline",
-    color: "#2563EB", 
-    benefits: ["Akses ke semua wahana anak", "Gratis ban pelampung", "Parkir kendaraan aman"],
+    harga: 40000,
+    color: "#2563EB", // Biru Slanik
+    badgeBg: "#2563EB",
+    benefits: ["Akses ke semua wahana", "Gratis pelampung", "Parkir kendaraan"],
   },
   {
     id: "2",
-    kategori: "Tiket Dewasa",
-    tipe: "Weekday",
-    hari: "(Senin - Jumat)",
-    harga: 40000,
-    ket: "Usia 12 Tahun ke atas",
-    icon: "people-outline",
-    color: "#2563EB",
-    benefits: ["Akses semua wahana ekstrem", "Fasilitas gazebo umum", "Parkir kendaraan aman"],
-  },
-  {
-    id: "3",
-    kategori: "Tiket Anak",
-    tipe: "Weekend",
+    kategori: "Weekend",
     hari: "(Sabtu - Minggu & Libur)",
-    harga: 40000,
-    ket: "Tinggi Badan 90cm - 11 Tahun",
-    icon: "sunny-outline",
-    color: "#EA580C",
-    benefits: ["Akses ke semua wahana anak", "Gratis ban pelampung", "Termasuk live music event"],
-  },
-  {
-    id: "4",
-    kategori: "Tiket Dewasa",
-    tipe: "Weekend",
-    hari: "(Sabtu - Minggu & Libur)",
-    harga: 45000,
-    ket: "Usia 12 Tahun ke atas",
-    icon: "flame-outline",
-    color: "#EA580C",
-    benefits: ["Akses semua wahana ekstrem", "Fasilitas gazebo umum", "Termasuk live music event"],
-  },
-  {
-    id: "5",
-    kategori: "Sewa Ban",
-    tipe: "Fasilitas",
-    hari: "(Durasi Sepuasnya)",
-    harga: 15000,
-    ket: "Penyewaan ban Singel / Double",
-    icon: "water-outline",
-    color: "#059669",
-    benefits: ["Penggunaan sepuasnya seharian", "Bisa tukar ukuran ban", "Bebas antrean sewa ulang"],
+    harga: 50000,
+    color: "#EA580C", // Oranye Slanik
+    badgeBg: "#F59E0B",
+    benefits: ["Akses ke semua wahana", "Gratis pelampung", "Parkir kendaraan"],
   },
 ];
 
 export default function TiketScreen() {
-  const columns = getNumColumns();
-
   return (
     <SafeAreaView style={styles.outerContainer}>
       <StatusBar barStyle="light-content" backgroundColor="#0EA5E9" />
@@ -87,95 +39,94 @@ export default function TiketScreen() {
       <FlatList
         data={DUMMY_TIKET}
         keyExtractor={(item) => item.id}
-        numColumns={columns}
-        key={`grid-slanik-${columns}`}
-        columnWrapperStyle={columns > 1 ? styles.gridRowGap : null}
+        numColumns={1}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
         
-        // ================== HEADER UTAMA (BIRU MELENGKUNG & PROMO) ==================
+        // ================== HEADER BIRU MELENGKUNG SLANIK ==================
         ListHeaderComponent={
           <View style={styles.headerContainer}>
-            {/* BACKGROUND HEADER BIRU KHAS SLANIKGO */}
             <View style={styles.blueHeroHeader}>
-              <View style={styles.whiteIconWrapper}>
-                <Ionicons name="ticket" size={28} color="#0EA5E9" />
-              </View>
+              <Ionicons name="ticket" size={28} color="#FFFFFF" style={{ marginBottom: 8 }} />
               <Text style={styles.heroTitle}>Tiket &amp; Harga</Text>
               <Text style={styles.heroSubtitle}>Pilih tiket masuk Slanik Waterpark sesuai hari kunjunganmu</Text>
             </View>
 
-            {/* BANNER PROMO DENGAN RE-DESIGN ELEGAN */}
+            {/* BANNER PROMO KUNING */}
             <View style={styles.promoBanner}>
               <View style={styles.promoBadge}>
-                <Text style={styles.promoBadgeText}>PROMO SPESIAL IDUL ADHA</Text>
+                <Text style={styles.promoBadgeText}>PROMO SPECIAL IDUL ADHA</Text>
               </View>
               <Text style={styles.promoTitle}>💥 BUY 1 GET 1 FREE!</Text>
               <Text style={styles.promoDesc}>
-                Beli <Text style={styles.weight700}>1 tiket masuk</Text> gratis 1 tiket wahana atraksi pilihan (Crazy Slide / Dragon River). Anak dengan tinggi di bawah 90cm <Text style={styles.weight700}>GRATIS MASUK!</Text>
+                Beli 1 tiket masuk gratis 1 tiket wahana atraksi (Crazy Slide / Dragon River). Anak di bawah 90cm GRATIS masuk!
               </Text>
             </View>
+            
+            {/* WRAPPER DUA KOLOM UTAMA (ILUSTRASI KIRI + KARTU KANAN) */}
+            <Text style={styles.sectionHeading}>Harga Tiket</Text>
+            <Text style={styles.sectionSubHeading}>Pilih Tiket Terbaikmu</Text>
+            
+            <View style={styles.mainLayoutGrid}>
+              
+              {/* KOLOM KIRI: ILUSTRASI KHAS SLANIKGO */}
+              <View style={styles.leftIllustrationCard}>
+                <View style={styles.waterOverlay}>
+                  <Ionicons name="water" size={64} color="#0EA5E9" />
+                  <Text style={styles.illusTitle}>Slanik</Text>
+                  <Text style={styles.illusSub}>Waterpark</Text>
+                  <View style={styles.waveDecoration} />
+                </View>
+              </View>
 
-            <Text style={styles.sectionHeading}>Pilih Tiket Terbaikmu</Text>
+              {/* KOLOM KANAN: TEMPAT KARTU TIKET MENGALIR */}
+              <View style={styles.rightTicketsContainer}>
+                {DUMMY_TIKET.map((item) => {
+                  const isWeekend = item.kategori === "Weekend";
+                  return (
+                    <View key={item.id} style={styles.ticketCard}>
+                      {/* Badge Hari Melengkung Oval Tengah Atas */}
+                      <View style={styles.badgeRowCenter}>
+                        <View style={[styles.tipeBadge, { backgroundColor: item.badgeBg }]}>
+                          <Text style={styles.tipeBadgeText}>{item.kategori}</Text>
+                        </View>
+                      </View>
+                      
+                      <Text style={styles.hariSubText}>{item.hari}</Text>
+
+                      {/* Komponen Harga Kebanggaan */}
+                      <View style={styles.priceContainer}>
+                        <Text style={[styles.currencyLabel, { color: item.color }]}>Rp</Text>
+                        <Text style={[styles.priceValue, { color: item.color }]}>
+                          {item.harga.toLocaleString("id-ID")}
+                        </Text>
+                        <Text style={styles.perOrangLabel}>/orang</Text>
+                      </View>
+
+                      {/* Checklist Keuntungan */}
+                      <View style={styles.benefitBox}>
+                        {item.benefits.map((benefit, idx) => (
+                          <View key={idx} style={styles.benefitRow}>
+                            <Ionicons name="checkmark" size={16} color="#10B981" style={{ marginRight: 6 }} />
+                            <Text style={styles.benefitText}>{benefit}</Text>
+                          </View>
+                        ))}
+                      </View>
+
+                      {/* Tombol Pesan Sekarang Oranye / Biru Panjang Semok */}
+                      <View style={[styles.actionButton, { backgroundColor: isWeekend ? "#F59E0B" : "#2563EB" }]}>
+                        <Text style={styles.actionButtonText}>Pesan Sekarang</Text>
+                        <Ionicons name="arrow-forward" size={14} color="#FFF" style={{ marginLeft: 6 }} />
+                      </View>
+                    </View>
+                  );
+                })}
+              </View>
+
+            </View>
           </View>
         }
-        
-        // ================== KARTU TIKET ALA WEB PREMIUM ==================
-        renderItem={({ item }) => {
-          const isWeekend = item.tipe === "Weekend";
-          const isFasilitas = item.tipe === "Fasilitas";
-          const accentColor = item.color;
-
-          return (
-            <View style={[styles.ticketCard, { maxWidth: columns > 1 ? `${100 / columns - 2}%` : "100%" }]}>
-              {/* Badge Tipe Hari */}
-              <View style={styles.badgeWrapper}>
-                <View style={[
-                  styles.tipeBadge, 
-                  { backgroundColor: isWeekend ? "#FEF3C7" : isFasilitas ? "#D1FAE5" : "#DBEAFE" }
-                ]}>
-                  <Text style={[
-                    styles.tipeBadgeText, 
-                    { color: isWeekend ? "#D97706" : isFasilitas ? "#059669" : "#2563EB" }
-                  ]}>
-                    {item.tipe}
-                  </Text>
-                </View>
-                <Text style={styles.hariText}>{item.hari}</Text>
-              </View>
-
-              {/* Judul & Detail Kategori */}
-              <Text style={styles.categoryTitle}>{item.kategori}</Text>
-              <Text style={styles.categoryDesc}>{item.ket}</Text>
-
-              {/* Harga Tiket */}
-              <View style={styles.priceSection}>
-                <Text style={styles.currencySymbol}>Rp</Text>
-                <Text style={styles.priceValue}>{item.harga.toLocaleString("id-ID")}</Text>
-                <Text style={styles.perPaxLabel}>/orang</Text>
-              </View>
-
-              {/* Garis Pembatas Tipis */}
-              <View style={styles.dividerLine} />
-
-              {/* Daftar Keuntungan / Benefit List (Mengikuti Desain Utama SlanikGo) */}
-              <View style={styles.benefitContainer}>
-                {item.benefits.map((benefit, index) => (
-                  <View key={index} style={styles.benefitRow}>
-                    <Ionicons name="checkmark-circle" size={16} color="#10B981" style={styles.checkIcon} />
-                    <Text style={styles.benefitText}>{benefit}</Text>
-                  </View>
-                ))}
-              </View>
-
-              {/* Tombol Aksi Pesan Sekarang */}
-              <View style={[styles.orderButton, { backgroundColor: accentColor }]}>
-                <Text style={styles.orderButtonText}>Pesan Sekarang</Text>
-                <Ionicons name="arrow-forward" size={16} color="#FFF" style={{ marginLeft: 6 }} />
-              </View>
-            </View>
-          );
-        }}
+        renderItem={null} // Semua di-handle di header agar menyatu sempurna dalam susunan web desktop
       />
     </SafeAreaView>
   );
@@ -184,59 +135,45 @@ export default function TiketScreen() {
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
+    backgroundColor: "#F4F9FF", // Background kebiruan soft biar menyatu cerah
   },
   scrollContent: {
     width: "100%",
     maxWidth: 1200,
     alignSelf: "center",
-    paddingBottom: 160, // Mencegah konten tertutup bottom tab bar
+    paddingBottom: 140,
   },
   headerContainer: {
     width: "100%",
   },
-  // Efek lengkung header atas agar konsisten dengan halaman info/tiket lama
   blueHeroHeader: {
     backgroundColor: "#0EA5E9",
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32,
-    paddingVertical: 50,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    paddingVertical: 40,
     alignItems: "center",
-    justifyContent: "center",
     width: "100%",
-    marginBottom: 32,
-  },
-  whiteIconWrapper: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: "#FFFFFF",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 12,
+    marginBottom: 24,
   },
   heroTitle: {
-    fontSize: 32,
-    fontWeight: "900",
+    fontSize: 28,
+    fontWeight: "800",
     color: "#FFFFFF",
-    letterSpacing: -0.5,
   },
   heroSubtitle: {
-    fontSize: 14,
+    fontSize: 13,
     color: "#E0F2FE",
-    marginTop: 6,
-    fontWeight: "500",
+    marginTop: 4,
     textAlign: "center",
   },
-  // Banner Promo Mewah Melebar
   promoBanner: {
     backgroundColor: "#FFFBEB",
-    borderRadius: 20,
-    padding: 24,
+    borderRadius: 16,
+    padding: 20,
     marginHorizontal: 40,
     borderWidth: 1,
-    borderColor: "#FDE68A",
-    marginBottom: 40,
+    borderColor: "#FEF3C7",
+    marginBottom: 32,
   },
   promoBadge: {
     backgroundColor: "#F59E0B",
@@ -244,148 +181,168 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 6,
     alignSelf: "flex-start",
-    marginBottom: 10,
+    marginBottom: 8,
   },
   promoBadgeText: {
     color: "#FFFFFF",
     fontSize: 10,
     fontWeight: "800",
-    letterSpacing: 0.5,
   },
   promoTitle: {
-    fontSize: 22,
-    fontWeight: "900",
+    fontSize: 18,
+    fontWeight: "800",
     color: "#78350F",
   },
   promoDesc: {
     fontSize: 13,
     color: "#92400E",
-    lineHeight: 20,
-    marginTop: 6,
-  },
-  weight700: {
-    fontWeight: "700",
+    lineHeight: 18,
+    marginTop: 4,
   },
   sectionHeading: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: "#0F172A",
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#2563EB",
+    marginHorizontal: 40,
+    textTransform: "uppercase",
+  },
+  sectionSubHeading: {
+    fontSize: 26,
+    fontWeight: "900",
+    color: "#1E293B",
     marginHorizontal: 40,
     marginBottom: 24,
     letterSpacing: -0.5,
   },
-  gridRowGap: {
+  
+  // CONTAINER LAYOUT 2 KOLOM KEMBAR REFERENSI
+  mainLayoutGrid: {
+    flexDirection: "row",
     paddingHorizontal: 40,
-    justifyContent: "flex-start",
-    gap: "3%",
+    gap: 24,
+    width: "100%",
   },
   
-  // RAGAM KARTU TIKET MAHAL & KELAS ATAS (ALA LANDING PAGE)
-  ticketCard: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 24,
-    padding: 28,
-    marginBottom: 28,
+  // KOLOM KIRI (KASTIL AIR / ILUSTRASI)
+  leftIllustrationCard: {
     flex: 1,
+    backgroundColor: "#E0F2FE",
+    borderRadius: 24,
+    overflow: "hidden",
+    minHeight: 400,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
-    ...Platform.select({
-      web: {
-        boxShadow: "0 10px 30px -5px rgba(15, 23, 42, 0.04), 0 4px 12px -4px rgba(15, 23, 42, 0.03)",
-      },
-    }),
-  },
-  badgeWrapper: {
-    flexDirection: "row",
+    borderColor: "#BAE6FD",
+    justifyContent: "center",
     alignItems: "center",
-    marginBottom: 16,
   },
-  tipeBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 30,
-    marginRight: 8,
+  waterOverlay: {
+    alignItems: "center",
   },
-  tipeBadgeText: {
-    fontSize: 11,
-    fontWeight: "800",
+  illusTitle: {
+    fontSize: 32,
+    fontWeight: "900",
+    color: "#0369A1",
+    marginTop: 12,
+  },
+  illusSub: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#0EA5E9",
+    letterSpacing: 2,
     textTransform: "uppercase",
   },
-  hariText: {
+  waveDecoration: {
+    height: 6,
+    width: 60,
+    backgroundColor: "#0EA5E9",
+    borderRadius: 3,
+    marginTop: 16,
+  },
+
+  // KOLOM KANAN (DAFTAR KARTU TIKET BERBARIS KESAMPING/GRID)
+  rightTicketsContainer: {
+    flex: 2,
+    flexDirection: "row",
+    gap: 20,
+  },
+  ticketCard: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 20,
+    padding: 24,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#E2E8F0",
+    justifyContent: "space-between",
+    ...Platform.select({
+      web: { boxShadow: "0 10px 25px -5px rgba(0,0,0,0.05)" },
+    }),
+  },
+  badgeRowCenter: {
+    alignItems: "center",
+    width: "100%",
+    marginBottom: 4,
+  },
+  tipeBadge: {
+    paddingHorizontal: 24,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
+  tipeBadgeText: {
+    color: "#FFFFFF",
+    fontSize: 13,
+    fontWeight: "700",
+  },
+  hariSubText: {
     fontSize: 12,
     color: "#64748B",
     fontWeight: "500",
+    marginBottom: 16,
   },
-  categoryTitle: {
-    fontSize: 24,
-    fontWeight: "900",
-    color: "#0F172A",
-    letterSpacing: -0.5,
-  },
-  categoryDesc: {
-    fontSize: 12,
-    color: "#64748B",
-    marginTop: 4,
-  },
-  priceSection: {
+  priceContainer: {
     flexDirection: "row",
     alignItems: "baseline",
-    marginTop: 20,
-    marginBottom: 4,
+    marginBottom: 16,
   },
-  currencySymbol: {
+  currencyLabel: {
     fontSize: 16,
     fontWeight: "800",
-    color: "#1E293B",
     marginRight: 2,
   },
   priceValue: {
-    fontSize: 34,
-    fontWeight: "950",
-    color: "#1E293B",
+    fontSize: 32,
+    fontWeight: "900",
     letterSpacing: -1,
   },
-  perPaxLabel: {
-    fontSize: 13,
+  perOrangLabel: {
+    fontSize: 12,
     color: "#64748B",
-    marginLeft: 4,
-    fontWeight: "500",
+    marginLeft: 2,
   },
-  dividerLine: {
-    height: 1,
-    backgroundColor: "#F1F5F9",
+  benefitBox: {
     width: "100%",
-    marginVertical: 20,
-  },
-  // Bagian Daftar Fitur Keuntungan
-  benefitContainer: {
-    width: "100%",
+    gap: 8,
     marginBottom: 24,
-    gap: 10,
   },
   benefitRow: {
     flexDirection: "row",
     alignItems: "center",
   },
-  checkIcon: {
-    marginRight: 8,
-  },
   benefitText: {
     fontSize: 13,
     color: "#475569",
-    fontWeight: "400",
   },
-  // Tombol Utama Pesan Sekarang
-  orderButton: {
+  
+  // TOMBOL LEBAR ELEGAN PAS DI BAWAH
+  actionButton: {
     width: "100%",
     paddingVertical: 12,
-    borderRadius: 14,
+    borderRadius: 30,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: "auto", // Mendorong tombol agar selalu presisi di dasar kartu
   },
-  orderButtonText: {
+  actionButtonText: {
     color: "#FFFFFF",
     fontSize: 14,
     fontWeight: "700",
