@@ -7,22 +7,8 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        // 🌟 Mempercantik Header Atas (Top Navbar)
-        headerStyle: {
-          backgroundColor: '#1E88E5',
-          elevation: 2, // Bayangan tebal ringan untuk Android
-          shadowColor: '#000', // Bayangan untuk iOS
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.08,
-          shadowRadius: 8,
-        },
-        headerTintColor: '#ffffff',
-        headerTitleAlign: 'center', // Bikin judul otomatis di tengah biar simetris
-        headerTitleStyle: {
-          fontWeight: '700', // Lebih bold tegas
-          fontSize: 18,
-          letterSpacing: 0.5, // Kasih jarak tipis antar huruf biar elegan
-        },
+        // 🌟 KUNCI UTAMA: Menghilangkan total header/navbar bawaan di bagian atas layar
+        headerShown: false, 
 
         // 🌟 Rombak Total Tampilan Menu Bawah (Floating Tab Bar)
         tabBarStyle: {
@@ -69,7 +55,6 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Beranda',
-          headerTitle: 'SlanikGo',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? "home" : "home-outline"} size={22} color={color} />
           ),
@@ -80,7 +65,6 @@ export default function TabLayout() {
         name="fasilitas"
         options={{
           title: 'Fasilitas',
-          headerTitle: 'Daftar Fasilitas',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? "water" : "water-outline"} size={22} color={color} />
           ),
@@ -91,7 +75,6 @@ export default function TabLayout() {
         name="tiket"
         options={{
           title: 'Tiket',
-          headerTitle: 'Informasi Tiket',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? "ticket" : "ticket-outline"} size={22} color={color} />
           ),
@@ -102,7 +85,6 @@ export default function TabLayout() {
         name="galeri"
         options={{
           title: 'Galeri',
-          headerTitle: 'Galeri Wisata',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? "images" : "images-outline"} size={22} color={color} />
           ),
@@ -113,7 +95,6 @@ export default function TabLayout() {
         name="info"
         options={{
           title: 'Info',
-          headerTitle: 'Info Layanan',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "information-circle" : "information-circle-outline"}
