@@ -135,8 +135,8 @@ const styles = StyleSheet.create({
   },
   // MEMBUAT LOGO FULL DI DALAM LINGKARAN
   logo: {
-    width: "100%",             
-    height: "100%",           
+    width: "135%",             
+    height: "135%",           
     transform: [{ scale: 1.4 }], // Kita scale 1.4x agar logo guritanya nge-zoom besar dan full mendominasi lingkaran putih!
   },
   formCard: {
