@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,63 +7,67 @@ import {
   SafeAreaView,
   StatusBar,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-const DUMMY_TIKET = [
-  {
-    id: "1",
-    kategori: "Tiket Anak",
-    tipe: "Weekday",
-    hari: "(Senin - Jumat)",
-    harga: 35000,
-    ket: "Tinggi 90cm - 11 Tahun",
-    color: "#2563EB", 
-    benefits: ["Wahana anak lengkap", "Gratis ban pelampung"],
-  },
-  {
-    id: "2",
-    kategori: "Tiket Dewasa",
-    tipe: "Weekday",
-    hari: "(Senin - Jumat)",
-    harga: 40000,
-    ket: "Usia 12 Tahun ke atas",
-    color: "#2563EB",
-    benefits: ["Semua wahana ekstrem", "Akses gazebo umum"],
-  },
-  {
-    id: "3",
-    kategori: "Tiket Anak",
-    tipe: "Weekend",
-    hari: "(Sabtu - Minggu & Libur)",
-    harga: 40000,
-    ket: "Tinggi 90cm - 11 Tahun",
-    color: "#EA580C",
-    benefits: ["Wahana anak lengkap", "Termasuk live event"],
-  },
-  {
-    id: "4",
-    kategori: "Tiket Dewasa",
-    tipe: "Weekend",
-    hari: "(Sabtu - Minggu & Libur)",
-    harga: 45000,
-    ket: "Usia 12 Tahun ke atas",
-    color: "#EA580C",
-    benefits: ["Semua wahana ekstrem", "Termasuk live event"],
-  },
-  {
-    id: "5",
-    kategori: "Sewa Ban Singel/Double",
-    tipe: "Fasilitas",
-    hari: "(Durasi Sepuasnya)",
-    harga: 15000,
-    ket: "Penyewaan ban seharian",
-    color: "#059669",
-    benefits: ["Bisa tukar ukuran ban", "Bebas antrean ulang"],
-  },
-];
+// Buat Interface sesuai DTO NestJS yang sudah disepakati bersama Tri
+interface TicketData {
+  id: string;
+  category: string;
+  type: "Weekday" | "Weekend" | "Paket";
+  price: number;
+  description: string;
+  isPromoActive?: boolean;
+  promoPrice?: number;
+}
 
 export default function TiketScreen() {
+  // State untuk menyimpan data tiket dari API, status loading, dan error
+  const [tickets, setTickets] = useState<TicketData[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Ambil data dari API Tri saat halaman pertama kali dibuka
+  useEffect(() => {
+    fetchTickets();
+  }, []);
+
+  const fetchTickets = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      // GANTI URL INI dengan alamat API NestJS milik Tri yang sebenarnya
+      // Contoh jika lokal: http://10.0.2.2:3000/tiket (untuk emulator Android) atau IP Laptop Tri
+      const response = await fetch("http://localhost:3000/tiket"); 
+      
+      if (!response.ok) {
+        throw new Error("Gagal mengambil data tiket terbaru.");
+      }
+      
+      const data = await response.json();
+      setTickets(data);
+    } catch (err: any) {
+      setError(err.message || "Terjadi kesalahan jaringan.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fungsi pembantu untuk menentukan karakteristik visual kartu berdasarkan tipe
+  const getTicketTheme = (type: string) => {
+    switch (type) {
+      case "Weekend":
+        return { badgeBg: "#FEF3C7", textColor: "#D97706", buttonBg: "#F59E0B", color: "#EA580C", labelHari: "(Sabtu - Minggu & Libur)" };
+      case "Paket":
+      case "Fasilitas":
+        return { badgeBg: "#D1FAE5", textColor: "#059669", buttonBg: "#059669", color: "#059669", labelHari: "(Fasilitas Tambahan)" };
+      default: // Weekday
+        return { badgeBg: "#DBEAFE", textColor: "#2563EB", buttonBg: "#2563EB", color: "#2563EB", labelHari: "(Senin - Jumat)" };
+    }
+  };
+
   return (
     <SafeAreaView style={styles.outerContainer}>
       <StatusBar barStyle="light-content" backgroundColor="#0EA5E9" />
@@ -97,10 +101,10 @@ export default function TiketScreen() {
             
             <Text style={styles.sectionHeading}>Pilihan Tiket Tersedia</Text>
             
-            {/* ================== LAYOUT UTAMA 2 KOLOM WEB ================== */}
+            {/* ================== LAYOUT UTAMA GRID KOLOM ================== */}
             <View style={styles.mainLayoutGrid}>
               
-              {/* KOLOM KIRI: BANNER UNTUK JANGKAR VISUAL DESKTOP */}
+              {/* KOLOM KIRI: BANNER JANGKAR VISUAL */}
               <View style={styles.leftIllustrationCard}>
                 <Ionicons name="water" size={64} color="#0EA5E9" />
                 <Text style={styles.illusTitle}>Slanik</Text>
@@ -108,65 +112,93 @@ export default function TiketScreen() {
                 <View style={styles.waveDecoration} />
               </View>
 
-              {/* KOLOM KANAN: GRID LAYOUT UNTUK TIKET-TIKET */}
+              {/* KOLOM KANAN: GRID LAYOUT TIKET */}
               <View style={styles.rightTicketsGrid}>
-                {DUMMY_TIKET.map((item) => {
-                  const isWeekend = item.tipe === "Weekend";
-                  const isFasilitas = item.tipe === "Fasilitas";
-                  
-                  const badgeBg = isWeekend ? "#FEF3C7" : isFasilitas ? "#D1FAE5" : "#DBEAFE";
-                  const textColor = isWeekend ? "#D97706" : isFasilitas ? "#059669" : "#2563EB";
-                  const buttonBg = isWeekend ? "#F59E0B" : isFasilitas ? "#059669" : "#2563EB";
+                {isLoading ? (
+                  // Tampilan saat data sedang di-fetch dari API Tri
+                  <View style={styles.centerFeedback}>
+                    <ActivityIndicator size="large" color="#0EA5E9" />
+                    <Text style={styles.feedbackText}>Sinkronisasi tiket Slanik...</Text>
+                  </View>
+                ) : error ? (
+                  // Tampilan jika server Tri mati atau jaringan bermasalah
+                  <View style={styles.centerFeedback}>
+                    <Ionicons name="alert-circle" size={32} color="#EF4444" />
+                    <Text style={[styles.feedbackText, { color: "#EF4444" }]}>{error}</Text>
+                  </View>
+                ) : tickets.length === 0 ? (
+                  // Tampilan jika Cindy belum menginput data apapun di CMS
+                  <View style={styles.centerFeedback}>
+                    <Ionicons name="receipt-outline" size={32} color="#64748B" />
+                    <Text style={styles.feedbackText}>Belum ada tiket aktif hari ini.</Text>
+                  </View>
+                ) : (
+                  tickets.map((item) => {
+                    const theme = getTicketTheme(item.type);
+                    const isFasilitas = item.type === "Paket";
 
-                  return (
-                    <View 
-                      key={item.id} 
-                      style={[
-                        styles.ticketCard, 
-                        isFasilitas && styles.fullWidthRow
-                      ]}
-                    >
-                      {/* Atas Kartu */}
-                      <View style={styles.cardHeaderRow}>
-                        <View style={[styles.tipeBadge, { backgroundColor: badgeBg }]}>
-                          <Text style={[styles.tipeBadgeText, { color: textColor }]}>{item.tipe}</Text>
-                        </View>
-                        <Text style={styles.hariSubText}>{item.hari}</Text>
-                      </View>
-                      
-                      {/* Kategori Judul */}
-                      <Text style={styles.categoryTitle}>{item.kategori}</Text>
-                      <Text style={styles.categoryDesc}>{item.ket}</Text>
+                    // Logika harga akhir: jika promo diaktifkan oleh Cindy, gunakan harga promo
+                    const finalPrice = item.isPromoActive && item.promoPrice ? item.promoPrice : item.price;
 
-                      {/* Komponen Harga - FIXED KURUNG SIKU */}
-                      <View style={styles.priceContainer}>
-                        <Text style={[styles.currencyLabel, { color: item.color }]}>Rp</Text>
-                        <Text style={[styles.priceValue, { color: item.color }]}>
-                          {item.harga.toLocaleString("id-ID")}
-                        </Text>
-                        <Text style={styles.perOrangLabel}>/orang</Text>
-                      </View>
-
-                      <View style={styles.dividerLine} />
-
-                      {/* Checklist Keuntungan */}
-                      <View style={styles.benefitBox}>
-                        {item.benefits.map((benefit, idx) => (
-                          <View key={idx} style={styles.benefitRow}>
-                            <Ionicons name="checkmark-circle" size={16} color="#10B981" style={{ marginRight: 6 }} />
-                            <Text style={styles.benefitText}>{benefit}</Text>
+                    return (
+                      <View 
+                        key={item.id} 
+                        style={[
+                          styles.ticketCard, 
+                          isFasilitas && styles.fullWidthRow
+                        ]}
+                      >
+                        {/* Atas Kartu */}
+                        <View style={styles.cardHeaderRow}>
+                          <View style={[styles.tipeBadge, { backgroundColor: theme.badgeBg }]}>
+                            <Text style={[styles.tipeBadgeText, { color: theme.textColor }]}>{item.type}</Text>
                           </View>
-                        ))}
-                      </View>
+                          <Text style={styles.hariSubText}>{theme.labelHari}</Text>
+                        </View>
+                        
+                        {/* Kategori Judul */}
+                        <Text style={styles.categoryTitle}>{item.category}</Text>
+                        <Text style={styles.categoryDesc} numberOfLines={2}>{item.description}</Text>
 
-                      {/* Tombol Aksi */}
-                      <View style={[styles.actionButton, { backgroundColor: buttonBg }]}>
-                        <Text style={styles.actionButtonText}>Pesan Sekarang</Text>
-                        <Ionicons name="arrow-forward" size={14} color="#FFF" style={{ marginLeft: 6 }} />
+                        {/* Komponen Harga Dinamis */}
+                        <View style={styles.priceContainer}>
+                          <Text style={[styles.currencyLabel, { color: theme.color }]}>Rp</Text>
+                          <Text style={[styles.priceValue, { color: theme.color }]}>
+                            {finalPrice.toLocaleString("id-ID")}
+                          </Text>
+                          <Text style={styles.perOrangLabel}>/orang</Text>
+                        </View>
+
+                        {/* Indikator coret harga lama kalau promo lagi aktif */}
+                        {item.isPromoActive && item.promoPrice && (
+                          <Text style={styles.originalPriceCrossover}>
+                            Sebelumnya: Rp {item.price.toLocaleString("id-ID")}
+                          </Text>
+                        )}
+
+                        <View style={styles.dividerLine} />
+
+                        {/* Checklist Keuntungan Statis/Dinamis Ringkas */}
+                        <View style={styles.benefitBox}>
+                          <View style={styles.benefitRow}>
+                            <Ionicons name="checkmark-circle" size={16} color="#10B981" style={{ marginRight: 6 }} />
+                            <Text style={styles.benefitText}>Akses wahana utama</Text>
+                          </View>
+                          <View style={styles.benefitRow}>
+                            <Ionicons name="checkmark-circle" size={16} color="#10B981" style={{ marginRight: 6 }} />
+                            <Text style={styles.benefitText}>Asuransi pengunjung</Text>
+                          </View>
+                        </View>
+
+                        {/* Tombol Aksi */}
+                        <View style={[styles.actionButton, { backgroundColor: theme.buttonBg }]}>
+                          <Text style={styles.actionButtonText}>Pesan Sekarang</Text>
+                          <Ionicons name="arrow-forward" size={14} color="#FFF" style={{ marginLeft: 6 }} />
+                        </View>
                       </View>
-                    </View>
-                  );
-                })}
+                    );
+                  })
+                )}
               </View>
 
             </View>
@@ -267,6 +299,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    maxHeight: 340,
   },
   illusTitle: {
     fontSize: 32,
@@ -295,7 +328,7 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   ticketCard: {
-    width: "48%", // Menggunakan persentase aman biar jalan lancar di browser web & emulator android sekaligus
+    width: "48%", 
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
     padding: 24,
@@ -337,7 +370,8 @@ const styles = StyleSheet.create({
   categoryDesc: {
     fontSize: 12,
     color: "#64748B",
-    marginTop: 2,
+    marginTop: 4,
+    lineHeight: 16,
   },
   priceContainer: {
     flexDirection: "row",
@@ -358,6 +392,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#64748B",
     marginLeft: 2,
+  },
+  originalPriceCrossover: {
+    fontSize: 11,
+    color: "#94A3B8",
+    textDecorationLine: "line-through",
+    marginTop: 2,
   },
   dividerLine: {
     height: 1,
@@ -389,5 +429,18 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 13,
     fontWeight: "700",
+  },
+  centerFeedback: {
+    flex: 1,
+    width: "100%",
+    paddingVertical: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 12,
+  },
+  feedbackText: {
+    fontSize: 14,
+    color: "#64748B",
+    fontWeight: "600",
   },
 });
