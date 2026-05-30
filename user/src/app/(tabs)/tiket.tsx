@@ -6,9 +6,18 @@ import {
   FlatList,
   SafeAreaView,
   StatusBar,
-  Platform,
+  Dimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+
+const { width } = Dimensions.get("window");
+
+// Tentukan jumlah kolom berdasarkan lebar layar laptop/PC
+const getNumColumns = () => {
+  if (width > 1024) return 3; // Layar Desktop lebar
+  if (width > 640) return 2;  // Layar Tablet / Laptop kecil
+  return 1;                   // Layar HP
+};
 
 const DUMMY_TIKET = [
   {
@@ -54,239 +63,244 @@ const DUMMY_TIKET = [
 ];
 
 export default function TiketScreen() {
+  const columns = getNumColumns();
+
   return (
     <SafeAreaView style={styles.outerContainer}>
-      <StatusBar barStyle="light-content" backgroundColor="#0EA5E9" />
+      <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
       
-      {/* WRAPPER PHONE MOCKUP (Kunci Utama Biar Ga Melar di PC) */}
-      <View style={styles.phoneWrapper}>
-        <FlatList
-          data={DUMMY_TIKET}
-          keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.listContainer}
-          
-          // HEADER DI DALAM SCROLL VIEW BIAR COCOK
-          ListHeaderComponent={
-            <View>
-              {/* MINI HERO HEADER */}
-              <View style={styles.headerCard}>
-                <View style={styles.headerTextContainer}>
-                  <Text style={styles.headerTitle}>Tiket &amp; Harga</Text>
-                  <Text style={styles.headerSubtitle}>Slanik Waterpark Lampung</Text>
-                </View>
-                <View style={styles.ticketIconCircle}>
-                  <Ionicons name="ticket-outline" size={24} color="#0EA5E9" />
-                </View>
+      <FlatList
+        data={DUMMY_TIKET}
+        keyExtractor={(item) => item.id}
+        numColumns={columns}
+        key={`grid-${columns}`} // Memaksa re-render jika ukuran layar ditarik/berubah
+        columnWrapperStyle={columns > 1 ? styles.gridRowGap : null}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.centerWrapper}
+        
+        // AREA HEADER & BANNER PROMO WIDE-SCREEN
+        ListHeaderComponent={
+          <View style={styles.headerWrapper}>
+            {/* HERO TITLE MINIMALIS MODERN */}
+            <View style={styles.headerCard}>
+              <View>
+                <Text style={styles.headerTitle}>Tiket &amp; Kategori Harga</Text>
+                <Text style={styles.headerSubtitle}>Slanik Waterpark Lampung • Informasi Tarif Terbaru</Text>
               </View>
+              <View style={styles.ticketIconCircle}>
+                <Ionicons name="ticket" size={24} color="#0EA5E9" />
+              </View>
+            </View>
 
-              {/* BANNER PROMO PREMIUM */}
-              <View style={styles.promoContainer}>
+            {/* BANNER PROMO WIDE-SCREEN */}
+            <View style={styles.promoContainer}>
+              <View style={styles.promoContent}>
                 <View style={styles.promoBadgeRow}>
-                  <Text style={styles.promoBadgeText}>💥 PROMO IDUL ADHA</Text>
+                  <Text style={styles.promoBadgeText}>💥 PROMO SPESIAL</Text>
                 </View>
                 <Text style={styles.promoTitleText}>BUY 1 GET 1 FREE!</Text>
                 <Text style={styles.promoDescriptionText}>
-                  Setiap pembelian <Text style={{fontWeight: "700"}}>1 tiket masuk</Text> gratis 1 tiket wahana (Crazy Slide / Dragon River).
+                  Setiap pembelian <Text style={styles.boldText}>1 tiket masuk utama</Text> gratis 1 tiket wahana atraksi (Crazy Slide / Dragon River). Anak di bawah tinggi badan 90cm gratis masuk!
                 </Text>
-                <View style={styles.promoFooterLine} />
               </View>
-              
-              <Text style={styles.sectionHeading}>Daftar Harga Tiket</Text>
+              <View style={styles.promoAccentBar} />
             </View>
-          }
-          
-          // RENDER KARTU TIKET MINIMALIS ELEGAN
-          renderItem={({ item }) => (
-            <View style={styles.ticketCard}>
-              {/* Sisi Kiri: Ikon & Detail */}
-              <View style={styles.leftContent}>
-                <View style={[styles.iconContainer, { backgroundColor: item.color + "12" }]}>
-                  <Ionicons name={item.icon as any} size={22} color={item.color} />
-                </View>
-                <View style={styles.textDetails}>
-                  <Text style={styles.categoryTitle}>{item.kategori}</Text>
-                  <Text style={styles.categoryDescription}>{item.ket}</Text>
-                </View>
+            
+            <Text style={styles.sectionHeading}>Pilihan Tiket Tersedia</Text>
+          </View>
+        }
+        
+        // KARTU TIKET DENGAN SISTEM FLEX GRID PREMIUM
+        renderItem={({ item }) => (
+          <View style={[styles.ticketCard, { maxWidth: columns > 1 ? `${100 / columns - 2}%` : "100%" }]}>
+            {/* Ikon Kategori Atas */}
+            <View style={styles.cardHeaderRow}>
+              <View style={[styles.iconContainer, { backgroundColor: item.color + "12" }]}>
+                <Ionicons name={item.icon as any} size={24} color={item.color} />
               </View>
-
-              {/* Sisi Kanan: Harga Paten */}
-              <View style={styles.rightContent}>
+              <View style={styles.rightPriceContent}>
                 <Text style={styles.currencyLabel}>Rp</Text>
                 <Text style={styles.priceValue}>{item.harga.toLocaleString("id-ID")}</Text>
               </View>
             </View>
-          )}
-        />
-      </View>
+
+            {/* Detail Teks Bawah */}
+            <View style={styles.textDetails}>
+              <Text style={styles.categoryTitle}>{item.kategori}</Text>
+              <Text style={styles.categoryDescription}>{item.ket}</Text>
+            </View>
+          </View>
+        )}
+      />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  // Latar belakang abu-abu studio jika dibuka di PC laptop
   outerContainer: {
     flex: 1,
-    backgroundColor: Platform.OS === "web" ? "#E2E8F0" : "#F8FAFC",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  // Membatasi lebar layout aplikasi di web browser biar ga melar ke samping
-  phoneWrapper: {
-    flex: 1,
-    width: "100%",
     backgroundColor: "#F8FAFC",
-    ...Platform.select({
-      web: {
-        maxWidth: 480, // Ukuran standar layar Hp portrait di monitor
-        maxHeight: "95vh",
-        borderRadius: 28,
-        marginVertical: 20,
-        overflow: "hidden",
-        boxShadow: "0px 20px 40px rgba(15, 23, 42, 0.15)",
-      },
-    }),
   },
-  listContainer: {
-    padding: 20,
-    paddingBottom: 40,
+  // Membatasi lebar konten utama di laptop agar tidak melar mentok ke ujung monitor
+  centerWrapper: {
+    width: "100%",
+    maxWidth: 1200,
+    alignSelf: "center",
+    paddingHorizontal: 32,
+    paddingVertical: 40,
   },
-  // Header Minimalis Modern ala iOS
+  headerWrapper: {
+    width: "100%",
+    marginBottom: 20,
+  },
+  gridRowGap: {
+    justifyContent: "flex-start",
+    gap: "2%", // Jarak horizontal antar kartu di web desktop
+  },
   headerCard: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  headerTextContainer: {
-    flex: 1,
+    marginBottom: 32,
   },
   headerTitle: {
-    fontSize: 26,
-    fontWeight: "800",
+    fontSize: 32,
+    fontWeight: "900",
     color: "#0F172A",
-    letterSpacing: -0.5,
+    letterSpacing: -0.8,
   },
   headerSubtitle: {
-    fontSize: 13,
+    fontSize: 14,
     color: "#64748B",
     fontWeight: "500",
-    marginTop: 2,
+    marginTop: 4,
   },
   ticketIconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     backgroundColor: "#E0F2FE",
     justifyContent: "center",
     alignItems: "center",
   },
-  // Kotak Promo dengan Gaya Glassmorphism Ringan
+  // Promo Banner Lebar Model Modern Dashboard
   promoContainer: {
-    backgroundColor: "#FFFBEB",
-    borderRadius: 20,
-    padding: 18,
-    borderWidth: 1,
-    borderColor: "#FDE68A",
-    marginBottom: 25,
-  },
-  promoBadgeRow: {
-    backgroundColor: "#D97706",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
-    alignSelf: "flex-start",
-    marginBottom: 8,
-  },
-  promoBadgeText: {
-    color: "#FFFFFF",
-    fontSize: 10,
-    fontWeight: "800",
-    letterSpacing: 0.3,
-  },
-  promoTitleText: {
-    fontSize: 20,
-    fontWeight: "900",
-    color: "#78350F",
-    letterSpacing: -0.3,
-  },
-  promoDescriptionText: {
-    fontSize: 12,
-    color: "#92400E",
-    lineHeight: 18,
-    marginTop: 4,
-  },
-  promoFooterLine: {
-    height: 3,
-    backgroundColor: "#F59E0B",
-    borderRadius: 2,
-    marginTop: 12,
-    width: 40,
-  },
-  sectionHeading: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#334155",
-    marginBottom: 12,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-  },
-  // Kartu List Tiket Clean Tipis Super Estetik
-  ticketCard: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    padding: 16,
+    borderRadius: 24,
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 12,
     borderWidth: 1,
     borderColor: "#E2E8F0",
-    ...Platform.select({
-      web: { boxShadow: "0px 4px 10px rgba(15, 23, 42, 0.02)" },
-    }),
+    overflow: "hidden",
+    marginBottom: 40,
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.02,
+    shadowRadius: 12,
   },
-  leftContent: {
-    flexDirection: "row",
-    alignItems: "center",
+  promoContent: {
+    padding: 24,
     flex: 1,
   },
+  promoAccentBar: {
+    width: 12,
+    backgroundColor: "#F59E0B",
+  },
+  promoBadgeRow: {
+    backgroundColor: "#FEF3C7",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+    alignSelf: "flex-start",
+    marginBottom: 10,
+  },
+  promoBadgeText: {
+    color: "#D97706",
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 0.5,
+  },
+  promoTitleText: {
+    fontSize: 24,
+    fontWeight: "900",
+    color: "#1E293B",
+    letterSpacing: -0.5,
+  },
+  promoDescriptionText: {
+    fontSize: 14,
+    color: "#475569",
+    lineHeight: 22,
+    marginTop: 6,
+    maxWidth: 800,
+  },
+  boldText: {
+    fontWeight: "700",
+    color: "#0F172A",
+  },
+  sectionHeading: {
+    fontSize: 14,
+    fontWeight: "800",
+    color: "#64748B",
+    marginBottom: 16,
+    textTransform: "uppercase",
+    letterSpacing: 1,
+  },
+  // Desain Kartu Grid Blok Kotak ala Next.js Premium Dashboard
+  ticketCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 24,
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#E2E8F0",
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.03,
+    shadowRadius: 20,
+    elevation: 2,
+  },
+  cardHeaderRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
   iconContainer: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
+    width: 48,
+    height: 48,
+    borderRadius: 16,
     justifyContent: "center",
     alignItems: "center",
   },
   textDetails: {
-    marginLeft: 14,
-    flex: 1,
-    paddingRight: 10,
+    width: "100%",
   },
   categoryTitle: {
-    fontSize: 14,
-    fontWeight: "700",
+    fontSize: 16,
+    fontWeight: "800",
     color: "#0F172A",
   },
   categoryDescription: {
-    fontSize: 11,
+    fontSize: 12,
     color: "#64748B",
-    marginTop: 3,
+    marginTop: 6,
+    lineHeight: 18,
   },
   rightContent: {
     flexDirection: "row",
     alignItems: "baseline",
   },
   currencyLabel: {
-    fontSize: 11,
-    fontWeight: "600",
+    fontSize: 12,
+    fontWeight: "700",
     color: "#94A3B8",
-    marginRight: 2,
+    marginRight: 3,
   },
   priceValue: {
-    fontSize: 18,
-    fontWeight: "800",
+    fontSize: 24,
+    fontWeight: "900",
     color: "#0F172A",
+    letterSpacing: -0.5,
   },
 });
