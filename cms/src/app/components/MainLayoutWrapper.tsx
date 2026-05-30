@@ -2,11 +2,21 @@
 
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { isAuthenticated } from "../../utils/token";
 
 export default function MainLayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    if (pathname !== "/login" && !isAuthenticated()) {
+      window.location.href = "/login";
+    } else {
+      setCheckingAuth(false);
+    }
+  }, [pathname]);
 
   // Jika di halaman login, jangan tampilkan sidebar dan topbar
   if (pathname === "/login") {
