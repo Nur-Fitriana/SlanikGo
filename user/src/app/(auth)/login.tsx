@@ -23,7 +23,6 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    // Navigasi ke Beranda (tabs)
     router.replace("/(tabs)");
   };
 
@@ -35,25 +34,25 @@ export default function LoginScreen() {
       <StatusBar barStyle="light-content" backgroundColor="#004AAD" />
       <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         
-        {/* Header Biru dengan Lengkungan Dinamis */}
+        {/* Header Biru */}
         <LinearGradient colors={["#004AAD", "#0093E9"]} style={styles.header}>
+          {/* Lingkaran pembungkus logo dibuat agak besar sedikit */}
           <View style={styles.logoWrapper}>
             <Image
               source={require("../../../assets/images/logo_slanik.png")}
               style={styles.logo}
-              resizeMode="contain" // Menggunakan contain agar logo bulat Slanik utuh sempurna
+              resizeMode="cover" // Diubah ke cover agar gambarnya memenuhi seluruh lingkaran
             />
           </View>
         </LinearGradient>
 
-        {/* Card Form Login yang Proporsional di HP */}
+        {/* Card Form Login yang Pas di HP */}
         <View style={styles.formCard}>
           <Text style={styles.title}>Selamat Datang!</Text>
           <Text style={styles.subtitle}>
             Silakan masuk untuk melanjutkan petualangan seru di Slanik Waterpark
           </Text>
 
-          {/* Input Username/Email */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Email atau Username</Text>
             <TextInput
@@ -67,7 +66,6 @@ export default function LoginScreen() {
             />
           </View>
 
-          {/* Input Password */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Password</Text>
             <TextInput
@@ -80,12 +78,10 @@ export default function LoginScreen() {
             />
           </View>
 
-          {/* Tombol Login */}
           <TouchableOpacity style={styles.loginButton} onPress={handleLogin} activeOpacity={0.8}>
             <Text style={styles.loginButtonText}>Login</Text>
           </TouchableOpacity>
 
-          {/* Navigasi ke Register */}
           <TouchableOpacity
             onPress={() => router.push("/(auth)/register")}
             style={styles.registerLink}
@@ -111,42 +107,42 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 30,
   },
-  // Mengurangi tinggi sedikit agar pas di layar HP (tidak makan tempat)
   header: {
-    height: 260,
+    height: 270,
     justifyContent: "center",
     alignItems: "center",
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 40,
+    paddingBottom: 30,
   },
-  // Mengatur ukuran lingkaran pembungkus logo agar lebih compact dan manis
+  // Ukuran lingkaran dinaikkan jadi 150 biar area logo makin mantap
   logoWrapper: {
-    width: 140,                
-    height: 140,
+    width: 150,                
+    height: 150,
     backgroundColor: "#FFFFFF",
-    borderRadius: 70,          
+    borderRadius: 75,          
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",        
-    elevation: 10,
+    elevation: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.2,
     shadowRadius: 10,
     borderWidth: 6,
     borderColor: "rgba(255,255,255,0.4)",
     marginTop: 20,
   },
+  // MEMBUAT LOGO FULL DI DALAM LINGKARAN
   logo: {
-    width: "85%",             
-    height: "85%",           
+    width: "100%",             
+    height: "100%",           
+    transform: [{ scale: 1.4 }], // Kita scale 1.4x agar logo guritanya nge-zoom besar dan full mendominasi lingkaran putih!
   },
-  // Memperlebar card agar inputan terasa lega di jari pengguna
   formCard: {
     backgroundColor: "#FFFFFF",
-    marginHorizontal: 24, // Diubah dari 45 ke 24 biar lebar form-nya pas dan lega
-    marginTop: -30, 
+    marginHorizontal: 24, // Kunci lebar form pas di HP (Gak kekecilan lagi)
+    marginTop: -25, 
     borderRadius: 24,
     paddingHorizontal: 24,
     paddingVertical: 28,
