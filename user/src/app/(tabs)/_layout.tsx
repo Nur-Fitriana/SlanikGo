@@ -1,39 +1,68 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { Platform } from 'react-native';
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        // 🌟 Mempercantik Header Atas (Top Navbar)
         headerStyle: {
           backgroundColor: '#1E88E5',
+          elevation: 2, // Bayangan tebal ringan untuk Android
+          shadowColor: '#000', // Bayangan untuk iOS
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.08,
+          shadowRadius: 8,
         },
-
-        headerTintColor: '#fff',
-
+        headerTintColor: '#ffffff',
+        headerTitleAlign: 'center', // Bikin judul otomatis di tengah biar simetris
         headerTitleStyle: {
-          fontWeight: 'bold',
+          fontWeight: '700', // Lebih bold tegas
           fontSize: 18,
+          letterSpacing: 0.5, // Kasih jarak tipis antar huruf biar elegan
         },
 
+        // 🌟 Rombak Total Tampilan Menu Bawah (Floating Tab Bar)
         tabBarStyle: {
           backgroundColor: '#ffffff',
-          height: 70,
-          paddingBottom: 8,
-          paddingTop: 8,
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
           position: 'absolute',
+          bottom: 16,  // Bikin melayang (floating) dari bawah layar
+          left: 16,    // Kasih jarak kiri
+          right: 16,   // Kasih jarak kanan
+          height: 64,  // Tinggi yang pas dan proporsional
+          borderRadius: 24, // Sudut melengkung penuh yang modern dan halus
+          paddingBottom: Platform.OS === 'ios' ? 0 : 4,
+          
+          // Efek Bayangan Lembut Premium (Soft Shadow Box)
+          ...Platform.select({
+            ios: {
+              shadowColor: '#0F172A',
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.12,
+              shadowRadius: 16,
+            },
+            android: {
+              elevation: 8,
+            },
+          }),
+          borderTopWidth: 0, // Hapus garis batas tipis yang kaku di bagian atas
         },
 
+        // Warna Icon & Teks saat Aktif vs Tidak Aktif
         tabBarActiveTintColor: '#1E88E5',
         tabBarInactiveTintColor: '#9CA3AF',
-
+        
+        // Desain Label Teks Menu
         tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '600',
+          fontSize: 11,
+          fontWeight: '700',
+          marginBottom: 4,
         },
+        tabBarIconStyle: {
+          marginTop: 4,
+        }
       }}
     >
       <Tabs.Screen
@@ -41,8 +70,8 @@ export default function TabLayout() {
         options={{
           title: 'Beranda',
           headerTitle: 'SlanikGo',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "home" : "home-outline"} size={22} color={color} />
           ),
         }}
       />
@@ -52,8 +81,8 @@ export default function TabLayout() {
         options={{
           title: 'Wahana',
           headerTitle: 'Daftar Wahana',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="water" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "water" : "water-outline"} size={22} color={color} />
           ),
         }}
       />
@@ -63,8 +92,8 @@ export default function TabLayout() {
         options={{
           title: 'Tiket',
           headerTitle: 'Informasi Tiket',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="ticket" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "ticket" : "ticket-outline"} size={22} color={color} />
           ),
         }}
       />
@@ -74,8 +103,8 @@ export default function TabLayout() {
         options={{
           title: 'Galeri',
           headerTitle: 'Galeri Wisata',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="images" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "images" : "images-outline"} size={22} color={color} />
           ),
         }}
       />
@@ -85,10 +114,10 @@ export default function TabLayout() {
         options={{
           title: 'Info',
           headerTitle: 'Info Layanan',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name="information-circle"
-              size={size}
+              name={focused ? "information-circle" : "information-circle-outline"}
+              size={23}
               color={color}
             />
           ),
