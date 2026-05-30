@@ -34,12 +34,12 @@ export default function LoginScreen() {
       <StatusBar barStyle="light-content" backgroundColor="#004AAD" />
       <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         
-        {/* Header Biru dengan Tinggi yang Ditambah Sedikit */}
+        {/* Header Biru di-adjust tingginya agar seimbang dengan logo besar */}
         <LinearGradient colors={["#004AAD", "#0093E9"]} style={styles.header}>
           <Image
             source={require("../../../assets/images/logo_slanik.png")}
             style={styles.logoImageDirect}
-            resizeMode="contain" // Contain menjaga topi kuning gurita tidak terpotong sistem
+            resizeMode="contain" // Tetapcontain biar topi kuning gurita aman ga kepotong browser
           />
         </LinearGradient>
 
@@ -105,23 +105,23 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   header: {
-    height: 320, // Dipertinggi sedikit agar muat logo yang sudah digedein
+    height: 420, // Dinaikkan ke 420 biar memberikan ruang yang lega untuk logo jumbo
     justifyContent: "center",
     alignItems: "center",
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
     paddingBottom: 10,
   },
-  // INI KUNCI UTAMA BIAR LOGONYA GEDE BANGET DAN PAS!
+  // UKURAN BARU: DIJAMIN JAUH LEBIH GEDE DAN MANTAP!
   logoImageDirect: {
-    width: 240,   // Dinaikkan drastis dari 170 ke 240 biar gede mantap!
-    height: 240,  // Diimbangi tingginya biar tetep bulat proporsional
+    width: 350,   
+    height: 350,  
     marginTop: 20,
   },
   formCard: {
     backgroundColor: "#FFFFFF",
     marginHorizontal: 24, 
-    marginTop: -30, 
+    marginTop: -40, 
     borderRadius: 24,
     paddingHorizontal: 24,
     paddingVertical: 28,
