@@ -8,14 +8,11 @@ import {
   SafeAreaView,
   StatusBar,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-
-  // Nama user dinamis
   const [userName, setUserName] = useState("Fitri");
 
   useLayoutEffect(() => {
@@ -26,138 +23,91 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Warna StatusBar disamakan dengan warna Biru Login */}
-      <StatusBar barStyle="light-content" backgroundColor="#1E3A8A" />
+      {/* Warna status bar disamakan persis dengan warna login */}
+      <StatusBar barStyle="light-content" backgroundColor="#007ae6" />
       
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         
-        {/* 1. HEADER HERO SOLID BIRU TUA (Sama persis warnanya dengan Login Screen) */}
+        {/* HEADER HERO SOLID BIRU CERAH */}
         <View style={styles.headerHeroSolid}>
           <View style={styles.headerTopRow}>
-            {/* Placeholder Logo Bulat */}
-            <View style={styles.logoPlaceholderCircle}>
-              <Ionicons name="water" size={22} color="#1E3A8A" />
+            {/* Logo Lingkaran Putih */}
+            <View style={styles.logoCircle}>
+              <Ionicons name="water" size={22} color="#007ae6" />
             </View>
             
-            {/* Tombol Notifikasi */}
+            {/* Notifikasi */}
             <TouchableOpacity style={styles.notifButton} activeOpacity={0.7}>
               <Ionicons name="notifications" size={22} color="#FFF" />
               <View style={styles.notifBadge} />
             </TouchableOpacity>
           </View>
 
-          {/* Teks Greeting Dinamis */}
           <Text style={styles.greeting}>Halo, {userName}! 👋</Text>
-          <Text style={styles.subGreeting}>Mau seru-seruan di SlanikGo hari ini?</Text>
+          <Text style={styles.subGreeting}>Selamat datang di SlanikGo</Text>
 
-          {/* Tombol CTA Tiket */}
+          {/* Tombol Pesan Tiket Putih */}
           <TouchableOpacity style={styles.ctaButton} activeOpacity={0.8}>
-            <Ionicons name="ticket" size={16} color="#2563EB" style={{ marginRight: 6 }} />
             <Text style={styles.ctaText}>Pesan Tiket Sekarang</Text>
-            <Ionicons name="chevron-forward" size={14} color="#2563EB" style={{ marginLeft: 6 }} />
           </TouchableOpacity>
         </View>
 
-        {/* 2. AREA KONTEN UTAMA */}
+        {/* AREA UTAMA */}
         <View style={styles.contentBody}>
 
-          {/* PROMO SECTION */}
+          {/* MENU UTAMA GRID (Tiket, Wahana, Galeri, Peta) */}
+          <View style={styles.menuGrid}>
+            <TouchableOpacity style={styles.menuItem}>
+              <View style={[styles.menuIconBox, { backgroundColor: "#EFF6FF" }]}>
+                <Ionicons name="ticket" size={24} color="#007ae6" />
+              </View>
+              <Text style={styles.menuLabel}>Tiket</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuItem}>
+              <View style={[styles.menuIconBox, { backgroundColor: "#E6F4EA" }]}>
+                <Ionicons name="water" size={24} color="#137333" />
+              </View>
+              <Text style={styles.menuLabel}>Wahana</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuItem}>
+              <View style={[styles.menuIconBox, { backgroundColor: "#FEF7E0" }]}>
+                <Ionicons name="images" size={24} color="#B06000" />
+              </View>
+              <Text style={styles.menuLabel}>Galeri</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuItem}>
+              <View style={[styles.menuIconBox, { backgroundColor: "#FCE8E6" }]}>
+                <Ionicons name="map" size={24} color="#C5221F" />
+              </View>
+              <Text style={styles.menuLabel}>Peta</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* SECTION HEADER INFO & PROMO */}
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Promo Terbaru</Text>
+            <Text style={styles.sectionTitle}>
+              <Ionicons name="information-circle" size={18} color="#007ae6" /> Info & Promo Terbaru
+            </Text>
             <TouchableOpacity>
               <Text style={styles.seeAllText}>Lihat semua <Ionicons name="chevron-forward" size={12} /></Text>
             </TouchableOpacity>
           </View>
 
-          {/* Banner Promo */}
-          <LinearGradient colors={["#38bdf8", "#0369a1"]} style={styles.promoBanner} start={{x:0, y:0}} end={{x:1, y:1}}>
-            <View style={styles.promoBadge}><Text style={styles.promoBadgeText}>SPESIAL RAMADHAN</Text></View>
-            <Text style={styles.promoTitle}>Diskon 50%</Text>
-            <Text style={styles.promoSub}>untuk tiket terusan!</Text>
-            <Text style={styles.promoDate}>Berlaku hingga 30 April 2026</Text>
-            <TouchableOpacity style={styles.promoBtn}><Text style={styles.promoBtnText}>Lihat Promo</Text></TouchableOpacity>
-            <Ionicons name="gift" size={110} color="rgba(255,255,255,0.15)" style={styles.promoWatermark} />
-          </LinearGradient>
-
-          {/* WAHANA SECTION */}
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Wahana Populer</Text>
-            <TouchableOpacity>
-              <Text style={styles.seeAllText}>Lihat semua <Ionicons name="chevron-forward" size={12} /></Text>
-            </TouchableOpacity>
+          {/* Banner Promo 1 - Solid Biru Cerah */}
+          <View style={styles.promoBanner}>
+            <Text style={styles.promoTitle}>Promo Ramadhan</Text>
+            <Text style={styles.promoSub}>Diskon 50% untuk tiket terusan!</Text>
+            <Ionicons name="gift" size={80} color="rgba(255,255,255,0.15)" style={styles.promoWatermark} />
           </View>
 
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalScroll}>
-            <View style={styles.wahanaCard}>
-              <LinearGradient colors={["#60a5fa", "#1d4ed8"]} style={styles.wahanaGradientBg}>
-                <Ionicons name="sparkles" size={26} color="rgba(255,255,255,0.25)" style={styles.wahanaIconBack} />
-                <View style={styles.wahanaOverlayContent}>
-                  <Text style={styles.wahanaName}>Rainbow Slide</Text>
-                  <Text style={styles.wahanaRating}><Ionicons name="star" color="#eab308" size={12}/> 4.8 (1.287)</Text>
-                </View>
-              </LinearGradient>
-            </View>
-
-            <View style={styles.wahanaCard}>
-              <LinearGradient colors={["#34d399", "#047857"]} style={styles.wahanaGradientBg}>
-                <Ionicons name="boat" size={26} color="rgba(255,255,255,0.25)" style={styles.wahanaIconBack} />
-                <View style={styles.wahanaOverlayContent}>
-                  <Text style={styles.wahanaName}>Wave Pool</Text>
-                  <Text style={styles.wahanaRating}><Ionicons name="star" color="#eab308" size={12}/> 4.7 (953)</Text>
-                </View>
-              </LinearGradient>
-            </View>
-          </ScrollView>
-
-          {/* EVENT SECTION */}
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Event Terdekat</Text>
-            <TouchableOpacity>
-              <Text style={styles.seeAllText}>Lihat semua <Ionicons name="chevron-forward" size={12} /></Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.eventCard}>
-            <View style={styles.eventIconPlaceholder}>
-              <Ionicons name="calendar" size={24} color="#2563EB" />
-            </View>
-            <View style={styles.eventInfoContainer}>
-              <Text style={styles.eventTitle}>Water Festival</Text>
-              <Text style={styles.eventDetail}><Ionicons name="calendar-outline" size={11}/> 20 - 22 Juni 2026</Text>
-              <Text style={styles.eventDetail}><Ionicons name="location-outline" size={11}/> SlanikGo Waterpark</Text>
-            </View>
-            <TouchableOpacity style={styles.eventArrow}>
-              <Ionicons name="arrow-forward" size={16} color="#2563EB" />
-            </TouchableOpacity>
-          </View>
-
-          {/* TIKET & POIN SECTION */}
-          <Text style={[styles.sectionTitle, { marginTop: 10, marginBottom: 12 }]}>Tiket & Poin Saya</Text>
-          
-          <View style={styles.statsRow}>
-            <TouchableOpacity style={styles.statsBox}>
-              <View style={[styles.statsIconCircle, { backgroundColor: "#EFF6FF" }]}>
-                <Ionicons name="ticket" size={18} color="#2563EB" />
-              </View>
-              <View style={styles.statsTextColumn}>
-                <Text style={styles.statsLabel}>Tiket Saya</Text>
-                <Text style={styles.statsCount}>2</Text>
-                <Text style={styles.statsSub}>Tiket aktif</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={14} color="#94a3b8" />
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.statsBox}>
-              <View style={[styles.statsIconCircle, { backgroundColor: "#FEF3C7" }]}>
-                <Ionicons name="star" size={18} color="#D97706" />
-              </View>
-              <View style={styles.statsTextColumn}>
-                <Text style={styles.statsLabel}>Poin Saya</Text>
-                <Text style={styles.statsCount}>350</Text>
-                <Text style={styles.statsSub}>Poin tersedia</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={14} color="#94a3b8" />
-            </TouchableOpacity>
+          {/* Banner Promo 2 - Solid Biru Cerah */}
+          <View style={styles.promoBanner}>
+            <Text style={styles.promoTitle}>Wahana Baru</Text>
+            <Text style={styles.promoSub}>Nikmati sensasi seru wahana baru kami.</Text>
+            <Ionicons name="sparkles" size={80} color="rgba(255,255,255,0.15)" style={styles.promoWatermark} />
           </View>
 
         </View>
@@ -169,37 +119,37 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#F8FAFC", // Dasar aplikasi putih bersih abu-abu halus
+    backgroundColor: "#FFFFFF", 
   },
   container: {
     flex: 1,
   },
-  // Kunci Utama: Header warna Solid Biru Tua melengkung kebawah (Persis Login Screen)
+  // Kunci utama: Menggunakan warna tunggal konsisten #007ae6 dan lebar 100% penuh kanan-kiri
   headerHeroSolid: {
     width: "100%",
-    backgroundColor: "#1E3A8A", // Pure Navy Slanik
-    paddingHorizontal: 25,
-    paddingTop: 30,
-    paddingBottom: 40,
-    borderBottomLeftRadius: 35,
-    borderBottomRightRadius: 35,
+    backgroundColor: "#007ae6", 
+    paddingHorizontal: 24,
+    paddingTop: 25,
+    paddingBottom: 45,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
   headerTopRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 25,
+    marginBottom: 20,
   },
-  logoPlaceholderCircle: {
-    width: 40,
-    height: 40,
+  logoCircle: {
+    width: 42,
+    height: 42,
     backgroundColor: "#FFFFFF",
-    borderRadius: 20,
+    borderRadius: 21,
     justifyContent: "center",
     alignItems: "center",
   },
   notifButton: {
-    backgroundColor: "rgba(255, 255, 255, 0.15)",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     padding: 10,
     borderRadius: 50,
     position: "relative",
@@ -215,221 +165,106 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontSize: 26,
-    fontWeight: "800",
+    fontWeight: "700",
     color: "#FFFFFF",
   },
   subGreeting: {
     fontSize: 14,
-    color: "#E2E8F0",
+    color: "#FFFFFF",
     marginTop: 4,
     opacity: 0.9,
   },
   ctaButton: {
     backgroundColor: "#FFFFFF",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 25,
-    marginTop: 25,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    marginTop: 20,
     alignSelf: "flex-start",
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
   },
   ctaText: {
-    color: "#2563EB",
+    color: "#007ae6",
     fontWeight: "700",
-    fontSize: 14,
+    fontSize: 13,
   },
   contentBody: {
-    paddingHorizontal: 25,
-    paddingTop: 20,
+    paddingHorizontal: 24,
+    paddingTop: 25,
     paddingBottom: 40,
+  },
+  menuGrid: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    marginTop: -25, // Membuat card menu melayang rapi di atas batas header melengkung
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 3,
+    marginBottom: 25,
+  },
+  menuItem: {
+    alignItems: "center",
+    flex: 1,
+  },
+  menuIconBox: {
+    width: 50,
+    height: 50,
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  menuLabel: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#475569",
   },
   sectionHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 15,
-    marginBottom: 12,
+    marginBottom: 15,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "700",
     color: "#1E293B",
+    flexDirection: "row",
+    alignItems: "center",
   },
   seeAllText: {
-    fontSize: 13,
-    color: "#2563EB",
+    fontSize: 12,
+    color: "#007ae6",
     fontWeight: "600",
   },
   promoBanner: {
     width: "100%",
-    borderRadius: 20,
-    padding: 18,
+    backgroundColor: "#007ae6", // Konsisten pakai warna biru yang sama
+    borderRadius: 16,
+    padding: 20,
     marginBottom: 15,
     position: "relative",
     overflow: "hidden",
   },
-  promoBadge: {
-    backgroundColor: "#FBBF24",
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 10,
-    alignSelf: "flex-start",
-    marginBottom: 8,
-  },
-  promoBadgeText: {
-    fontSize: 10,
-    fontWeight: "800",
-    color: "#78350F",
-  },
   promoTitle: {
-    fontSize: 28,
-    fontWeight: "900",
+    fontSize: 18,
+    fontWeight: "700",
     color: "#FFFFFF",
   },
   promoSub: {
-    fontSize: 16,
-    fontWeight: "700",
+    fontSize: 13,
     color: "#FFFFFF",
-    marginTop: -2,
-  },
-  promoDate: {
-    fontSize: 11,
-    color: "#E0F2FE",
-    marginTop: 8,
+    marginTop: 5,
     opacity: 0.9,
-  },
-  promoBtn: {
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 12,
-    alignSelf: "flex-start",
-    marginTop: 14,
-  },
-  promoBtnText: {
-    color: "#0369a1",
-    fontSize: 12,
-    fontWeight: "700",
   },
   promoWatermark: {
     position: "absolute",
     right: 15,
-    bottom: 10,
-  },
-  horizontalScroll: {
-    paddingBottom: 10,
-  },
-  wahanaCard: {
-    width: 160,
-    height: 110,
-    borderRadius: 16,
-    marginRight: 12,
-    overflow: "hidden",
-  },
-  wahanaGradientBg: {
-    flex: 1,
-    padding: 12,
-    justifyContent: "flex-end",
-    position: "relative",
-  },
-  wahanaIconBack: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-  },
-  wahanaOverlayContent: {
-    zIndex: 2,
-  },
-  wahanaName: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    fontWeight: "700",
-  },
-  wahanaRating: {
-    color: "#E2E8F0",
-    fontSize: 11,
-    marginTop: 2,
-  },
-  eventCard: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    padding: 14,
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#F1F5F9",
-  },
-  eventIconPlaceholder: {
-    width: 50,
-    height: 50,
-    backgroundColor: "#EFF6FF",
-    borderRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  eventInfoContainer: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  eventTitle: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#1E293B",
-  },
-  eventDetail: {
-    fontSize: 12,
-    color: "#64748B",
-    marginTop: 3,
-  },
-  eventArrow: {
-    backgroundColor: "#EFF6FF",
-    padding: 8,
-    borderRadius: 50,
-  },
-  statsRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  statsBox: {
-    backgroundColor: "#FFFFFF",
-    flex: 1,
-    borderRadius: 16,
-    padding: 14,
-    flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal: 4,
-    borderWidth: 1,
-    borderColor: "#F1F5F9",
-  },
-  statsIconCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  statsTextColumn: {
-    flex: 1,
-    marginLeft: 10,
-  },
-  statsLabel: {
-    fontSize: 11,
-    color: "#64748B",
-    fontWeight: "500",
-  },
-  statsCount: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "#1E293B",
-  },
-  statsSub: {
-    fontSize: 10,
-    color: "#94a3b8",
+    bottom: -5,
   },
 });
