@@ -21,7 +21,7 @@ interface PengumumkanItem {
   info: string;
 }
 
-// Data Dummy Promo Aktual dari CMS
+// Data Dummy Promo
 const DUMMY_PENGUMUMAN: PengumumkanItem[] = [
   { id: 1, judul: "Promo Ramadhan", info: "Diskon 50% untuk tiket terusan!" },
   { id: 2, judul: "Wahana Baru", info: "Nikmati sensasi seluncuran pelangi sekarang." },
@@ -33,22 +33,22 @@ export default function HomeScreen() {
       <StatusBar barStyle="light-content" backgroundColor="#1e3a8a" />
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         
-        {/* 1. HEADER GRADASI UTAMA */}
+        {/* HEADER GRADASI */}
         <LinearGradient
           colors={["#1e3a8a", "#3b82f6"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.headerGradient}
         >
-          {/* SUSUNAN TOP BAR: GREETING & LOGO */}
           <View style={styles.headerContent}>
+            {/* KIRI: TEKS GREETING */}
             <View style={styles.textContainer}>
               <Text style={styles.mainAppTitle}>Beranda</Text>
               <Text style={styles.greeting}>Halo, Fitri!</Text>
               <Text style={styles.subGreeting}>Mau seru-seruan di SlanikGo hari ini?</Text>
             </View>
 
-            {/* LOGO DI TENGAH AGAR SEIMBANG DAN GEDE MANTAP */}
+            {/* TENGAH: LOGO BULAT SUPER PAS & COCOK */}
             <View style={styles.logoWrapper}>
               <Image
                 source={require("../../../assets/images/logo_slanik.png")}
@@ -57,14 +57,14 @@ export default function HomeScreen() {
               />
             </View>
 
-            {/* TOMBOL NOTIFIKASI DI POJOK KANAN */}
+            {/* KANAN: NOTIFIKASI */}
             <TouchableOpacity style={styles.notificationBadge} activeOpacity={0.7}>
               <Ionicons name="notifications" size={22} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
         </LinearGradient>
 
-        {/* 2. BODY CONTENT (KONTEN UTAMA DI BAWAH HEADER) */}
+        {/* KONTEN UTAMA */}
         <View style={styles.mainContent}>
           
           {/* SECTION INFO & PROMO TERBARU */}
@@ -76,7 +76,7 @@ export default function HomeScreen() {
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            snapToInterval={width - 32}
+            snapToInterval={width > 600 ? 550 : width - 64}
             decelerationRate="fast"
             contentContainerStyle={styles.sliderContainer}
           >
@@ -98,8 +98,8 @@ export default function HomeScreen() {
             ))}
           </ScrollView>
 
-          {/* QUICK MENU GRID BERGAYA MODEREN */}
-          <Text style={[styles.sectionTitle, { marginTop: 15, marginBottom: 15 }]}>Menu Utama</Text>
+          {/* MENU UTAMA GRID */}
+          <Text style={[styles.sectionTitle, { marginTop: 25, marginBottom: 15 }]}>Menu Utama</Text>
           <View style={styles.quickGridMenu}>
             <TouchableOpacity style={styles.menuItemRow} activeOpacity={0.8}>
               <View style={[styles.iconCircle, { backgroundColor: "#EFF6FF" }]}>
@@ -140,19 +140,17 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: "#1e3a8a" },
   container: { flex: 1, backgroundColor: "#F8FAFC" },
 
-  // Desain Gradasi Header yang kokoh dan presisi
   headerGradient: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     paddingTop: 25,
-    paddingBottom: 40,
+    paddingBottom: 45,
     borderBottomLeftRadius: 32,
     borderBottomRightRadius: 32,
   },
   headerContent: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginTop: 10,
+    alignItems: "center", // Bikin konten rata tengah secara vertikal
   },
   textContainer: { 
     flex: 2,
@@ -162,32 +160,29 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     color: "#E2E8F0",
     letterSpacing: 0.5,
-    marginBottom: 8,
+    marginBottom: 4,
   },
   greeting: { 
-    fontSize: 22, 
+    fontSize: 20, 
     fontWeight: "bold", 
     color: "#FFFFFF" 
   },
   subGreeting: { 
-    fontSize: 13, 
+    fontSize: 12, 
     color: "#F1F5F9", 
-    marginTop: 4, 
-    opacity: 0.9,
-    lineHeight: 18,
+    marginTop: 2, 
+    opacity: 0.85,
   },
 
-  // WRAPPER LOGO BIAR JALANNYA AMAN DAN BISA DIBIKIN GEDE
   logoWrapper: {
-    flex: 1,
+    flex: 1.5,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: -10,
   },
-  // UKURAN LOGO BARU: Super Gede, Bulat Jelas, Anti Buram!
+  // Logo dibuat pas 110 biar kelihatan bulat mantap dan gak kekecilan!
   homeLogo: {
-    width: 90, 
-    height: 90,
+    width: 110, 
+    height: 110,
   },
   notificationBadge: {
     backgroundColor: "rgba(255, 255, 255, 0.2)",
@@ -195,49 +190,44 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
 
-  // Styling Konten Inti
   mainContent: { 
-    paddingHorizontal: 16, 
-    marginTop: -20,
+    paddingHorizontal: 24, 
+    marginTop: -25,
     backgroundColor: "#FFFFFF",
-    marginHorizontal: 16,
+    marginHorizontal: 20,
     borderRadius: 24,
-    paddingVertical: 20,
-    elevation: 4,
+    paddingVertical: 24,
+    elevation: 5,
     shadowColor: "#0f172a",
     shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    maxWidth: 800, // Biar pas di web gak melar kelebaran
+    alignSelf: "center",
+    width: "92%",
   },
   sectionHeaderRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 12,
   },
   sectionTitle: { 
     fontSize: 16, 
     fontWeight: "700", 
     color: "#1E293B",
-    letterSpacing: 0.2,
   },
 
-  // Moderenisasi Slider Card Banner Promo
-  sliderContainer: { paddingVertical: 8 },
+  sliderContainer: { paddingVertical: 4 },
   announcementCard: {
-    width: width - 64,
-    height: 125,
+    width: width > 600 ? 500 : width - 88,
+    height: 115,
     marginRight: 12,
     borderRadius: 16,
     overflow: "hidden",
-    elevation: 3,
-    shadowColor: "#0ea5e9",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
   },
   gradientCard: { 
     flex: 1, 
-    padding: 18, 
+    padding: 20, 
     justifyContent: "center" 
   },
   cardHeaderRow: { 
@@ -253,35 +243,38 @@ const styles = StyleSheet.create({
   announcementInfo: { 
     color: "#FFFFFF", 
     fontSize: 13, 
-    marginTop: 6, 
-    opacity: 0.95,
+    marginTop: 4, 
+    opacity: 0.9,
   },
 
-  // DESAIN MENU LAYOUT BARU: Berjajar horizontal rapi bentuk grid list
   quickGridMenu: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 5,
+    maxWidth: 500, // Membatasi jarak menu biar ga renggang di laptop
+    width: "100%",
+    alignSelf: "center",
   },
   menuItemRow: {
     alignItems: "center",
-    width: (width - 96) / 4,
+    flex: 1,
   },
   iconCircle: {
-    width: 52,
-    height: 52,
-    borderRadius: 16,
+    width: 56,
+    height: 56,
+    borderRadius: 18,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 8,
-    borderWidth: 1,
-    borderColor: "#F1F5F9",
+    elevation: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
   },
   menuText: { 
     fontSize: 13, 
     fontWeight: "600", 
     color: "#475569",
-    textAlign: "center"
   },
 });
