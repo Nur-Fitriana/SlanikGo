@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   StatusBar,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
@@ -26,39 +25,36 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Warna StatusBar disamakan dengan warna Biru Login */}
+      {/* StatusBar disamakan dengan warna Biru Slanik */}
       <StatusBar barStyle="light-content" backgroundColor="#1E3A8A" />
       
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         
-        {/* 1. HEADER HERO SOLID BIRU TUA (Sama persis warnanya dengan Login Screen) */}
+        {/* HEADER HERO SOLID BIRU */}
         <View style={styles.headerHeroSolid}>
           <View style={styles.headerTopRow}>
-            {/* Placeholder Logo Bulat */}
             <View style={styles.logoPlaceholderCircle}>
               <Ionicons name="water" size={22} color="#1E3A8A" />
             </View>
             
-            {/* Tombol Notifikasi */}
             <TouchableOpacity style={styles.notifButton} activeOpacity={0.7}>
               <Ionicons name="notifications" size={22} color="#FFF" />
               <View style={styles.notifBadge} />
             </TouchableOpacity>
           </View>
 
-          {/* Teks Greeting Dinamis */}
           <Text style={styles.greeting}>Halo, {userName}! 👋</Text>
           <Text style={styles.subGreeting}>Mau seru-seruan di SlanikGo hari ini?</Text>
 
           {/* Tombol CTA Tiket */}
           <TouchableOpacity style={styles.ctaButton} activeOpacity={0.8}>
-            <Ionicons name="ticket" size={16} color="#2563EB" style={{ marginRight: 6 }} />
+            <Ionicons name="ticket" size={16} color="#1E3A8A" style={{ marginRight: 6 }} />
             <Text style={styles.ctaText}>Pesan Tiket Sekarang</Text>
-            <Ionicons name="chevron-forward" size={14} color="#2563EB" style={{ marginLeft: 6 }} />
+            <Ionicons name="chevron-forward" size={14} color="#1E3A8A" style={{ marginLeft: 6 }} />
           </TouchableOpacity>
         </View>
 
-        {/* 2. AREA KONTEN UTAMA */}
+        {/* AREA KONTEN UTAMA */}
         <View style={styles.contentBody}>
 
           {/* PROMO SECTION */}
@@ -69,15 +65,15 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
 
-          {/* Banner Promo */}
-          <LinearGradient colors={["#38bdf8", "#0369a1"]} style={styles.promoBanner} start={{x:0, y:0}} end={{x:1, y:1}}>
+          {/* Banner Promo - Sekarang pakai warna solid biru konsisten */}
+          <View style={styles.promoBanner}>
             <View style={styles.promoBadge}><Text style={styles.promoBadgeText}>SPESIAL RAMADHAN</Text></View>
             <Text style={styles.promoTitle}>Diskon 50%</Text>
             <Text style={styles.promoSub}>untuk tiket terusan!</Text>
             <Text style={styles.promoDate}>Berlaku hingga 30 April 2026</Text>
             <TouchableOpacity style={styles.promoBtn}><Text style={styles.promoBtnText}>Lihat Promo</Text></TouchableOpacity>
-            <Ionicons name="gift" size={110} color="rgba(255,255,255,0.15)" style={styles.promoWatermark} />
-          </LinearGradient>
+            <Ionicons name="gift" size={110} color="rgba(255,255,255,0.1)" style={styles.promoWatermark} />
+          </View>
 
           {/* WAHANA SECTION */}
           <View style={styles.sectionHeader}>
@@ -88,24 +84,26 @@ export default function HomeScreen() {
           </View>
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalScroll}>
+            {/* Card Wahana 1 - Warna Solid Biru */}
             <View style={styles.wahanaCard}>
-              <LinearGradient colors={["#60a5fa", "#1d4ed8"]} style={styles.wahanaGradientBg}>
-                <Ionicons name="sparkles" size={26} color="rgba(255,255,255,0.25)" style={styles.wahanaIconBack} />
+              <View style={styles.wahanaBgSolid}>
+                <Ionicons name="sparkles" size={26} color="rgba(255,255,255,0.2)" style={styles.wahanaIconBack} />
                 <View style={styles.wahanaOverlayContent}>
                   <Text style={styles.wahanaName}>Rainbow Slide</Text>
                   <Text style={styles.wahanaRating}><Ionicons name="star" color="#eab308" size={12}/> 4.8 (1.287)</Text>
                 </View>
-              </LinearGradient>
+              </View>
             </View>
 
+            {/* Card Wahana 2 - Warna Solid Biru */}
             <View style={styles.wahanaCard}>
-              <LinearGradient colors={["#34d399", "#047857"]} style={styles.wahanaGradientBg}>
-                <Ionicons name="boat" size={26} color="rgba(255,255,255,0.25)" style={styles.wahanaIconBack} />
+              <View style={styles.wahanaBgSolid}>
+                <Ionicons name="boat" size={26} color="rgba(255,255,255,0.2)" style={styles.wahanaIconBack} />
                 <View style={styles.wahanaOverlayContent}>
                   <Text style={styles.wahanaName}>Wave Pool</Text>
                   <Text style={styles.wahanaRating}><Ionicons name="star" color="#eab308" size={12}/> 4.7 (953)</Text>
                 </View>
-              </LinearGradient>
+              </View>
             </View>
           </ScrollView>
 
@@ -119,7 +117,7 @@ export default function HomeScreen() {
 
           <View style={styles.eventCard}>
             <View style={styles.eventIconPlaceholder}>
-              <Ionicons name="calendar" size={24} color="#2563EB" />
+              <Ionicons name="calendar" size={24} color="#1E3A8A" />
             </View>
             <View style={styles.eventInfoContainer}>
               <Text style={styles.eventTitle}>Water Festival</Text>
@@ -127,7 +125,7 @@ export default function HomeScreen() {
               <Text style={styles.eventDetail}><Ionicons name="location-outline" size={11}/> SlanikGo Waterpark</Text>
             </View>
             <TouchableOpacity style={styles.eventArrow}>
-              <Ionicons name="arrow-forward" size={16} color="#2563EB" />
+              <Ionicons name="arrow-forward" size={16} color="#1E3A8A" />
             </TouchableOpacity>
           </View>
 
@@ -136,8 +134,8 @@ export default function HomeScreen() {
           
           <View style={styles.statsRow}>
             <TouchableOpacity style={styles.statsBox}>
-              <View style={[styles.statsIconCircle, { backgroundColor: "#EFF6FF" }]}>
-                <Ionicons name="ticket" size={18} color="#2563EB" />
+              <View style={styles.statsIconCircle}>
+                <Ionicons name="ticket" size={18} color="#1E3A8A" />
               </View>
               <View style={styles.statsTextColumn}>
                 <Text style={styles.statsLabel}>Tiket Saya</Text>
@@ -169,15 +167,15 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#F8FAFC", // Dasar aplikasi putih bersih abu-abu halus
+    backgroundColor: "#F8FAFC",
   },
   container: {
     flex: 1,
   },
-  // Kunci Utama: Header warna Solid Biru Tua melengkung kebawah (Persis Login Screen)
+  // KUNCI UTAMA: Menggunakan warna solid tunggal #1E3A8A
   headerHeroSolid: {
     width: "100%",
-    backgroundColor: "#1E3A8A", // Pure Navy Slanik
+    backgroundColor: "#1E3A8A", 
     paddingHorizontal: 25,
     paddingTop: 30,
     paddingBottom: 40,
@@ -233,13 +231,9 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginTop: 25,
     alignSelf: "flex-start",
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
   },
   ctaText: {
-    color: "#2563EB",
+    color: "#1E3A8A",
     fontWeight: "700",
     fontSize: 14,
   },
@@ -262,11 +256,13 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: 13,
-    color: "#2563EB",
+    color: "#1E3A8A",
     fontWeight: "600",
   },
+  // BANNER SEKARANG PAKAI SOLID BIRU #1E3A8A
   promoBanner: {
     width: "100%",
+    backgroundColor: "#1E3A8A",
     borderRadius: 20,
     padding: 18,
     marginBottom: 15,
@@ -299,7 +295,7 @@ const styles = StyleSheet.create({
   },
   promoDate: {
     fontSize: 11,
-    color: "#E0F2FE",
+    color: "#E2E8F0",
     marginTop: 8,
     opacity: 0.9,
   },
@@ -312,7 +308,7 @@ const styles = StyleSheet.create({
     marginTop: 14,
   },
   promoBtnText: {
-    color: "#0369a1",
+    color: "#1E3A8A",
     fontSize: 12,
     fontWeight: "700",
   },
@@ -331,8 +327,10 @@ const styles = StyleSheet.create({
     marginRight: 12,
     overflow: "hidden",
   },
-  wahanaGradientBg: {
+  // WAHANA JUGA SEKARANG PAKAI SOLID BIRU #1E3A8A
+  wahanaBgSolid: {
     flex: 1,
+    backgroundColor: "#1E3A8A",
     padding: 12,
     justifyContent: "flex-end",
     position: "relative",
@@ -411,6 +409,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
+    backgroundColor: "#EFF6FF",
     justifyContent: "center",
     alignItems: "center",
   },
