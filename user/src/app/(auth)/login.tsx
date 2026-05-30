@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   header: {
-    height: 420, // Dinaikkan ke 420 biar memberikan ruang yang lega untuk logo jumbo
+    height: 280, 
     justifyContent: "center",
     alignItems: "center",
     borderBottomLeftRadius: 40,
