@@ -117,10 +117,10 @@ const styles = StyleSheet.create({
   },
   // Ukuran lingkaran dinaikkan jadi 150 biar area logo makin mantap
   logoWrapper: {
-    width: 150,                
-    height: 150,
+    width: 140,                
+    height: 140,
     backgroundColor: "#FFFFFF",
-    borderRadius: 75,          
+    borderRadius: 70,          
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",        
