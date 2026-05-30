@@ -79,8 +79,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="fasilitas"
         options={{
-          title: 'Wahana',
-          headerTitle: 'Daftar Wahana',
+          title: 'Fasilitas',
+          headerTitle: 'Daftar Fasilitas',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? "water" : "water-outline"} size={22} color={color} />
           ),
