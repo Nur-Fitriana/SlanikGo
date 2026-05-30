@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { useEffect } from "react";
+import { removeToken } from "../../utils/token";
 
 const navItems = [
   {
@@ -86,6 +87,14 @@ const navItems = [
 
 export default function Sidebar({ isOpen, setIsOpen }: { isOpen?: boolean; setIsOpen?: (v: boolean) => void }) {
   const pathname = usePathname();
+
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (confirm("Apakah Anda yakin ingin keluar dari panel admin?")) {
+      removeToken();
+      window.location.href = "/login";
+    }
+  };
 
   // Tutup otomatis saat admin menekan menu dan berpindah halaman
   useEffect(() => {
@@ -273,6 +282,7 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen?: boolean; setIs
           </div>
           <Link 
             href="/login" 
+            onClick={handleLogout}
             style={{ 
               display: "flex", 
               alignItems: "center", 

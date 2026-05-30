@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "ES2021",
-    "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "./dist",
     "ignoreDeprecations": "5.0",
     "esModuleInterop": true,
@@ -23,10 +23,10 @@
     ]
   },
   "include": [
-  "src/**/*",
-  "test/**/*",
-  "prisma.config.ts"
-],
+    "src/**/*",
+    "test/**/*",
+    "prisma.config.ts"
+  ],
   "exclude": [
     "node_modules",
     "dist"
