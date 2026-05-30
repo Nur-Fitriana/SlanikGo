@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  StatusBar,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
@@ -22,7 +23,6 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    // Navigasi ke Dashboard (tabs)
     router.replace("/(tabs)");
   };
 
@@ -31,16 +31,16 @@ export default function LoginScreen() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Header Biru dengan Logo */}
+      <StatusBar barStyle="light-content" backgroundColor="#004AAD" />
+      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+        
+        {/* Header Biru di-adjust tingginya agar seimbang dengan logo besar */}
         <LinearGradient colors={["#004AAD", "#0093E9"]} style={styles.header}>
-          <View style={styles.logoWrapper}>
-            <Image
-              source={require("../../../assets/images/logo_slanik.png")}
-              style={styles.logo}
-              resizeMode="cover" // Pakai cover biar memenuhi ruang
-            />
-          </View>
+          <Image
+            source={require("../../../assets/images/logo_slanik.png")}
+            style={styles.logoImageDirect}
+            resizeMode="contain" // Tetapcontain biar topi kuning gurita aman ga kepotong browser
+          />
         </LinearGradient>
 
         {/* Card Form Login */}
@@ -55,6 +55,7 @@ export default function LoginScreen() {
             <TextInput
               style={styles.input}
               placeholder="Masukkan email/username"
+              placeholderTextColor="#94A3B8"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -67,19 +68,21 @@ export default function LoginScreen() {
             <TextInput
               style={styles.input}
               placeholder="••••••••"
+              placeholderTextColor="#94A3B8"
               secureTextEntry
               value={password}
               onChangeText={setPassword}
             />
           </View>
 
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin} activeOpacity={0.8}>
             <Text style={styles.loginButtonText}>Login</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => router.push("/(auth)/register")}
             style={styles.registerLink}
+            activeOpacity={0.7}
           >
             <Text style={styles.footerText}>
               Belum punya akun?{" "}
@@ -99,98 +102,86 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
+    paddingBottom: 30,
   },
   header: {
-    height: 300,
+    height: 280, 
     justifyContent: "center",
     alignItems: "center",
-    borderBottomLeftRadius: 60,
-    borderBottomRightRadius: 60,
-    paddingBottom: 50,
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
+    paddingBottom: 10,
   },
-  logoWrapper: {
-    width: 170,                
-    height: 170,
-    backgroundColor: "#fff",
-    borderRadius: 85,          
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "hidden",        
-    elevation: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
-    shadowRadius: 15,
-    borderWidth: 8,
-    borderColor: "rgba(255,255,255,0.3)",
+  // UKURAN BARU: DIJAMIN JAUH LEBIH GEDE DAN MANTAP!
+  logoImageDirect: {
+    width: 350,   
+    height: 350,  
     marginTop: 20,
   },
-  logo: {
-    width: "100%",             
-    height: "100%",           
-    transform: [{ scale: 1.6 }], 
-  },
-  welcomeText: {
-    color: "#fff",
-    fontSize: 24,
-    fontWeight: "bold",
-    marginTop: 5,
-    marginBottom: 20,
-  },
   formCard: {
-    backgroundColor: "#fff",
-    marginHorizontal: 45,
+    backgroundColor: "#FFFFFF",
+    marginHorizontal: 24, 
     marginTop: -40, 
-    borderRadius: 30,
-    padding: 30,
-    elevation: 8, // Shadow untuk Android
-    shadowColor: "#000", // Shadow untuk iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
+    borderRadius: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 28,
+    elevation: 4, 
+    shadowColor: "#0f172a", 
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
   },
   title: {
     fontSize: 22,
     fontWeight: "bold",
     textAlign: "center",
     color: "#1E293B",
+    letterSpacing: 0.3,
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 13,
     color: "#64748B",
     textAlign: "center",
-    marginBottom: 30,
-    marginTop: 5,
-    lineHeight: 20,
+    marginBottom: 24,
+    marginTop: 6,
+    lineHeight: 18,
   },
   inputContainer: {
-    marginBottom: 15,
+    marginBottom: 16,
   },
   label: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "600",
     color: "#475569",
-    marginBottom: 5,
+    marginBottom: 6,
   },
   input: {
     backgroundColor: "#F1F5F9",
-    padding: 15,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     borderRadius: 12,
     fontSize: 14,
     borderWidth: 1,
     borderColor: "#E2E8F0",
+    color: "#1E293B",
   },
   loginButton: {
     backgroundColor: "#0081C9",
-    paddingVertical: 15,
+    paddingVertical: 14,
     borderRadius: 12,
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 8,
+    elevation: 2,
+    shadowColor: "#0081C9",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
   },
   loginButtonText: {
-    color: "#fff",
-    fontSize: 16,
+    color: "#FFFFFF",
+    fontSize: 15,
     fontWeight: "bold",
+    letterSpacing: 0.3,
   },
   registerLink: {
     marginTop: 20,
@@ -198,7 +189,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     color: "#64748B",
-    fontSize: 14,
+    fontSize: 13,
   },
   registerText: {
     color: "#0081C9",
