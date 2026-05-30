@@ -36,17 +36,15 @@ export default function LoginScreen() {
         
         {/* Header Biru */}
         <LinearGradient colors={["#004AAD", "#0093E9"]} style={styles.header}>
-          {/* Lingkaran pembungkus logo dibuat agak besar sedikit */}
-          <View style={styles.logoWrapper}>
-            <Image
-              source={require("../../../assets/images/logo_slanik.png")}
-              style={styles.logo}
-              resizeMode="cover" // Diubah ke cover agar gambarnya memenuhi seluruh lingkaran
-            />
-          </View>
+          {/* TAMPILKAN LOGO ASLI SECARA LANGSUNG TANPA WADAH LINGKARAN PUTIH */}
+          <Image
+            source={require("../../../assets/images/logo_slanik.png")}
+            style={styles.logoImageDirect}
+            resizeMode="contain" // Contain memastikan seluruh gambar bulat & topi tampil utuh sempurna
+          />
         </LinearGradient>
 
-        {/* Card Form Login yang Pas di HP */}
+        {/* Card Form Login */}
         <View style={styles.formCard}>
           <Text style={styles.title}>Selamat Datang!</Text>
           <Text style={styles.subtitle}>
@@ -108,41 +106,23 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   header: {
-    height: 270,
+    height: 250, // Disesuaikan tingginya agar pas
     justifyContent: "center",
     alignItems: "center",
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    paddingBottom: 30,
+    paddingBottom: 20,
   },
-  // Ukuran lingkaran dinaikkan jadi 150 biar area logo makin mantap
-  logoWrapper: {
-    width: 140,                
-    height: 140,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 70,          
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "hidden",        
-    elevation: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    borderWidth: 6,
-    borderColor: "rgba(255,255,255,0.4)",
+  // KUNCI UTAMA: Styling langsung ke gambarnya agar besar dan utuh tanpa kepotong
+  logoImageDirect: {
+    width: 170, // Ukuran diatur proporsional sesuai gambar asli kamu       
+    height: 170,
     marginTop: 20,
-  },
-  // MEMBUAT LOGO FULL DI DALAM LINGKARAN
-  logo: {
-    width: "135%",             
-    height: "135%",           
-    transform: [{ scale: 1.4 }], // Kita scale 1.4x agar logo guritanya nge-zoom besar dan full mendominasi lingkaran putih!
   },
   formCard: {
     backgroundColor: "#FFFFFF",
-    marginHorizontal: 24, // Kunci lebar form pas di HP (Gak kekecilan lagi)
-    marginTop: -25, 
+    marginHorizontal: 24, 
+    marginTop: -20, 
     borderRadius: 24,
     paddingHorizontal: 24,
     paddingVertical: 28,
