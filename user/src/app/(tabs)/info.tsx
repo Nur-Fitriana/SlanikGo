@@ -117,15 +117,8 @@ export default function InfoScreen() {
             🏷️ Pilihan Tiket Masuk Terbaik
           </Text>
 
-          {
-            <Ionicons
-              name={isAnak ? "happy-outline" : "people-outline"}
-              size={24}
-              color={cardAccent}
-            />
-          }
           {isLoading ? (
-            <ActivityIndicator size="large" color="#007ae6" />
+            <ActivityIndicator size="large" color="#0284C7" style={{ marginVertical: 20 }} />
           ) : (
             tickets.map((ticket) => {
               const isAnak = ticket.namaKategori.toLowerCase().includes("anak");
@@ -154,7 +147,7 @@ export default function InfoScreen() {
                       ]}
                     >
                       <Ionicons
-                        name={isAnak ? "accessibility" : "people"}
+                        name={isAnak ? "happy-outline" : "people-outline"}
                         size={22}
                         color={themeColor}
                       />
