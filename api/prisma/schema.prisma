@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Fasilitas {
+  id        Int      @id @default(autoincrement())
+  nama      String
+  ikon      String?
+  deskripsi String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tiket {
+  id        Int      @id @default(autoincrement())
+  kategori  String
+  harga     Int
+  deskripsi String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InfoWisata {
+  id            Int      @id @default(autoincrement())
+  jamBuka       String
+  jamTutup      String
+  alamat        String
+  mapsEmbedUrl  String?
+  noTelepon     String?
+  email         String?
+  sosialMedia   Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Galeri {
+  id        Int      @id @default(autoincrement())
+  judul     String
+  gambarUrl String
+  caption   String?
+  urutan    Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
