@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  ScrollView, 
-  SafeAreaView, 
-  StatusBar, 
-  ActivityIndicator, 
-  TouchableOpacity, 
-  Linking 
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  StatusBar,
+  ActivityIndicator,
+  TouchableOpacity,
+  Linking,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 interface TicketData {
   id: number;
@@ -28,17 +28,39 @@ export default function InfoScreen() {
       try {
         const response = await fetch("http://192.168.1.10:3000/api/ticket");
         const data = await response.json();
-        
+
         if (response.ok && Array.isArray(data)) {
           setTickets(data);
         }
       } catch (err) {
-        console.log("Koneksi API offline, menggunakan data fallback interaktif.");
+        console.log(
+          "Koneksi API offline, menggunakan data fallback interaktif."
+        );
         const mockData: TicketData[] = [
-          { id: 1, namaKategori: "Anak-Anak", tipeHari: "Weekday (Senin - Jumat)", hargaDasar: 35000 },
-          { id: 2, namaKategori: "Dewasa", tipeHari: "Weekday (Senin - Jumat)", hargaDasar: 40000 },
-          { id: 3, namaKategori: "Anak-Anak", tipeHari: "Weekend / Tanggal Merah", hargaDasar: 40000 },
-          { id: 4, namaKategori: "Dewasa", tipeHari: "Weekend / Tanggal Merah", hargaDasar: 45000 },
+          {
+            id: 1,
+            namaKategori: "Anak-Anak",
+            tipeHari: "Weekday (Senin - Jumat)",
+            hargaDasar: 35000,
+          },
+          {
+            id: 2,
+            namaKategori: "Dewasa",
+            tipeHari: "Weekday (Senin - Jumat)",
+            hargaDasar: 40000,
+          },
+          {
+            id: 3,
+            namaKategori: "Anak-Anak",
+            tipeHari: "Weekend / Tanggal Merah",
+            hargaDasar: 40000,
+          },
+          {
+            id: 4,
+            namaKategori: "Dewasa",
+            tipeHari: "Weekend / Tanggal Merah",
+            hargaDasar: 45000,
+          },
         ];
         setTickets(mockData);
       } finally {
@@ -57,22 +79,31 @@ export default function InfoScreen() {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor="#0284C7" />
 
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
-        
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.scrollView}
+      >
         {/* ================= HERO BANNER: WAVE VIBES ================= */}
         <View style={styles.heroBanner}>
           <View style={styles.heroBadge}>
             <Text style={styles.heroBadgeText}>🌴 WAHOO! WELCOME TO</Text>
           </View>
           <Text style={styles.heroMainTitle}>Slanik Waterpark</Text>
-          <Text style={styles.heroSubTitle}>Tempat Rekreasi Air Terbesar & Terfavorit di Lampung</Text>
-          
+          <Text style={styles.heroSubTitle}>
+            Tempat Rekreasi Air Terbesar & Terfavorit di Lampung
+          </Text>
+
           <View style={styles.heroStatsRow}>
             <View style={styles.statItem}>
               <Ionicons name="star" size={14} color="#FBBF24" />
               <Text style={styles.statText}>Top Rated 2026</Text>
             </View>
-            <View style={[styles.statItem, { backgroundColor: 'rgba(255,255,255,0.15)' }]}>
+            <View
+              style={[
+                styles.statItem,
+                { backgroundColor: "rgba(255,255,255,0.15)" },
+              ]}
+            >
               <Ionicons name="location" size={14} color="#FFF" />
               <Text style={styles.statText}>Lampung Selatan</Text>
             </View>
@@ -81,40 +112,73 @@ export default function InfoScreen() {
 
         {/* MAIN BODY LAYOUT */}
         <View style={styles.containerContent}>
-          
           {/* ================= SECTION 1: PRICE LIST ================= */}
-          <Text style={styles.sectionHeading}>🏷️ Pilihan Tiket Masuk Terbaik</Text>
-          
+          <Text style={styles.sectionHeading}>
+            🏷️ Pilihan Tiket Masuk Terbaik
+          </Text>
+
+          {
+            <Ionicons
+              name={isAnak ? "happy-outline" : "people-outline"}
+              size={24}
+              color={cardAccent}
+            />
+          }
           {isLoading ? (
-            <ActivityIndicator size="medium" color="#0EA5E9" style={{ marginVertical: 20 }} />
+            <ActivityIndicator size="large" color="#007ae6" />
           ) : (
             tickets.map((ticket) => {
               const isAnak = ticket.namaKategori.toLowerCase().includes("anak");
-              const isWeekend = ticket.tipeHari.toLowerCase().includes("weekend") || ticket.tipeHari.toLowerCase().includes("libur");
-              
+              const isWeekend =
+                ticket.tipeHari.toLowerCase().includes("weekend") ||
+                ticket.tipeHari.toLowerCase().includes("libur");
+
               // Tema warna kontras dinamis
-              const themeColor = isWeekend ? '#EF4444' : '#0EA5E9';
-              const lightBg = isWeekend ? '#FEF2F2' : '#F0F9FF';
+              const themeColor = isWeekend ? "#EF4444" : "#0EA5E9";
+              const lightBg = isWeekend ? "#FEF2F2" : "#F0F9FF";
 
               return (
                 <View key={ticket.id} style={styles.fancyTicketCard}>
-                  <View style={[styles.leftAccentBar, { backgroundColor: themeColor }]} />
-                  
+                  <View
+                    style={[
+                      styles.leftAccentBar,
+                      { backgroundColor: themeColor },
+                    ]}
+                  />
+
                   <View style={styles.cardInnerContent}>
-                    <View style={[styles.avatarIconBox, { backgroundColor: lightBg }]}>
-                      <Ionicons 
-                        name={isAnak ? "accessibility" : "people"} 
-                        size={22} 
-                        color={themeColor} 
+                    <View
+                      style={[
+                        styles.avatarIconBox,
+                        { backgroundColor: lightBg },
+                      ]}
+                    >
+                      <Ionicons
+                        name={isAnak ? "accessibility" : "people"}
+                        size={22}
+                        color={themeColor}
                       />
                     </View>
-                    
+
                     <View style={styles.ticketMetaDetails}>
                       <Text style={styles.metaCategoryName}>
-                        Tiket {ticket.namaKategori.charAt(0).toUpperCase() + ticket.namaKategori.slice(1)}
+                        Tiket{" "}
+                        {ticket.namaKategori.charAt(0).toUpperCase() +
+                          ticket.namaKategori.slice(1)}
                       </Text>
-                      <View style={[styles.dayLabelPill, { backgroundColor: isWeekend ? '#FEE2E2' : '#E0F2FE' }]}>
-                        <Text style={[styles.dayLabelText, { color: themeColor }]}>{ticket.tipeHari}</Text>
+                      <View
+                        style={[
+                          styles.dayLabelPill,
+                          {
+                            backgroundColor: isWeekend ? "#FEE2E2" : "#E0F2FE",
+                          },
+                        ]}
+                      >
+                        <Text
+                          style={[styles.dayLabelText, { color: themeColor }]}
+                        >
+                          {ticket.tipeHari}
+                        </Text>
                       </View>
                     </View>
 
@@ -132,11 +196,15 @@ export default function InfoScreen() {
           )}
 
           {/* ================= SECTION 2: TIMING GRIDS ================= */}
-          <Text style={[styles.sectionHeading, { marginTop: 26 }]}>🕒 Rencanakan Kunjunganmu</Text>
-          
+          <Text style={[styles.sectionHeading, { marginTop: 26 }]}>
+            🕒 Rencanakan Kunjunganmu
+          </Text>
+
           <View style={styles.flexGridRow}>
-            <View style={[styles.gridTimeCard, { borderTopColor: '#38BDF8' }]}>
-              <View style={[styles.gridIconCircle, { backgroundColor: '#E0F2FE' }]}>
+            <View style={[styles.gridTimeCard, { borderTopColor: "#38BDF8" }]}>
+              <View
+                style={[styles.gridIconCircle, { backgroundColor: "#E0F2FE" }]}
+              >
                 <Ionicons name="time" size={20} color="#0EA5E9" />
               </View>
               <Text style={styles.gridMainLabel}>Weekday</Text>
@@ -146,8 +214,10 @@ export default function InfoScreen() {
               </View>
             </View>
 
-            <View style={[styles.gridTimeCard, { borderTopColor: '#FBBF24' }]}>
-              <View style={[styles.gridIconCircle, { backgroundColor: '#FEF3C7' }]}>
+            <View style={[styles.gridTimeCard, { borderTopColor: "#FBBF24" }]}>
+              <View
+                style={[styles.gridIconCircle, { backgroundColor: "#FEF3C7" }]}
+              >
                 <Ionicons name="sunny" size={20} color="#D97706" />
               </View>
               <Text style={styles.gridMainLabel}>Weekend</Text>
@@ -159,11 +229,16 @@ export default function InfoScreen() {
           </View>
 
           {/* ================= SECTION 3: INTERACTIVE CUSTOMER SERVICE ================= */}
-          <Text style={[styles.sectionHeading, { marginTop: 26 }]}>📞 Hubungi Tim Humas Slanik</Text>
-          <Text style={styles.sectionDescription}>Punya pertanyaan atau rencana datang bersama rombongan besar? Ketuk salah satu admin WhatsApp di bawah ini:</Text>
+          <Text style={[styles.sectionHeading, { marginTop: 26 }]}>
+            📞 Hubungi Tim Humas Slanik
+          </Text>
+          <Text style={styles.sectionDescription}>
+            Punya pertanyaan atau rencana datang bersama rombongan besar? Ketuk
+            salah satu admin WhatsApp di bawah ini:
+          </Text>
 
           <View style={styles.flexGridRow}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.premiumContactCard}
               onPress={() => hubungiWhatsApp("6287841000565")}
               activeOpacity={0.85}
@@ -179,23 +254,31 @@ export default function InfoScreen() {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.premiumContactCard}
               onPress={() => hubungiWhatsApp("6281273348835")}
               activeOpacity={0.85}
             >
-              <View style={[styles.waIconFloatContainer, { backgroundColor: '#10B981' }]}>
+              <View
+                style={[
+                  styles.waIconFloatContainer,
+                  { backgroundColor: "#10B981" },
+                ]}
+              >
                 <Ionicons name="logo-whatsapp" size={24} color="#FFF" />
               </View>
               <Text style={styles.csNameText}>Kak Eva</Text>
               <Text style={styles.csRoleSub}>Koordinator Operasional</Text>
-              <View style={[styles.actionChatBadge, { backgroundColor: '#E6F4EA' }]}>
-                <Text style={[styles.actionChatText, { color: '#10B981' }]}>Kirim Chat</Text>
+              <View
+                style={[styles.actionChatBadge, { backgroundColor: "#E6F4EA" }]}
+              >
+                <Text style={[styles.actionChatText, { color: "#10B981" }]}>
+                  Kirim Chat
+                </Text>
                 <Ionicons name="arrow-forward" size={12} color="#10B981" />
               </View>
             </TouchableOpacity>
           </View>
-
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -223,9 +306,25 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginBottom: 12,
   },
-  heroBadgeText: { color: "#FFF", fontSize: 10, fontWeight: "800", letterSpacing: 0.5 },
-  heroMainTitle: { color: "#FFF", fontSize: 28, fontWeight: "900", letterSpacing: -0.5 },
-  heroSubTitle: { color: "#BAE6FD", fontSize: 13, marginTop: 4, lineHeight: 18, fontWeight: "500" },
+  heroBadgeText: {
+    color: "#FFF",
+    fontSize: 10,
+    fontWeight: "800",
+    letterSpacing: 0.5,
+  },
+  heroMainTitle: {
+    color: "#FFF",
+    fontSize: 28,
+    fontWeight: "900",
+    letterSpacing: -0.5,
+  },
+  heroSubTitle: {
+    color: "#BAE6FD",
+    fontSize: 13,
+    marginTop: 4,
+    lineHeight: 18,
+    fontWeight: "500",
+  },
   heroStatsRow: { flexDirection: "row", marginTop: 14 },
   statItem: {
     flexDirection: "row",
@@ -239,9 +338,24 @@ const styles = StyleSheet.create({
   statText: { color: "#FFF", fontSize: 11, fontWeight: "600", marginLeft: 4 },
 
   // === CONTENT BODY WRAPPER ===
-  containerContent: { paddingHorizontal: 20, paddingBottom: 40, marginTop: -20 },
-  sectionHeading: { fontSize: 15, fontWeight: "800", color: "#0F172A", marginBottom: 12 },
-  sectionDescription: { fontSize: 12, color: "#64748B", lineHeight: 16, marginBottom: 12, marginTop: -6 },
+  containerContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 40,
+    marginTop: -20,
+  },
+  sectionHeading: {
+    fontSize: 15,
+    fontWeight: "800",
+    color: "#0F172A",
+    marginBottom: 12,
+  },
+  sectionDescription: {
+    fontSize: 12,
+    color: "#64748B",
+    lineHeight: 16,
+    marginBottom: 12,
+    marginTop: -6,
+  },
 
   // === STYLING FANCY TIKET CARD ===
   fancyTicketCard: {
@@ -257,7 +371,12 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   leftAccentBar: { width: 6 },
-  cardInnerContent: { flex: 1, padding: 14, flexDirection: "row", alignItems: "center" },
+  cardInnerContent: {
+    flex: 1,
+    padding: 14,
+    flexDirection: "row",
+    alignItems: "center",
+  },
   avatarIconBox: {
     width: 44,
     height: 44,
@@ -267,12 +386,23 @@ const styles = StyleSheet.create({
   },
   ticketMetaDetails: { flex: 1, marginLeft: 12, justifyContent: "center" },
   metaCategoryName: { fontSize: 15, fontWeight: "800", color: "#0F172A" },
-  dayLabelPill: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6, alignSelf: "flex-start", marginTop: 5 },
+  dayLabelPill: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    alignSelf: "flex-start",
+    marginTop: 5,
+  },
   dayLabelText: { fontSize: 9, fontWeight: "700" },
   priceContainer: { alignItems: "flex-end", marginLeft: 10 },
   actualPrice: { fontSize: 18, fontWeight: "900" },
   rpSign: { fontSize: 12, fontWeight: "700", marginRight: 2 },
-  perPersonText: { fontSize: 9, color: "#94a3b8", marginTop: 2, fontWeight: "500" },
+  perPersonText: {
+    fontSize: 9,
+    color: "#94a3b8",
+    marginTop: 2,
+    fontWeight: "500",
+  },
 
   // === FLEX GRID LAYOUT (JADWAL & CS) ===
   flexGridRow: { flexDirection: "row", justifyContent: "space-between" },
@@ -289,12 +419,36 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 2,
   },
-  gridIconCircle: { width: 40, height: 40, borderRadius: 20, alignItems: "center", justifyContent: "center", marginBottom: 8 },
+  gridIconCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
+  },
   gridMainLabel: { fontSize: 14, fontWeight: "800", color: "#1E293B" },
-  gridDaysSub: { fontSize: 10, color: "#94a3b8", marginTop: 2, fontWeight: "500" },
-  timePillBlue: { backgroundColor: "#E0F2FE", paddingHorizontal: 12, paddingVertical: 4, borderRadius: 12, marginTop: 12 },
+  gridDaysSub: {
+    fontSize: 10,
+    color: "#94a3b8",
+    marginTop: 2,
+    fontWeight: "500",
+  },
+  timePillBlue: {
+    backgroundColor: "#E0F2FE",
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginTop: 12,
+  },
   timePillTextBlue: { color: "#0EA5E9", fontSize: 11, fontWeight: "800" },
-  timePillOrange: { backgroundColor: "#FEF3C7", paddingHorizontal: 12, paddingVertical: 4, borderRadius: 12, marginTop: 12 },
+  timePillOrange: {
+    backgroundColor: "#FEF3C7",
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginTop: 12,
+  },
   timePillTextOrange: { color: "#D97706", fontSize: 11, fontWeight: "800" },
 
   // === PREMIUM INTERACTIVE CS CARDS ===
@@ -320,7 +474,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   csNameText: { fontSize: 14, fontWeight: "800", color: "#1E293B" },
-  csRoleSub: { fontSize: 10, color: "#94a3b8", textAlign: "center", marginTop: 2, height: 32, fontWeight: "500" },
+  csRoleSub: {
+    fontSize: 10,
+    color: "#94a3b8",
+    textAlign: "center",
+    marginTop: 2,
+    height: 32,
+    fontWeight: "500",
+  },
   actionChatBadge: {
     flexDirection: "row",
     alignItems: "center",
@@ -330,7 +491,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 8,
   },
-  actionChatText: { color: "#0EA5E9", fontSize: 10, fontWeight: "700", marginRight: 4 },
+  actionChatText: {
+    color: "#0EA5E9",
+    fontSize: 10,
+    fontWeight: "700",
+    marginRight: 4,
+  },
 
-  emptyText: { fontSize: 12, color: "#94a3b8", textAlign: "center", marginVertical: 10 },
+  emptyText: {
+    fontSize: 12,
+    color: "#94a3b8",
+    textAlign: "center",
+    marginVertical: 10,
+  },
 });
