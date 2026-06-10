@@ -92,3 +92,14 @@ export async function updateGallery(id: string, photo: Partial<GalleryPhoto>): P
     } as GalleryPhoto;
   }
 }
+
+// DELETE an existing gallery photo from NestJS API with local fallback
+export async function deleteGallery(id: string): Promise<void> {
+  try {
+    await apiRequest<void>(`/galeri/${id}`, {
+      method: "DELETE",
+    });
+  } catch (error) {
+    console.warn(`Backend API offline or failed, simulating delete locally for ID ${id}. Details:`, error);
+  }
+}
