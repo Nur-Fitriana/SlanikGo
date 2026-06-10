@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useToast } from "../components/ToastProvider";
-import { getAllGallery, createGallery, GalleryPhoto } from "../../services/galeriService";
+import { getAllGallery, createGallery, updateGallery, GalleryPhoto } from "../../services/galeriService";
 
 export default function GalleryManagement() {
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
@@ -30,14 +30,25 @@ export default function GalleryManagement() {
     fetchAndSetGallery();
   }, []);
 
-  const movePhoto = (index: number, direction: "up" | "down") => {
+  const movePhoto = async (index: number, direction: "up" | "down") => {
     const newPhotos = [...photos];
     if (direction === "up" && index > 0) {
       [newPhotos[index], newPhotos[index - 1]] = [newPhotos[index - 1], newPhotos[index]];
     } else if (direction === "down" && index < photos.length - 1) {
       [newPhotos[index], newPhotos[index + 1]] = [newPhotos[index + 1], newPhotos[index]];
+    } else {
+      return;
     }
-    setPhotos(newPhotos.map((p, i) => ({ ...p, order: i + 1 })));
+    const reordered = newPhotos.map((p, i) => ({ ...p, order: i + 1 }));
+    setPhotos(reordered);
+    // Persist new order for the two swapped photos to backend
+    const swapIdx = direction === "up" ? index - 1 : index + 1;
+    try {
+      await updateGallery(reordered[index].id, { order: reordered[index].order });
+      await updateGallery(reordered[swapIdx].id, { order: reordered[swapIdx].order });
+    } catch (err) {
+      console.warn("Failed to persist reorder to backend, order updated locally only.", err);
+    }
   };
 
   const handleDelete = (id: string) => {
@@ -184,10 +195,16 @@ export default function GalleryManagement() {
 
               <div style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <span style={{ fontSize: "12px", color: "var(--text-muted)", fontWeight: "600" }}>Urutan: #{photo.order}</span>
-                <button style={{
-                  fontSize: "12px", color: "var(--brand-accent)", background: "transparent", border: "none",
-                  fontWeight: "600", cursor: "pointer"
-                }}>Edit Caption</button>
+                <button
+                  style={{
+                    fontSize: "12px", color: "var(--brand-accent)", background: "transparent", border: "none",
+                    fontWeight: "600", cursor: "pointer"
+                  }}
+                  onClick={() => {
+                    setEditingPhoto(photo);
+                    setIsModalOpen(true);
+                  }}
+                >Edit Caption</button>
               </div>
             </div>
           ))
@@ -260,7 +277,8 @@ export default function GalleryManagement() {
               try {
                 const photoData = { url, caption, order };
                 if (editingPhoto) {
-                  // Edit path will be wired in commit #95
+                  const updated = await updateGallery(editingPhoto.id, photoData);
+                  setPhotos(prev => prev.map(p => p.id === editingPhoto.id ? updated : p));
                   showToast("Foto berhasil diperbarui!", "success");
                 } else {
                   const newPhoto = await createGallery(photoData);
