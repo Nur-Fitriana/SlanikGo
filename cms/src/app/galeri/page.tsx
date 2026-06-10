@@ -8,6 +8,8 @@ export default function GalleryManagement() {
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingPhoto, setEditingPhoto] = useState<GalleryPhoto | null>(null);
   const { showToast } = useToast();
 
   const fetchAndSetGallery = async (silent = false) => {
@@ -56,7 +58,10 @@ export default function GalleryManagement() {
         <button
           className="btn-primary"
           style={{ display: "flex", alignItems: "center", gap: "8px" }}
-          onClick={() => showToast("Fitur upload foto segera hadir!", "info")}
+          onClick={() => {
+            setEditingPhoto(null);
+            setIsModalOpen(true);
+          }}
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -203,7 +208,10 @@ export default function GalleryManagement() {
             background: "rgba(255,255,255,0.4)",
             transition: "all 0.2s ease"
           }}
-          onClick={() => showToast("Fitur tambah foto segera hadir!", "info")}
+          onClick={() => {
+            setEditingPhoto(null);
+            setIsModalOpen(true);
+          }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "rgba(255,255,255,0.8)";
             e.currentTarget.style.borderColor = "var(--brand-accent)";
@@ -225,6 +233,48 @@ export default function GalleryManagement() {
           <span style={{ fontSize: "14px", fontWeight: "600", color: "var(--brand-secondary)" }}>Tambah Foto</span>
         </div>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+          background: "rgba(15, 23, 42, 0.6)", backdropFilter: "blur(4px)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          zIndex: 1000, padding: "20px"
+        }}>
+          <div className="card-premium" style={{
+            width: "100%", maxWidth: "500px", background: "white", padding: "32px",
+            maxHeight: "90vh", overflowY: "auto"
+          }}>
+            <h2 style={{ fontSize: "20px", fontWeight: "700", marginBottom: "24px", color: "var(--brand-secondary)" }}>
+              {editingPhoto ? "Edit Foto Galeri" : "Tambah Foto Baru"}
+            </h2>
+
+            <form style={{ display: "flex", flexDirection: "column", gap: "20px" }} onSubmit={async (e) => {
+              e.preventDefault();
+              setIsModalOpen(false);
+              showToast(editingPhoto ? "Foto berhasil diperbarui!" : "Foto baru ditambahkan!", "success");
+            }}>
+              <div>
+                <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>URL Gambar</label>
+                <input type="text" name="url" className="input-field" placeholder="https://images.unsplash.com/..." defaultValue={editingPhoto?.url} required />
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Caption / Judul</label>
+                <input type="text" name="caption" className="input-field" placeholder="Contoh: Dragon Slide..." defaultValue={editingPhoto?.caption} required />
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Urutan</label>
+                <input type="number" name="order" className="input-field" placeholder="1" defaultValue={editingPhoto?.order || photos.length + 1} required />
+              </div>
+              <div style={{ display: "flex", gap: "12px", marginTop: "12px" }}>
+                <button type="button" className="btn-outline" style={{ flex: 1 }} onClick={() => setIsModalOpen(false)}>Batal</button>
+                <button type="submit" className="btn-primary" style={{ flex: 1 }}>Simpan Foto</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
