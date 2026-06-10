@@ -1,39 +1,40 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useToast } from "../components/ToastProvider";
-
-interface OperationalHour {
-  day: string;
-  openTime: string;
-  closeTime: string;
-  isClosed: boolean;
-}
-
-const initialHours: OperationalHour[] = [
-  { day: "Senin", openTime: "08:00", closeTime: "17:00", isClosed: false },
-  { day: "Selasa", openTime: "08:00", closeTime: "17:00", isClosed: false },
-  { day: "Rabu", openTime: "08:00", closeTime: "17:00", isClosed: false },
-  { day: "Kamis", openTime: "08:00", closeTime: "17:00", isClosed: false },
-  { day: "Jumat", openTime: "08:00", closeTime: "17:00", isClosed: false },
-  { day: "Sabtu", openTime: "07:30", closeTime: "18:00", isClosed: false },
-  { day: "Minggu", openTime: "07:30", closeTime: "18:00", isClosed: false },
-];
+import { getInfoWisata, OperationalDay } from "../../services/infoService";
 
 export default function OperationalHours() {
-  const [hours, setHours] = useState<OperationalHour[]>(initialHours);
+  const [hours, setHours] = useState<OperationalDay[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const { showToast } = useToast();
 
+  const fetchAndSetHours = async (silent = false) => {
+    try {
+      if (!silent) setIsLoading(true);
+      const info = await getInfoWisata();
+      setHours(info.hours);
+    } catch (err: any) {
+      showToast("Gagal memuat jam operasional.", "error");
+    } finally {
+      if (!silent) setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAndSetHours();
+  }, []);
+
   const handleToggleClosed = (index: number) => {
     const newHours = [...hours];
-    newHours[index].isClosed = !newHours[index].isClosed;
+    newHours[index] = { ...newHours[index], isClosed: !newHours[index].isClosed };
     setHours(newHours);
   };
 
   const handleTimeChange = (index: number, field: "openTime" | "closeTime", value: string) => {
     const newHours = [...hours];
-    newHours[index][field] = value;
+    newHours[index] = { ...newHours[index], [field]: value };
     setHours(newHours);
   };
 
@@ -53,10 +54,10 @@ export default function OperationalHours() {
           <h1 className="page-title">Jam Operasional</h1>
           <p className="page-subtitle">Atur jadwal operasional rutin dan hari libur Slanik Waterpark.</p>
         </div>
-        <button 
-          className="btn-primary" 
+        <button
+          className="btn-primary"
           onClick={handleSave}
-          disabled={isSaving}
+          disabled={isSaving || isLoading}
           style={{ minWidth: "140px" }}
         >
           {isSaving ? "Menyimpan..." : "Simpan Jadwal"}
@@ -74,62 +75,87 @@ export default function OperationalHours() {
         </div>
 
         <div style={{ padding: "0 24px" }}>
-          {hours.map((item, index) => (
-            <div key={item.day} style={{ 
-              display: "grid", 
-              gridTemplateColumns: "1.5fr 1fr 1fr 1fr", 
-              gap: "20px", 
-              alignItems: "center", 
-              padding: "20px 0",
-              borderBottom: index === hours.length - 1 ? "none" : "1px solid var(--divider)"
-            }}>
-              <div style={{ fontWeight: "600", fontSize: "15px", color: "var(--brand-secondary)" }}>
-                {item.day}
-              </div>
-              
-              <div>
-                <input 
-                  type="time" 
-                  className="input-field" 
-                  value={item.openTime}
-                  disabled={item.isClosed}
-                  onChange={(e) => handleTimeChange(index, "openTime", e.target.value)}
-                  style={{ opacity: item.isClosed ? 0.5 : 1 }}
-                />
-              </div>
+          {/* Loading skeleton */}
+          <style>{`
+            @keyframes pulse-shimmer {
+              0% { opacity: 0.6; }
+              50% { opacity: 1; }
+              100% { opacity: 0.6; }
+            }
+            .skeleton-shimmer { animation: pulse-shimmer 1.5s ease-in-out infinite; }
+          `}</style>
 
-              <div>
-                <input 
-                  type="time" 
-                  className="input-field" 
-                  value={item.closeTime}
-                  disabled={item.isClosed}
-                  onChange={(e) => handleTimeChange(index, "closeTime", e.target.value)}
-                  style={{ opacity: item.isClosed ? 0.5 : 1 }}
-                />
+          {isLoading ? (
+            Array.from({ length: 7 }).map((_, idx) => (
+              <div key={idx} className="skeleton-shimmer" style={{
+                display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr", gap: "20px",
+                alignItems: "center", padding: "20px 0",
+                borderBottom: idx === 6 ? "none" : "1px solid var(--divider)"
+              }}>
+                <div style={{ height: "16px", width: "60%", background: "#cbd5e1", borderRadius: "6px" }} />
+                <div style={{ height: "36px", width: "100%", background: "#cbd5e1", borderRadius: "8px" }} />
+                <div style={{ height: "36px", width: "100%", background: "#cbd5e1", borderRadius: "8px" }} />
+                <div style={{ height: "32px", width: "80px", background: "#cbd5e1", borderRadius: "20px", margin: "0 auto" }} />
               </div>
+            ))
+          ) : (
+            hours.map((item, index) => (
+              <div key={item.day} style={{
+                display: "grid",
+                gridTemplateColumns: "1.5fr 1fr 1fr 1fr",
+                gap: "20px",
+                alignItems: "center",
+                padding: "20px 0",
+                borderBottom: index === hours.length - 1 ? "none" : "1px solid var(--divider)"
+              }}>
+                <div style={{ fontWeight: "600", fontSize: "15px", color: "var(--brand-secondary)" }}>
+                  {item.day}
+                </div>
 
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <button
-                  onClick={() => handleToggleClosed(index)}
-                  style={{
-                    padding: "6px 12px",
-                    borderRadius: "20px",
-                    border: "none",
-                    background: item.isClosed ? "#fee2e2" : "#dcfce7",
-                    color: item.isClosed ? "#dc2626" : "#15803d",
-                    fontSize: "12px",
-                    fontWeight: "700",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    minWidth: "80px"
-                  }}
-                >
-                  {item.isClosed ? "TUTUP" : "BUKA"}
-                </button>
+                <div>
+                  <input
+                    type="time"
+                    className="input-field"
+                    value={item.openTime}
+                    disabled={item.isClosed}
+                    onChange={(e) => handleTimeChange(index, "openTime", e.target.value)}
+                    style={{ opacity: item.isClosed ? 0.5 : 1 }}
+                  />
+                </div>
+
+                <div>
+                  <input
+                    type="time"
+                    className="input-field"
+                    value={item.closeTime}
+                    disabled={item.isClosed}
+                    onChange={(e) => handleTimeChange(index, "closeTime", e.target.value)}
+                    style={{ opacity: item.isClosed ? 0.5 : 1 }}
+                  />
+                </div>
+
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <button
+                    onClick={() => handleToggleClosed(index)}
+                    style={{
+                      padding: "6px 12px",
+                      borderRadius: "20px",
+                      border: "none",
+                      background: item.isClosed ? "#fee2e2" : "#dcfce7",
+                      color: item.isClosed ? "#dc2626" : "#15803d",
+                      fontSize: "12px",
+                      fontWeight: "700",
+                      cursor: "pointer",
+                      transition: "all 0.2s ease",
+                      minWidth: "80px"
+                    }}
+                  >
+                    {item.isClosed ? "TUTUP" : "BUKA"}
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
 
