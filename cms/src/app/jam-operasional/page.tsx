@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { useToast } from "../components/ToastProvider";
-import { getInfoWisata, OperationalDay } from "../../services/infoService";
+import { getInfoWisata, updateInfoWisata, InfoWisata, OperationalDay } from "../../services/infoService";
 
 export default function OperationalHours() {
   const [hours, setHours] = useState<OperationalDay[]>([]);
+  const [infoData, setInfoData] = useState<InfoWisata | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const { showToast } = useToast();
@@ -14,6 +15,7 @@ export default function OperationalHours() {
     try {
       if (!silent) setIsLoading(true);
       const info = await getInfoWisata();
+      setInfoData(info);
       setHours(info.hours);
     } catch (err: any) {
       showToast("Gagal memuat jam operasional.", "error");
@@ -38,12 +40,19 @@ export default function OperationalHours() {
     setHours(newHours);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    if (!infoData) return;
     setIsSaving(true);
-    setTimeout(() => {
-      setIsSaving(false);
+    try {
+      const updated = await updateInfoWisata({ ...infoData, hours });
+      setInfoData(updated);
       showToast("Jam operasional berhasil diperbarui!", "success");
-    }, 1000);
+      fetchAndSetHours(true);
+    } catch (err: any) {
+      showToast(err.message || "Gagal menyimpan jam operasional.", "error");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
