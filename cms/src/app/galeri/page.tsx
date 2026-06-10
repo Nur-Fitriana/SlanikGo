@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useToast } from "../components/ToastProvider";
-import { getAllGallery, createGallery, updateGallery, GalleryPhoto } from "../../services/galeriService";
+import { getAllGallery, createGallery, updateGallery, deleteGallery, GalleryPhoto } from "../../services/galeriService";
 
 export default function GalleryManagement() {
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
@@ -51,10 +51,16 @@ export default function GalleryManagement() {
     }
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Hapus foto ini dari galeri?")) {
-      setPhotos(photos.filter(p => p.id !== id));
-      showToast("Foto berhasil dihapus dari galeri!", "success");
+      try {
+        await deleteGallery(id);
+        setPhotos(prev => prev.filter(p => p.id !== id));
+        showToast("Foto berhasil dihapus dari galeri!", "success");
+        fetchAndSetGallery(true);
+      } catch (err: any) {
+        showToast(err.message || "Gagal menghapus foto.", "error");
+      }
     }
   };
 
