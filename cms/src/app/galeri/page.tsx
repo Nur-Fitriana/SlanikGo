@@ -1,25 +1,32 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useToast } from "../components/ToastProvider";
-
-interface GalleryPhoto {
-  id: string;
-  url: string;
-  caption: string;
-  order: number;
-}
-
-const initialPhotos: GalleryPhoto[] = [
-  { id: "1", url: "https://images.unsplash.com/photo-1582650625119-3a31f8fa2699?auto=format&fit=crop&q=80&w=600", caption: "Dragon Slide", order: 1 },
-  { id: "2", url: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&q=80&w=600", caption: "Olympic Pool Area", order: 2 },
-  { id: "3", url: "https://images.unsplash.com/photo-1519331379826-f10be5486c6f?auto=format&fit=crop&q=80&w=600", caption: "Kids Zone Splash", order: 3 },
-  { id: "4", url: "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&q=80&w=600", caption: "Main Entrance", order: 4 },
-];
+import { getAllGallery, GalleryPhoto } from "../../services/galeriService";
 
 export default function GalleryManagement() {
-  const [photos, setPhotos] = useState<GalleryPhoto[]>(initialPhotos);
+  const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { showToast } = useToast();
+
+  const fetchAndSetGallery = async (silent = false) => {
+    try {
+      if (!silent) setIsLoading(true);
+      const data = await getAllGallery();
+      setPhotos(data);
+      setError(null);
+    } catch (err: any) {
+      setError(err.message || "Gagal memuat data galeri.");
+      showToast("Gagal memuat data galeri", "error");
+    } finally {
+      if (!silent) setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAndSetGallery();
+  }, []);
 
   const movePhoto = (index: number, direction: "up" | "down") => {
     const newPhotos = [...photos];
