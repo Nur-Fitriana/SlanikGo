@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useToast } from "../components/ToastProvider";
-import { getAllFacilities, createFacility, updateFacility, Facility } from "../../services/fasilitasService";
+import { getAllFacilities, createFacility, updateFacility, deleteFacility, Facility } from "../../services/fasilitasService";
 
 export default function FacilityManagement() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
@@ -39,10 +39,16 @@ export default function FacilityManagement() {
     }
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Hapus fasilitas ini?")) {
-      setFacilities(facilities.filter(f => f.id !== id));
-      showToast("Fasilitas berhasil dihapus!", "success");
+      try {
+        await deleteFacility(id);
+        setFacilities(facilities.filter(f => f.id !== id));
+        showToast("Fasilitas berhasil dihapus!", "success");
+        fetchAndSetFacilities(true);
+      } catch (err: any) {
+        showToast(err.message || "Gagal menghapus fasilitas.", "error");
+      }
     }
   };
 
