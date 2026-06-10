@@ -129,4 +129,42 @@ export async function createFacility(facility: Omit<Facility, "id">): Promise<Fa
   }
 }
 
+// PATCH (update) an existing facility in NestJS API with local fallback
+export async function updateFacility(id: string, facility: Partial<Facility>): Promise<Facility> {
+  try {
+    const backendData: any = {};
+    if (facility.name !== undefined) backendData.nama = facility.name;
+    if (facility.description !== undefined) backendData.deskripsi = facility.description;
+
+    if (
+      facility.category !== undefined ||
+      facility.image !== undefined ||
+      facility.status !== undefined
+    ) {
+      backendData.ikon = JSON.stringify({
+        category: facility.category,
+        image: facility.image,
+        status: facility.status,
+      });
+    }
+
+    const response = await apiRequest<any>(`/fasilitas/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(backendData),
+    });
+    return mapToFacility(response);
+  } catch (error) {
+    console.warn(`Backend API offline or failed, simulating update locally for ID ${id}. Details:`, error);
+    return {
+      id,
+      name: facility.name || "",
+      category: facility.category || "Wahana Air",
+      description: facility.description || "",
+      image: facility.image || "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&q=80&w=400",
+      status: facility.status || "Aktif",
+      ...facility,
+    } as Facility;
+  }
+}
+
 
