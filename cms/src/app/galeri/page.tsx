@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useToast } from "../components/ToastProvider";
-import { getAllGallery, GalleryPhoto } from "../../services/galeriService";
+import { getAllGallery, createGallery, GalleryPhoto } from "../../services/galeriService";
 
 export default function GalleryManagement() {
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
@@ -252,8 +252,26 @@ export default function GalleryManagement() {
 
             <form style={{ display: "flex", flexDirection: "column", gap: "20px" }} onSubmit={async (e) => {
               e.preventDefault();
-              setIsModalOpen(false);
-              showToast(editingPhoto ? "Foto berhasil diperbarui!" : "Foto baru ditambahkan!", "success");
+              const formData = new FormData(e.currentTarget);
+              const url = formData.get("url") as string;
+              const caption = formData.get("caption") as string;
+              const order = Number(formData.get("order")) || photos.length + 1;
+
+              try {
+                const photoData = { url, caption, order };
+                if (editingPhoto) {
+                  // Edit path will be wired in commit #95
+                  showToast("Foto berhasil diperbarui!", "success");
+                } else {
+                  const newPhoto = await createGallery(photoData);
+                  setPhotos(prev => [...prev, newPhoto]);
+                  showToast("Foto baru berhasil ditambahkan!", "success");
+                }
+                setIsModalOpen(false);
+                fetchAndSetGallery(true);
+              } catch (err: any) {
+                showToast(err.message || "Gagal menyimpan foto.", "error");
+              }
             }}>
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>URL Gambar</label>
