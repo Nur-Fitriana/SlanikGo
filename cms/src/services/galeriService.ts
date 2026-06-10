@@ -47,3 +47,48 @@ export async function getAllGallery(): Promise<GalleryPhoto[]> {
     return MOCK_GALLERY;
   }
 }
+
+// POST a new photo to NestJS API with local fallback
+export async function createGallery(photo: Omit<GalleryPhoto, "id">): Promise<GalleryPhoto> {
+  try {
+    const backendData = mapToBackendGaleri(photo);
+    const response = await apiRequest<any>("/galeri", {
+      method: "POST",
+      body: JSON.stringify(backendData),
+    });
+    return mapToGalleryPhoto(response);
+  } catch (error) {
+    console.warn("Backend API offline or failed, simulating gallery creation locally. Details:", error);
+    return {
+      ...photo,
+      id: String(Date.now()),
+    };
+  }
+}
+// PATCH (update) an existing gallery photo in NestJS API with local fallback
+export async function updateGallery(id: string, photo: Partial<GalleryPhoto>): Promise<GalleryPhoto> {
+  try {
+    const backendData: any = {};
+    if (photo.url !== undefined) backendData.gambarUrl = photo.url;
+    if (photo.caption !== undefined) {
+      backendData.caption = photo.caption;
+      backendData.judul = photo.caption;
+    }
+    if (photo.order !== undefined) backendData.urutan = Number(photo.order);
+
+    const response = await apiRequest<any>(`/galeri/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(backendData),
+    });
+    return mapToGalleryPhoto(response);
+  } catch (error) {
+    console.warn(`Backend API offline or failed, simulating gallery update locally for ID ${id}. Details:`, error);
+    return {
+      id,
+      url: photo.url || "",
+      caption: photo.caption || "",
+      order: photo.order || 0,
+      ...photo,
+    } as GalleryPhoto;
+  }
+}
