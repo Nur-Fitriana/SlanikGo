@@ -78,59 +78,93 @@ export default function FacilityManagement() {
 
       {/* Facilities Grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "24px" }}>
-        {facilities.map((facility) => (
-          <div key={facility.id} className="card-premium" style={{ overflow: "hidden", display: "flex", flexDirection: "column" }}>
-            <div style={{ position: "relative", height: "200px", width: "100%" }}>
-              <img
-                src={facility.image}
-                alt={facility.name}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-              <div style={{ position: "absolute", top: "12px", right: "12px" }}>
-                <span className={getStatusBadge(facility.status)}>{facility.status}</span>
+        {/* Style block for shimmer pulse */}
+        <style>{`
+          @keyframes pulse-shimmer {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+          }
+          .skeleton-shimmer {
+            animation: pulse-shimmer 1.5s ease-in-out infinite;
+          }
+        `}</style>
+
+        {isLoading ? (
+          Array.from({ length: 3 }).map((_, idx) => (
+            <div key={idx} className="card-premium skeleton-shimmer" style={{ overflow: "hidden", display: "flex", flexDirection: "column", height: "380px" }}>
+              <div style={{ height: "200px", width: "100%", background: "#cbd5e1" }} />
+              <div style={{ padding: "20px", flex: 1, display: "flex", flexDirection: "column", gap: "12px" }}>
+                <div style={{ height: "12px", width: "30%", background: "#cbd5e1", borderRadius: "6px" }} />
+                <div style={{ height: "20px", width: "70%", background: "#cbd5e1", borderRadius: "6px" }} />
+                <div style={{ height: "40px", width: "100%", background: "#cbd5e1", borderRadius: "6px", marginTop: "8px" }} />
+                <div style={{ height: "35px", width: "100%", background: "#cbd5e1", borderRadius: "6px", marginTop: "auto" }} />
               </div>
             </div>
-
-            <div style={{ padding: "20px", flex: 1, display: "flex", flexDirection: "column" }}>
-              <div style={{ marginBottom: "12px" }}>
-                <span style={{ fontSize: "11px", fontWeight: "700", color: "var(--brand-accent)", textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                  {facility.category}
-                </span>
-                <h3 style={{ fontSize: "18px", fontWeight: "700", color: "var(--brand-secondary)", marginTop: "4px" }}>{facility.name}</h3>
-              </div>
-
-              <p style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: "1.6", marginBottom: "20px", flex: 1 }}>
-                {facility.description}
-              </p>
-
-              <div style={{ display: "flex", gap: "10px", paddingTop: "16px", borderTop: "1px solid var(--divider)" }}>
-                <button
-                  className="btn-outline"
-                  style={{ flex: 1, padding: "8px", fontSize: "13px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
-                  onClick={() => {
-                    setEditingFacility(facility);
-                    setIsModalOpen(true);
-                  }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-                  </svg>
-                  Edit
-                </button>
-                <button
-                  className="btn-danger"
-                  style={{ padding: "8px 12px" }}
-                  onClick={() => handleDelete(facility.id)}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                  </svg>
-                </button>
-              </div>
-            </div>
+          ))
+        ) : error ? (
+          <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "40px", color: "#dc2626", fontWeight: "500" }}>
+            {error}
           </div>
-        ))}
+        ) : facilities.length === 0 ? (
+          <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "40px", color: "var(--text-muted)", fontWeight: "500" }}>
+            Belum ada data fasilitas.
+          </div>
+        ) : (
+          facilities.map((facility) => (
+            <div key={facility.id} className="card-premium" style={{ overflow: "hidden", display: "flex", flexDirection: "column" }}>
+              <div style={{ position: "relative", height: "200px", width: "100%" }}>
+                <img
+                  src={facility.image}
+                  alt={facility.name}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+                <div style={{ position: "absolute", top: "12px", right: "12px" }}>
+                  <span className={getStatusBadge(facility.status)}>{facility.status}</span>
+                </div>
+              </div>
+
+              <div style={{ padding: "20px", flex: 1, display: "flex", flexDirection: "column" }}>
+                <div style={{ marginBottom: "12px" }}>
+                  <span style={{ fontSize: "11px", fontWeight: "700", color: "var(--brand-accent)", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                    {facility.category}
+                  </span>
+                  <h3 style={{ fontSize: "18px", fontWeight: "700", color: "var(--brand-secondary)", marginTop: "4px" }}>{facility.name}</h3>
+                </div>
+
+                <p style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: "1.6", marginBottom: "20px", flex: 1 }}>
+                  {facility.description}
+                </p>
+
+                <div style={{ display: "flex", gap: "10px", paddingTop: "16px", borderTop: "1px solid var(--divider)" }}>
+                  <button
+                    className="btn-outline"
+                    style={{ flex: 1, padding: "8px", fontSize: "13px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
+                    onClick={() => {
+                      setEditingFacility(facility);
+                      setIsModalOpen(true);
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                    </svg>
+                    Edit
+                  </button>
+                  <button
+                    className="btn-danger"
+                    style={{ padding: "8px 12px" }}
+                    onClick={() => handleDelete(facility.id)}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Modal */}
