@@ -106,3 +106,29 @@ export async function getInfoWisata(): Promise<InfoWisata> {
     return MOCK_INFO_WISATA;
   }
 }
+
+// PATCH / POST InfoWisata to NestJS API with local simulation fallback
+// Uses PATCH if an existing record id is known, otherwise POST to create one.
+export async function updateInfoWisata(info: InfoWisata): Promise<InfoWisata> {
+  try {
+    const payload = mapToBackendInfo(info);
+    let response: any;
+
+    if (info.id) {
+      response = await apiRequest<any>(`/info/${info.id}`, {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+      });
+    } else {
+      response = await apiRequest<any>("/info", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+    }
+
+    return mapToInfoWisata(response);
+  } catch (error) {
+    console.warn("Backend API offline or failed, simulating info update locally. Details:", error);
+    return info;
+  }
+}
