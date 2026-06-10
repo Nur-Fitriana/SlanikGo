@@ -33,3 +33,17 @@ export function mapToBackendGaleri(frontendPhoto: Omit<GalleryPhoto, "id">) {
     urutan: Number(frontendPhoto.order) || 0,
   };
 }
+
+// GET all gallery photos from NestJS API with local fallback
+export async function getAllGallery(): Promise<GalleryPhoto[]> {
+  try {
+    const data = await apiRequest<any[]>("/galeri");
+    if (Array.isArray(data)) {
+      return data.map(mapToGalleryPhoto).sort((a, b) => a.order - b.order);
+    }
+    return MOCK_GALLERY;
+  } catch (error) {
+    console.warn("Backend API offline or failed, using local MOCK_GALLERY fallback. Details:", error);
+    return MOCK_GALLERY;
+  }
+}
