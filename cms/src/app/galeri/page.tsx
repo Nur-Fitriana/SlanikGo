@@ -73,93 +73,120 @@ export default function GalleryManagement() {
         gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
         gap: "24px"
       }}>
-        {photos.map((photo, index) => (
-          <div key={photo.id} className="card-premium group" style={{
-            overflow: "hidden",
-            position: "relative"
-          }}>
-            <div style={{ position: "relative", height: "200px", overflow: "hidden" }}>
-              <img
-                src={photo.url}
-                alt={photo.caption}
-                style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s ease" }}
-              />
-              <div style={{
-                position: "absolute",
-                top: 0, left: 0, right: 0, bottom: 0,
-                background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%)",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "flex-end",
-                padding: "16px"
-              }}>
-                <p style={{ color: "white", fontSize: "14px", fontWeight: "600", margin: 0 }}>{photo.caption}</p>
+        <style>{`
+          @keyframes pulse-shimmer {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+          }
+          .skeleton-shimmer {
+            animation: pulse-shimmer 1.5s ease-in-out infinite;
+          }
+        `}</style>
+
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, idx) => (
+            <div key={idx} className="card-premium skeleton-shimmer" style={{ overflow: "hidden", display: "flex", flexDirection: "column", height: "260px" }}>
+              <div style={{ height: "200px", width: "100%", background: "#cbd5e1" }} />
+              <div style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ height: "12px", width: "40%", background: "#cbd5e1", borderRadius: "6px" }} />
+                <div style={{ height: "12px", width: "30%", background: "#cbd5e1", borderRadius: "6px" }} />
               </div>
-
-              {/* Order Controls */}
-              <div style={{ position: "absolute", top: "12px", left: "12px", display: "flex", gap: "4px" }}>
-                <button
-                  onClick={() => movePhoto(index, "up")}
-                  disabled={index === 0}
-                  style={{
-                    width: "32px", height: "32px", borderRadius: "8px",
-                    background: "rgba(255,255,255,0.9)", border: "none",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    cursor: index === 0 ? "default" : "pointer",
-                    opacity: index === 0 ? 0.4 : 1,
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
-                  }}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d6fa4" strokeWidth="2.5">
-                    <polyline points="18 15 12 9 6 15"></polyline>
-                  </svg>
-                </button>
-                <button
-                  onClick={() => movePhoto(index, "down")}
-                  disabled={index === photos.length - 1}
-                  style={{
-                    width: "32px", height: "32px", borderRadius: "8px",
-                    background: "rgba(255,255,255,0.9)", border: "none",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    cursor: index === photos.length - 1 ? "default" : "pointer",
-                    opacity: index === photos.length - 1 ? 0.4 : 1,
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
-                  }}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d6fa4" strokeWidth="2.5">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                  </svg>
-                </button>
-              </div>
-
-              {/* Delete Button */}
-              <button
-                onClick={() => handleDelete(photo.id)}
-                style={{
-                  position: "absolute", top: "12px", right: "12px",
-                  width: "32px", height: "32px", borderRadius: "8px",
-                  background: "#fee2e2", border: "none",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  cursor: "pointer",
-                  boxShadow: "0 2px 8px rgba(220,38,38,0.2)"
-                }}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2">
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                </svg>
-              </button>
             </div>
-
-            <div style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: "12px", color: "var(--text-muted)", fontWeight: "600" }}>Urutan: #{photo.order}</span>
-              <button style={{
-                fontSize: "12px", color: "var(--brand-accent)", background: "transparent", border: "none",
-                fontWeight: "600", cursor: "pointer"
-              }}>Edit Caption</button>
-            </div>
+          ))
+        ) : error ? (
+          <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "40px", color: "#dc2626", fontWeight: "500" }}>
+            {error}
           </div>
-        ))}
+        ) : (
+          photos.map((photo, index) => (
+            <div key={photo.id} className="card-premium group" style={{
+              overflow: "hidden",
+              position: "relative"
+            }}>
+              <div style={{ position: "relative", height: "200px", overflow: "hidden" }}>
+                <img
+                  src={photo.url}
+                  alt={photo.caption}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s ease" }}
+                />
+                <div style={{
+                  position: "absolute",
+                  top: 0, left: 0, right: 0, bottom: 0,
+                  background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%)",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-end",
+                  padding: "16px"
+                }}>
+                  <p style={{ color: "white", fontSize: "14px", fontWeight: "600", margin: 0 }}>{photo.caption}</p>
+                </div>
+
+                {/* Order Controls */}
+                <div style={{ position: "absolute", top: "12px", left: "12px", display: "flex", gap: "4px" }}>
+                  <button
+                    onClick={() => movePhoto(index, "up")}
+                    disabled={index === 0}
+                    style={{
+                      width: "32px", height: "32px", borderRadius: "8px",
+                      background: "rgba(255,255,255,0.9)", border: "none",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      cursor: index === 0 ? "default" : "pointer",
+                      opacity: index === 0 ? 0.4 : 1,
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+                    }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d6fa4" strokeWidth="2.5">
+                      <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => movePhoto(index, "down")}
+                    disabled={index === photos.length - 1}
+                    style={{
+                      width: "32px", height: "32px", borderRadius: "8px",
+                      background: "rgba(255,255,255,0.9)", border: "none",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      cursor: index === photos.length - 1 ? "default" : "pointer",
+                      opacity: index === photos.length - 1 ? 0.4 : 1,
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+                    }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d6fa4" strokeWidth="2.5">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Delete Button */}
+                <button
+                  onClick={() => handleDelete(photo.id)}
+                  style={{
+                    position: "absolute", top: "12px", right: "12px",
+                    width: "32px", height: "32px", borderRadius: "8px",
+                    background: "#fee2e2", border: "none",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    cursor: "pointer",
+                    boxShadow: "0 2px 8px rgba(220,38,38,0.2)"
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </button>
+              </div>
+
+              <div style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontSize: "12px", color: "var(--text-muted)", fontWeight: "600" }}>Urutan: #{photo.order}</span>
+                <button style={{
+                  fontSize: "12px", color: "var(--brand-accent)", background: "transparent", border: "none",
+                  fontWeight: "600", cursor: "pointer"
+                }}>Edit Caption</button>
+              </div>
+            </div>
+          ))
+        )}
 
         {/* Empty State / Add Card */}
         <div
