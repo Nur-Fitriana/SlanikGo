@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useToast } from "../components/ToastProvider";
-import { getAllFacilities, createFacility, Facility } from "../../services/fasilitasService";
+import { getAllFacilities, createFacility, updateFacility, Facility } from "../../services/fasilitasService";
 
 export default function FacilityManagement() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
@@ -156,8 +156,8 @@ export default function FacilityManagement() {
 
               try {
                 if (editingFacility) {
-                  // Will hook to update API in commit 83
-                  setFacilities(facilities.map(f => f.id === editingFacility.id ? { ...f, ...facilityData } : f));
+                  const updated = await updateFacility(editingFacility.id, facilityData);
+                  setFacilities(facilities.map(f => f.id === editingFacility.id ? updated : f));
                   showToast("Fasilitas berhasil diperbarui!", "success");
                 } else {
                   const newFacility = await createFacility(facilityData);
