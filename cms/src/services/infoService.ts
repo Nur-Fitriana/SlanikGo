@@ -89,3 +89,20 @@ export function mapToBackendInfo(info: InfoWisata) {
     whatsapp: info.whatsapp,
   };
 }
+
+// GET InfoWisata from NestJS API with local mock fallback
+export async function getInfoWisata(): Promise<InfoWisata> {
+  try {
+    const data = await apiRequest<any>("/info");
+    // Backend may return array (one record) or single object
+    const record = Array.isArray(data) ? data[0] : data;
+    if (!record) {
+      console.info("No InfoWisata data in backend yet, using mock defaults.");
+      return MOCK_INFO_WISATA;
+    }
+    return mapToInfoWisata(record);
+  } catch (error) {
+    console.warn("Backend API offline or failed, using MOCK_INFO_WISATA fallback. Details:", error);
+    return MOCK_INFO_WISATA;
+  }
+}
