@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useToast } from "../components/ToastProvider";
-import { getAllFacilities, Facility } from "../../services/fasilitasService";
+import { getAllFacilities, createFacility, Facility } from "../../services/fasilitasService";
 
 export default function FacilityManagement() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
@@ -12,21 +12,22 @@ export default function FacilityManagement() {
   const [error, setError] = useState<string | null>(null);
   const { showToast } = useToast();
 
-  useEffect(() => {
-    async function loadFacilities() {
-      try {
-        setIsLoading(true);
-        const data = await getAllFacilities();
-        setFacilities(data);
-        setError(null);
-      } catch (err: any) {
-        setError(err.message || "Gagal memuat data fasilitas.");
-        showToast("Gagal memuat data fasilitas", "error");
-      } finally {
-        setIsLoading(false);
-      }
+  const fetchAndSetFacilities = async (silent = false) => {
+    try {
+      if (!silent) setIsLoading(true);
+      const data = await getAllFacilities();
+      setFacilities(data);
+      setError(null);
+    } catch (err: any) {
+      setError(err.message || "Gagal memuat data fasilitas.");
+      showToast("Gagal memuat data fasilitas", "error");
+    } finally {
+      if (!silent) setIsLoading(false);
     }
-    loadFacilities();
+  };
+
+  useEffect(() => {
+    fetchAndSetFacilities();
   }, []);
 
   const getStatusBadge = (status: string) => {
@@ -142,20 +143,42 @@ export default function FacilityManagement() {
               {editingFacility ? "Edit Fasilitas" : "Tambah Fasilitas Baru"}
             </h2>
 
-            <form style={{ display: "flex", flexDirection: "column", gap: "20px" }} onSubmit={(e) => {
+            <form style={{ display: "flex", flexDirection: "column", gap: "20px" }} onSubmit={async (e) => {
               e.preventDefault();
-              setIsModalOpen(false);
-              showToast(editingFacility ? "Fasilitas berhasil diperbarui!" : "Fasilitas baru ditambahkan!", "success");
+              const formData = new FormData(e.currentTarget);
+              const name = formData.get("name") as string;
+              const category = formData.get("category") as string;
+              const status = formData.get("status") as "Aktif" | "Pemeliharaan" | "Tutup";
+              const description = formData.get("description") as string;
+              const image = formData.get("image") as string || "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&q=80&w=400";
+
+              const facilityData = { name, category, status, description, image };
+
+              try {
+                if (editingFacility) {
+                  // Will hook to update API in commit 83
+                  setFacilities(facilities.map(f => f.id === editingFacility.id ? { ...f, ...facilityData } : f));
+                  showToast("Fasilitas berhasil diperbarui!", "success");
+                } else {
+                  const newFacility = await createFacility(facilityData);
+                  setFacilities([...facilities, newFacility]);
+                  showToast("Fasilitas baru ditambahkan!", "success");
+                }
+                setIsModalOpen(false);
+                fetchAndSetFacilities(true);
+              } catch (err: any) {
+                showToast(err.message || "Gagal menyimpan fasilitas", "error");
+              }
             }}>
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Nama Fasilitas</label>
-                <input type="text" className="input-field" placeholder="Contoh: Kolam Arus, Tower Slide..." defaultValue={editingFacility?.name} required />
+                <input type="text" name="name" className="input-field" placeholder="Contoh: Kolam Arus, Tower Slide..." defaultValue={editingFacility?.name} required />
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                 <div>
                   <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Kategori</label>
-                  <select className="input-field" defaultValue={editingFacility?.category || "Wahana Air"}>
+                  <select name="category" className="input-field" defaultValue={editingFacility?.category || "Wahana Air"}>
                     <option value="Kolam Renang">Kolam Renang</option>
                     <option value="Wahana Air">Wahana Air</option>
                     <option value="Area Bermain">Area Bermain</option>
@@ -164,7 +187,7 @@ export default function FacilityManagement() {
                 </div>
                 <div>
                   <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Status</label>
-                  <select className="input-field" defaultValue={editingFacility?.status || "Aktif"}>
+                  <select name="status" className="input-field" defaultValue={editingFacility?.status || "Aktif"}>
                     <option value="Aktif">Aktif</option>
                     <option value="Pemeliharaan">Pemeliharaan</option>
                     <option value="Tutup">Tutup</option>
@@ -174,26 +197,12 @@ export default function FacilityManagement() {
 
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Deskripsi</label>
-                <textarea className="input-field" rows={3} placeholder="Jelaskan detail fasilitas..." defaultValue={editingFacility?.description}></textarea>
+                <textarea name="description" className="input-field" rows={3} placeholder="Jelaskan detail fasilitas..." defaultValue={editingFacility?.description}></textarea>
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>Foto Fasilitas</label>
-                <div style={{
-                  border: "2px dashed var(--input-border)",
-                  borderRadius: "12px",
-                  padding: "24px",
-                  textAlign: "center",
-                  background: "#f8fafc",
-                  cursor: "pointer"
-                }}>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2" style={{ marginBottom: "8px" }}>
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                    <polyline points="21 15 16 10 5 21"></polyline>
-                  </svg>
-                  <p style={{ fontSize: "12px", color: "var(--text-muted)" }}>Klik atau seret foto ke sini untuk upload</p>
-                </div>
+                <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "8px", color: "var(--text-secondary)" }}>URL Foto Fasilitas</label>
+                <input type="text" name="image" className="input-field" placeholder="https://..." defaultValue={editingFacility?.image} />
               </div>
 
               <div style={{ display: "flex", gap: "12px", marginTop: "12px" }}>
