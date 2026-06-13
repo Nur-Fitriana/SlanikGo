@@ -1,6 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
 
-// Membuat instansiasi Axios khusus untuk layanan Wisata
 export const wisataAxiosInstance: AxiosInstance = axios.create({
   baseURL: process.env.WISATA_SERVICE_URL || 'http://localhost:3001', // Sesuaikan URL Microservice Wisata Anda
   timeout: 5000,
@@ -14,7 +13,13 @@ wisataAxiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
-    return Promise.reject(error);
+  (error: unknown) => {
+    if (error instanceof Error) {
+      return Promise.reject(error);
+    }
+
+    return Promise.reject(
+      new Error(typeof error === 'string' ? error : 'Wisata Service Error'),
+    );
   },
 );
