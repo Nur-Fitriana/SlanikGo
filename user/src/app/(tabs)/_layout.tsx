@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Platform, View, Image, StyleSheet, Text, Dimensions } from 'react-native';
+import { Platform, View, Image, StyleSheet, Text, Dimensions, ScrollView } from 'react-native';
 
 const { width } = Dimensions.get("window");
 
@@ -10,9 +10,14 @@ export default function TabLayout() {
   const bannerHeight = isWeb ? 360 : 240;
 
   return (
-    <View style={styles.mainContainer}>
+    // 🌟 KUNCI UTAMA: Membuka ScrollView Global di Layout agar Banner & Isi Halaman bisa di-scroll bareng!
+    <ScrollView 
+      style={styles.globalScroll} 
+      contentContainerStyle={styles.globalScrollContent}
+      showsVerticalScrollIndicator={false}
+    >
       
-      {/* 🌴 1. HERO BANNER FIX (Menggunakan View Statis agar Gambar Pasti Muncul di Web & HP) */}
+      {/* 🌴 1. HERO BANNER (Gambar dijamin muncul & ikut ke-scroll ke atas) */}
       <View style={[styles.heroContainer, { height: bannerHeight }]}>
         <Image 
           source={require("../../../assets/images/slanik_hero.png")} 
@@ -43,18 +48,17 @@ export default function TabLayout() {
           </View>
         </View>
 
-        {/* Lengkungan halus transisi bawah */}
+        {/* Lengkungan putih manis pembatas bawah */}
         <View style={styles.curvedMask} />
       </View>
 
-      {/* 🌟 2. KONTEN TABS NAVIGASI (Bisa di-scroll lancar & rapi) */}
-      <View style={styles.tabsContentBinder}>
+      {/* 🌟 2. WRAPPER UNTUK ISI HALAMAN KAMU */}
+      <View style={styles.tabsContainerBinder}>
         <Tabs
           screenOptions={{
-            // Header bawaan dimatikan total karena kita sudah pakai Banner statis di atas
-            headerShown: false, 
+            headerShown: false, // Matikan header bawaan
 
-            // Layout Tab Menu Bawah yang Presisi & Mewah
+            // Menu navigasi bawah yang rapi & presisi
             tabBarStyle: {
               backgroundColor: '#FFFFFF',
               position: 'absolute',
@@ -66,16 +70,12 @@ export default function TabLayout() {
               paddingBottom: Platform.OS === 'ios' ? 0 : 8,
               paddingTop: 8,
               borderWidth: 0,
-              
               ...Platform.select({
                 ios: {
                   shadowColor: '#1E293B',
                   shadowOffset: { width: 0, height: 10 },
                   shadowOpacity: 0.08,
                   shadowRadius: 20,
-                },
-                android: {
-                  elevation: 10,
                 },
                 web: {
                   boxShadow: '0px 12px 32px rgba(30, 41, 59, 0.12)',
@@ -146,14 +146,17 @@ export default function TabLayout() {
         </Tabs>
       </View>
 
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  mainContainer: {
+  globalScroll: {
     flex: 1,
     backgroundColor: '#F8FAFC',
+  },
+  globalScrollContent: {
+    flexGrow: 1,
   },
   heroContainer: {
     width: "100%",
@@ -187,59 +190,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.3)",
   },
-  premiumBadgeText: { 
-    color: "#FFF", 
-    fontSize: 9, 
-    fontWeight: "800", 
-    letterSpacing: 1 
-  },
-  brandTitle: { 
-    color: "#FFF", 
-    fontSize: width > 768 ? 44 : 28, 
-    fontWeight: "900", 
-    letterSpacing: -0.5,
-  },
-  brandSubtitle: { 
-    color: "#F1F5F9", 
-    fontSize: width > 768 ? 15 : 12, 
-    marginTop: 6, 
-    fontWeight: "500", 
-    maxWidth: 550, 
-    lineHeight: width > 768 ? 22 : 18,
-    opacity: 0.95,
-  },
-  metaRow: { 
-    flexDirection: "row", 
-    marginTop: 14,
-    gap: 8
-  },
-  metaPill: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgba(15, 23, 42, 0.5)", 
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 8,
-  },
-  metaText: { 
-    color: "#FFF", 
-    fontSize: 11, 
-    fontWeight: "600", 
-    marginLeft: 5 
-  },
+  premiumBadgeText: { color: "#FFF", fontSize: 9, fontWeight: "800", letterSpacing: 1 },
+  brandTitle: { color: "#FFF", fontSize: width > 768 ? 44 : 28, fontWeight: "900", letterSpacing: -0.5 },
+  brandSubtitle: { color: "#F1F5F9", fontSize: width > 768 ? 15 : 12, marginTop: 6, fontWeight: "500", maxWidth: 550, lineHeight: width > 768 ? 22 : 18, opacity: 0.95 },
+  metaRow: { flexDirection: "row", marginTop: 14, gap: 8 },
+  metaPill: { flexDirection: "row", alignItems: "center", backgroundColor: "rgba(15, 23, 42, 0.5)", paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8 },
+  metaText: { color: "#FFF", fontSize: 11, fontWeight: "600", marginLeft: 5 },
   curvedMask: {
     position: 'absolute',
     bottom: -1, 
     left: 0,
     right: 0,
     height: 28,
-    backgroundColor: '#F8FAFC', 
+    backgroundColor: '#0284C7', // Disamakan dengan warna latar biru "Halo Fitri" kamu agar menyatu sempurna!
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
   },
-  // Membungkus tabs agar sisa layar di bawah banner sepenuhnya bisa di-scroll bebas
-  tabsContentBinder: {
-    flex: 1,
-    marginTop: -4, // Menyisipkan sedikit ke dalam lengkungan agar rapi
+  // Mengunci tinggi area halaman di bawah banner agar bisa mengikuti tinggi konten aslinya
+  tabsContainerBinder: {
+    height: Dimensions.get('window').height - 100,
+    marginTop: -2,
   },
 });
