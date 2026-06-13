@@ -12,7 +12,6 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { height } = Dimensions.get('window');
 
@@ -23,7 +22,7 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleRegister = async () => {
+  const handleRegister = () => {
     if (!name.trim() || !username.trim() || !password.trim()) {
       Alert.alert("Error", "Semua kolom pendaftaran wajib diisi!");
       return;
@@ -31,22 +30,18 @@ export default function RegisterScreen() {
 
     setLoading(true);
 
-    try {
-      // Menyimpan data akun secara lokal di HP agar bisa dibaca di halaman Login
-      await AsyncStorage.setItem('user_username', username.trim().toLowerCase());
-      await AsyncStorage.setItem('user_password', password);
-      await AsyncStorage.setItem('user_name', name.trim());
-
-      setTimeout(() => {
-        setLoading(false);
-        Alert.alert("Sukses", "Akun berhasil dibuat! Silakan masuk memakai akun tersebut.");
-        router.back(); // Otomatis balik ke halaman login
-      }, 1000);
-
-    } catch (error) {
+    setTimeout(() => {
       setLoading(false);
-      Alert.alert("Error", "Gagal menyimpan data pendaftaran.");
-    }
+
+      (window as any).akunSlanik = {
+        username: username.trim().toLowerCase(),
+        password: password,
+        name: name.trim()
+      };
+
+      Alert.alert("Sukses", "Akun berhasil dibuat! Silakan masuk memakai akun tersebut.");
+      router.back(); // Kembali ke login
+    }, 1000);
   };
 
   return (
