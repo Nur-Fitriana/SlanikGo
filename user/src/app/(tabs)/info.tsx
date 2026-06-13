@@ -8,10 +8,13 @@ import {
   StatusBar,
   TouchableOpacity,
   Linking,
-  ImageBackground,
+  Image,
   Alert,
+  Dimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+
+const { width } = Dimensions.get("window");
 
 export default function InfoScreen() {
   const hubungiWhatsApp = async (nomor: string) => {
@@ -26,14 +29,13 @@ export default function InfoScreen() {
   };
 
   const bukaPeta = async () => {
-    // Memakai format Google Maps universal agar tidak crash di iOS/Android
-    const url = "https://maps.google.com/?q=Slanik+Waterpark";
+    const url = "https://goo.gl/maps/SlanikWaterparkLampung"; // Tautan universal peta yang aman
     const bisaBuka = await Linking.canOpenURL(url);
 
     if (bisaBuka) {
       await Linking.openURL(url);
     } else {
-      Alert.alert("Error", "Tidak dapat membuka peta.");
+      Alert.alert("Error", "Tidak dapat membuka aplikasi peta.");
     }
   };
 
@@ -43,48 +45,52 @@ export default function InfoScreen() {
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
         
-        {/* ================= 1. HERO BANNER ================= */}
-        {/* Path di bawah ini melompat keluar dari src/app/(tabs) menuju ke assets/images/ */}
-        <ImageBackground 
-          source={require("../../../assets/images/slanik_hero.png")} 
-          style={styles.heroImageBanner}
-          resizeMode="cover"
-        >
-          <View style={styles.heroOverlay}>
-            <View style={styles.heroBadge}>
-              <Text style={styles.heroBadgeText}>🌴 THE LARGEST WATERPARK IN LAMPUNG</Text>
-            </View>
-            <Text style={styles.heroMainTitle}>🌊 Slanik Waterpark</Text>
-            <Text style={styles.heroSubTitle}>
-              Tempat Rekreasi Air Terbesar & Terfavorit Keluarga di Lampung
-            </Text>
-
-            <View style={styles.heroStatsRow}>
-              <View style={styles.statItem}>
-                <Ionicons name="star" size={14} color="#FBBF24" />
-                <Text style={styles.statText}>4.9 Top Rated</Text>
+        {/* ================= 1. HERO BANNER RE-DESIGN (HD & FULL WIDTH) ================= */}
+        <View style={styles.heroContainer}>
+          <Image 
+            source={require("../../../assets/images/slanik_hero.png")} 
+            style={styles.heroImage}
+            resizeMode="cover"
+          />
+          {/* Lapisan gradasi gelap tipis agar teks tetap terbaca tajam */}
+          <View style={styles.heroGradientOverlay}>
+            <View style={styles.heroContentWrapper}>
+              <View style={styles.heroBadge}>
+                <Text style={styles.heroBadgeText}>🌴 THE LARGEST WATERPARK IN LAMPUNG</Text>
               </View>
-              <View style={styles.statItemBlank}>
-                <Ionicons name="location" size={14} color="#FFF" />
-                <Text style={styles.statText}>Jati Agung, Lamsel</Text>
+              <Text style={styles.heroMainTitle}>🌊 Slanik Waterpark</Text>
+              <Text style={styles.heroSubTitle}>
+                Tempat Rekreasi Air Terbesar & Terfavorit Keluarga di Lampung
+              </Text>
+
+              <View style={styles.heroStatsRow}>
+                <View style={styles.statItem}>
+                  <Ionicons name="star" size={14} color="#FBBF24" />
+                  <Text style={styles.statText}>4.9 Top Rated 2026</Text>
+                </View>
+                <View style={styles.statItemBlank}>
+                  <Ionicons name="location" size={14} color="#FFF" />
+                  <Text style={styles.statText}>Lampung Selatan</Text>
+                </View>
               </View>
             </View>
           </View>
-        </ImageBackground>
+        </View>
 
-        {/* CONTAINER UTAMA */}
+        {/* CONTAINER UTAMA KONTEN */}
         <View style={styles.fullWebBody}>
 
           {/* ================= 2. JAM OPERASIONAL ================= */}
           <View style={styles.sectionBlock}>
-            <Text style={styles.sectionHeading}>🕒 Jam Operasional</Text>
+            <Text style={styles.sectionHeading}>🕒 Rencanakan Kunjunganmu</Text>
             <View style={styles.responsiveGridRow}>
               
               <View style={[styles.gridScheduleCard, { borderTopColor: "#0284C7" }]}>
                 <View style={[styles.gridIconCircle, { backgroundColor: "#E0F2FE" }]}>
                   <Ionicons name="calendar-outline" size={22} color="#0284C7" />
                 </View>
-                <Text style={styles.scheduleTitle}>Senin - Jumat</Text>
+                <Text style={styles.scheduleTitle}>Weekday</Text>
+                <Text style={styles.scheduleSubTitle}>Senin s/d Jumat</Text>
                 <View style={styles.timePillBlue}>
                   <Text style={styles.timePillTextBlue}>09:00 - 17:00</Text>
                 </View>
@@ -94,7 +100,8 @@ export default function InfoScreen() {
                 <View style={[styles.gridIconCircle, { backgroundColor: "#FEF3C7" }]}>
                   <Ionicons name="sunny-outline" size={22} color="#F59E0B" />
                 </View>
-                <Text style={styles.scheduleTitle}>Weekend & Libur</Text>
+                <Text style={styles.scheduleTitle}>Weekend</Text>
+                <Text style={styles.scheduleSubTitle}>Sabtu, Minggu & Libur</Text>
                 <View style={styles.timePillOrange}>
                   <Text style={styles.timePillTextOrange}>08:00 - 17:30</Text>
                 </View>
@@ -105,7 +112,10 @@ export default function InfoScreen() {
 
           {/* ================= 3. HUBUNGI KAMI ================= */}
           <View style={styles.sectionBlock}>
-            <Text style={styles.sectionHeading}>📞 Hubungi Kami</Text>
+            <Text style={styles.sectionHeading}>📞 Hubungi Tim Humas Slanik</Text>
+            <Text style={styles.sectionSubHeading}>
+              Punya pertanyaan atau rencana datang bersama rombongan besar? Ketuk salah satu admin WhatsApp di bawah ini:
+            </Text>
             <View style={styles.responsiveGridRow}>
 
               <TouchableOpacity 
@@ -172,16 +182,27 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: "#0284C7" },
   scrollView: { flex: 1, backgroundColor: "#F8FAFC" },
 
-  heroImageBanner: {
+  // Desain Baru untuk Hero Banner full website & HD
+  heroContainer: {
     width: "100%",
-    minHeight: 360,
-    justifyContent: "flex-end",
+    height: width > 768 ? 480 : 320, // Menyesuaikan layar desktop web (lebih tinggi) vs mobile
+    position: "relative",
+    backgroundColor: "#0284C7",
+    overflow: "hidden",
   },
-  heroOverlay: {
-    backgroundColor: "rgba(15, 23, 42, 0.45)", 
-    paddingTop: 80,
+  heroImage: {
+    width: "100%",
+    height: "100%",
+    position: "absolute",
+  },
+  heroGradientOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(15, 23, 42, 0.4)", // Lapisan gelap agar teks tetap tajam HD
+    justifyContent: "flex-end",
     paddingBottom: 40,
-    paddingHorizontal: "5%",
+  },
+  heroContentWrapper: {
+    paddingHorizontal: "8%",
   },
   heroBadge: {
     backgroundColor: "#0284C7",
@@ -191,14 +212,14 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginBottom: 12,
   },
-  heroBadgeText: { color: "#FFF", fontSize: 10, fontWeight: "800", letterSpacing: 0.8 },
-  heroMainTitle: { color: "#FFF", fontSize: 40, fontWeight: "900", letterSpacing: -0.5 },
-  heroSubTitle: { color: "#F1F5F9", fontSize: 15, marginTop: 8, fontWeight: "500", maxWidth: 650, lineHeight: 22 },
+  heroBadgeText: { color: "#FFF", fontSize: 11, fontWeight: "800", letterSpacing: 0.8 },
+  heroMainTitle: { color: "#FFF", fontSize: width > 768 ? 46 : 32, fontWeight: "900", letterSpacing: -0.5 },
+  heroSubTitle: { color: "#F1F5F9", fontSize: width > 768 ? 16 : 14, marginTop: 8, fontWeight: "500", maxWidth: 700, lineHeight: 22 },
   heroStatsRow: { flexDirection: "row", marginTop: 20 },
   statItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
@@ -207,7 +228,7 @@ const styles = StyleSheet.create({
   statItemBlank: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    backgroundColor: "rgba(255, 255, 255, 0.25)",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
@@ -216,24 +237,30 @@ const styles = StyleSheet.create({
   statText: { color: "#FFF", fontSize: 12, fontWeight: "600", marginLeft: 5 },
 
   fullWebBody: {
-    paddingHorizontal: "5%",
-    paddingTop: 35,
+    paddingHorizontal: "8%",
+    paddingTop: 40,
     paddingBottom: 60,
   },
   sectionBlock: {
-    marginBottom: 35,
+    marginBottom: 40,
   },
   sectionHeading: {
-    fontSize: 19,
+    fontSize: 22,
     fontWeight: "800",
     color: "#0F172A",
-    marginBottom: 16,
+    marginBottom: 6,
+  },
+  sectionSubHeading: {
+    fontSize: 14,
+    color: "#64748B",
+    marginBottom: 20,
+    lineHeight: 20,
   },
   responsiveGridRow: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    gap: 16,
+    gap: 20,
   },
 
   gridScheduleCard: {
@@ -244,83 +271,84 @@ const styles = StyleSheet.create({
     borderTopWidth: 5,
     shadowColor: "#0F172A",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.04,
+    shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 2,
     borderWidth: 1,
     borderColor: "#E2E8F0",
     flexGrow: 1,
     flexShrink: 0,
-    flexBasis: 300,
+    flexBasis: 340,
   },
   gridIconCircle: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 12,
   },
-  scheduleTitle: { fontSize: 16, fontWeight: "800", color: "#1E293B" },
+  scheduleTitle: { fontSize: 18, fontWeight: "800", color: "#1E293B" },
+  scheduleSubTitle: { fontSize: 13, color: "#64748B", marginTop: 2 },
   timePillBlue: {
     backgroundColor: "#E0F2FE",
-    paddingHorizontal: 16,
-    paddingVertical: 6,
+    paddingHorizontal: 18,
+    paddingVertical: 8,
     borderRadius: 12,
-    marginTop: 12,
+    marginTop: 14,
   },
-  timePillTextBlue: { color: "#0EA5E9", fontSize: 13, fontWeight: "800" },
+  timePillTextBlue: { color: "#0EA5E9", fontSize: 14, fontWeight: "800" },
   timePillOrange: {
     backgroundColor: "#FEF3C7",
-    paddingHorizontal: 16,
-    paddingVertical: 6,
+    paddingHorizontal: 18,
+    paddingVertical: 8,
     borderRadius: 12,
-    marginTop: 12,
+    marginTop: 14,
   },
-  timePillTextOrange: { color: "#D97706", fontSize: 13, fontWeight: "800" },
+  timePillTextOrange: { color: "#D97706", fontSize: 14, fontWeight: "800" },
 
   premiumContactCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
-    padding: 24,
+    padding: 28,
     alignItems: "center",
     shadowColor: "#0F172A",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.06,
     shadowRadius: 12,
     elevation: 3,
     borderWidth: 1,
     borderColor: "#E2E8F0",
     flexGrow: 1,
     flexShrink: 0,
-    flexBasis: 300,
+    flexBasis: 340,
   },
   waIconFloatContainer: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     backgroundColor: "#25D366",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 10,
+    marginBottom: 12,
   },
-  csNameText: { fontSize: 16, fontWeight: "800", color: "#1E293B" },
-  csRoleSub: { fontSize: 12, color: "#94a3b8", textAlign: "center", marginTop: 4, height: 20, fontWeight: "500" },
+  csNameText: { fontSize: 18, fontWeight: "800", color: "#1E293B" },
+  csRoleSub: { fontSize: 13, color: "#94A3B8", textAlign: "center", marginTop: 4, fontWeight: "500" },
   actionChatBadge: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#E0F2FE",
-    paddingHorizontal: 14,
-    paddingVertical: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
     borderRadius: 10,
-    marginTop: 14,
+    marginTop: 16,
   },
-  actionChatText: { color: "#0EA5E9", fontSize: 11, fontWeight: "700", marginRight: 4 },
+  actionChatText: { color: "#0EA5E9", fontSize: 12, fontWeight: "700", marginRight: 4 },
 
   fullLocationCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
-    padding: 20,
+    padding: 24,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -328,7 +356,7 @@ const styles = StyleSheet.create({
     borderColor: "#E2E8F0",
     shadowColor: "#0F172A",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.04,
+    shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 2,
     flexWrap: "wrap",
@@ -338,12 +366,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
-    minWidth: 280,
+    minWidth: 300,
   },
   mapIconCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     backgroundColor: "#E0F2FE",
     alignItems: "center",
     justifyContent: "center",
@@ -352,13 +380,13 @@ const styles = StyleSheet.create({
   locationMetaDetails: {
     flex: 1,
   },
-  locationMainTitle: { fontSize: 17, fontWeight: "800", color: "#1E293B" },
-  locationSubTitle: { fontSize: 12, color: "#64748B", marginTop: 4, lineHeight: 16 },
+  locationMainTitle: { fontSize: 18, fontWeight: "800", color: "#1E293B" },
+  locationSubTitle: { fontSize: 13, color: "#64748B", marginTop: 4, lineHeight: 18 },
   openMapBadge: {
     backgroundColor: "#0284C7",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     borderRadius: 12,
   },
-  openMapText: { color: "#FFFFFF", fontSize: 12, fontWeight: "700" },
+  openMapText: { color: "#FFFFFF", fontSize: 13, fontWeight: "700" },
 });
