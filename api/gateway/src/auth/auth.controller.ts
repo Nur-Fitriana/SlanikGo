@@ -1,4 +1,3 @@
-// auth.controller.ts
 import { Controller, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginGatewayDto } from './dto/login-gateway.dto';
@@ -14,10 +13,15 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
+  @Post('register')
+  async register(@Body() registerDto: any) {
+    return this.authService.register(registerDto);
+  }
+
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')
   async refresh(@Req() req: Request) {
-    const user = req.user as any;
+    const user = (req as any).user;
     return this.authService.refreshTokens(user.sub, user.username);
   }
 }
