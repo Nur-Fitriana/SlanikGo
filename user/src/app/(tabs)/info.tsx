@@ -17,7 +17,7 @@ export default function InfoScreen() {
   };
 
   const bukaPeta = () => {
-    Linking.openURL("https://maps.google.com/?q=Slanik+Waterpark+Lampung");
+    Linking.openURL("https://maps.google.com/?q=Slanik+Waterpark");
   };
 
   return (
@@ -26,7 +26,7 @@ export default function InfoScreen() {
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
         
-        {/* ================= 1. HERO BANNER (FULL WIDTH) ================= */}
+        {/* ================= 1. HERO BANNER FULL LAYAR PC ================= */}
         <View style={styles.heroBanner}>
           <View style={styles.heroBadge}>
             <Text style={styles.heroBadgeText}>🌴 WAHOO! WELCOME TO</Text>
@@ -48,10 +48,10 @@ export default function InfoScreen() {
           </View>
         </View>
 
-        {/* CONTAINER UTAMA RESPONSIF UNTUK WEB & HP */}
+        {/* CONTAINER UTAMA RESPONSIVE WEB */}
         <View style={styles.fullWebBody}>
 
-          {/* ================= 2. JAM OPERASIONAL (GRID BERSAMPINGAN) ================= */}
+          {/* ================= 2. JAM OPERASIONAL (BERJEJER KE SAMPING DI WEB) ================= */}
           <View style={styles.sectionBlock}>
             <Text style={styles.sectionHeading}>🕒 Jam Operasional</Text>
             <View style={styles.responsiveGridRow}>
@@ -79,7 +79,7 @@ export default function InfoScreen() {
             </View>
           </View>
 
-          {/* ================= 3. HUBUNGI KAMI (GRID BERSAMPINGAN) ================= */}
+          {/* ================= 3. HUBUNGI KAMI (BERJEJER KE SAMPING DI WEB) ================= */}
           <View style={styles.sectionBlock}>
             <Text style={styles.sectionHeading}>📞 Hubungi Kami</Text>
             <View style={styles.responsiveGridRow}>
@@ -119,7 +119,7 @@ export default function InfoScreen() {
             </View>
           </View>
 
-          {/* ================= 4. LOKASI (FULL BANNER STRIP) ================= */}
+          {/* ================= 4. LOKASI STRIP (MEMANJANG MEWAH) ================= */}
           <View style={styles.sectionBlock}>
             <Text style={styles.sectionHeading}>📍 Lokasi</Text>
             <TouchableOpacity style={styles.fullLocationCard} onPress={bukaPeta} activeOpacity={0.9}>
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: "#0284C7" },
   scrollView: { flex: 1, backgroundColor: "#F8FAFC" },
 
-  // 1. BANNER HERO
+  // BANNER HERO (Menggunakan string persen yang valid)
   heroBanner: {
     backgroundColor: "#0284C7",
     paddingTop: 40,
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   },
   statText: { color: "#FFF", fontSize: 12, fontWeight: "600", marginLeft: 5 },
 
-  // 2. WRAPPER BODY WEB (PANDING PERSENTASE BIAR FULL LAYAR PC)
+  // BODY UTAMA HALAMAN WEB
   fullWebBody: {
     paddingHorizontal: "5%",
     paddingTop: 30,
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
-  // GRID RUMUS OTOMATIS MENYAMPING DI WEB & KEBESAR DI HP
+  // GRID CONTAINER UTAMA BIAR KARTU BISA BERJAJAR KANAN-KIRI
   responsiveGridRow: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     gap: 16,
   },
 
-  // CARD JADWAL OPERASIONAL LAYOUT BARU
+  // KARTU JADWAL OPERASIONAL (GRID)
   gridScheduleCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
   },
   timePillTextOrange: { color: "#D97706", fontSize: 13, fontWeight: "800" },
 
-  // PREMIUM CHAT ADMIN (GRID BERJAJARAN)
+  // KARTU CHAT WHATSAPP PREMIUM
   premiumContactCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   },
   actionChatText: { color: "#0EA5E9", fontSize: 11, fontWeight: "700", marginRight: 4 },
 
-  // 4. LOKASI CARD (STYLE FULL WIDTH PREMIUM STRIP)
+  // KARTU LOKASI STRIP MEMANJANG HORIZONTAL
   fullLocationCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
