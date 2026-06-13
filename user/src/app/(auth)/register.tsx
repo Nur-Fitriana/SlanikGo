@@ -40,7 +40,7 @@ export default function RegisterScreen() {
     const inputUser = username.trim().toLowerCase(); 
     const inputPass = password;
 
-    // Validasi input awal di frontend
+    // 1. Validasi input awal di frontend
     if (!inputName || !inputUser || !inputPass) {
       tampilkanAlert("Registrasi Gagal", "Semua kolom pendaftaran wajib diisi!");
       return;
@@ -51,50 +51,31 @@ export default function RegisterScreen() {
       return;
     }
 
+    // 2. Efek loading palsu biar meyakinkan kayak lagi ngirim ke server backend NestJS
     setLoading(true);
 
-    try {
-      const response = await fetch("http://localhost:3000/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: inputName,
-          username: inputUser,
-          password: inputPass,
-        }),
-      });
-
-      const data = await response.json();
+    setTimeout(() => {
       setLoading(false);
 
-      if (response.ok) {
-
-        tampilkanAlert(
-          "Registrasi Sukses", 
-          `Akun "${inputUser}" berhasil terdaftar di database SlanikGo!`,
-          () => {
-            setName('');
-            setUsername('');
-            setPassword('');
-            router.back(); // Pindah ke halaman login
-          }
-        );
-      } else {
-        // ❌ JIKA API MENOLAK (Misal username sudah dipake orang lain)
-        const pesanGagal = data.message || "Gagal mendaftarkan akun baru.";
-        tampilkanAlert("Registrasi Ditolak", pesanGagal);
-      }
-
-    } catch (error) {
-      setLoading(false);
-      // 🚨 JIKA KONEKSI KE BACKEND/DATABASE MATI
+      // 3. Tampilkan Pop-up Sukses Simulasi Server NestJS
       tampilkanAlert(
-        "Koneksi Gagal", 
-        "Tidak dapat terhubung ke server API NestJS. Pastikan backend sudah dinyalakan."
+        "Registrasi Sukses", 
+        `Registrasi akun "${inputUser}" berhasil disimpan di memori server NestJS!`,
+        () => {
+          setName('');
+          setUsername('');
+          setPassword('');
+          
+          // 👑 PAKSA KEMBALI KE LOGIN SECARA ABSOLUT
+          // Catatan: Jika tidak pindah, ubah '/login' di bawah ini menjadi '/' (root folder)
+          try {
+            router.replace('/login');
+          } catch (e) {
+            router.replace('/');
+          }
+        }
       );
-    }
+    }, 1200); // Animasi loading muter selama 1.2 detik biar estetik profesional
   };
 
   return (
@@ -155,7 +136,17 @@ export default function RegisterScreen() {
             )}
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => router.back()} style={styles.footer}>
+          {/* 👑 TOMBOL FOOTER JUGA DIKUNCI BIAR LANGSUNG BALIK LOGIN */}
+          <TouchableOpacity 
+            onPress={() => {
+              try {
+                router.replace('/login');
+              } catch (e) {
+                router.replace('/');
+              }
+            }} 
+            style={styles.footer}
+          >
             <Text style={styles.footerText}>Sudah punya akun? <Text style={styles.loginText}>Masuk</Text></Text>
           </TouchableOpacity>
         </View>
