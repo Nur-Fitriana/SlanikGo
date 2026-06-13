@@ -23,7 +23,6 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Fungsi pembantu pop-up biar pasti muncul di tengah layar Web Browser maupun HP
   const tampilkanAlert = (judul: string, pesan: string, callback?: () => void) => {
     if (Platform.OS === "web") {
       window.alert(`${judul}: ${pesan}`);
@@ -40,7 +39,6 @@ export default function RegisterScreen() {
     const inputUser = username.trim().toLowerCase(); 
     const inputPass = password;
 
-    // 1. Validasi input awal di frontend
     if (!inputName || !inputUser || !inputPass) {
       tampilkanAlert("Registrasi Gagal", "Semua kolom pendaftaran wajib diisi!");
       return;
@@ -51,13 +49,20 @@ export default function RegisterScreen() {
       return;
     }
 
-    // 2. Efek loading palsu biar meyakinkan kayak lagi ngirim ke server backend NestJS
     setLoading(true);
 
     setTimeout(() => {
       setLoading(false);
 
-      // 3. Tampilkan Pop-up Sukses Simulasi Server NestJS
+      // 👑 AMAN: Simpan data permanen di browser biar gak ilang pas pindah halaman
+      if (Platform.OS === "web") {
+        localStorage.setItem("akunSlanikUser", inputUser);
+        localStorage.setItem("akunSlanikPass", inputPass);
+      } else {
+        // Cadangan kalau di HP
+        (window as any).akunSlanik = { username: inputUser, password: inputPass };
+      }
+
       tampilkanAlert(
         "Registrasi Sukses", 
         `Registrasi akun "${inputUser}" berhasil disimpan di memori server NestJS!`,
@@ -65,9 +70,6 @@ export default function RegisterScreen() {
           setName('');
           setUsername('');
           setPassword('');
-          
-          // 👑 PAKSA KEMBALI KE LOGIN SECARA ABSOLUT
-          // Catatan: Jika tidak pindah, ubah '/login' di bawah ini menjadi '/' (root folder)
           try {
             router.replace('/login');
           } catch (e) {
@@ -75,78 +77,34 @@ export default function RegisterScreen() {
           }
         }
       );
-    }, 1200); // Animasi loading muter selama 1.2 detik biar estetik profesional
+    }, 1200);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.topDecoration} />
-      
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-        style={styles.centering}
-      >
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.centering}>
         <View style={styles.registerCard}>
           <View style={styles.header}>
             <Text style={styles.title}>Registrasi</Text>
             <Text style={styles.subtitle}>Buat akun SlanikGo baru</Text>
           </View>
-
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Nama Lengkap</Text>
-            <TextInput 
-              style={styles.input} 
-              placeholder="Nama Anda" 
-              value={name} 
-              onChangeText={setName} 
-            />
+            <TextInput style={styles.input} placeholder="Nama Anda" value={name} onChangeText={setName} />
           </View>
-
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Username</Text>
-            <TextInput 
-              style={styles.input} 
-              placeholder="Username" 
-              value={username} 
-              onChangeText={setUsername} 
-              autoCapitalize="none"
-            />
+            <TextInput style={styles.input} placeholder="Username" value={username} onChangeText={setUsername} autoCapitalize="none" />
           </View>
-
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Password</Text>
-            <TextInput 
-              style={styles.input} 
-              placeholder="••••••••" 
-              secureTextEntry 
-              value={password} 
-              onChangeText={setPassword} 
-            />
+            <TextInput style={styles.input} placeholder="••••••••" secureTextEntry value={password} onChangeText={setPassword} />
           </View>
-
-          <TouchableOpacity 
-            style={[styles.btnRegister, loading && { opacity: 0.7 }]} 
-            onPress={handleRegister}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color="#FFFFFF" size="small" />
-            ) : (
-              <Text style={styles.btnText}>Registrasi</Text>
-            )}
+          <TouchableOpacity style={[styles.btnRegister, loading && { opacity: 0.7 }]} onPress={handleRegister} disabled={loading}>
+            {loading ? <ActivityIndicator color="#FFFFFF" size="small" /> : <Text style={styles.btnText}>Registrasi</Text>}
           </TouchableOpacity>
-
-          {/* 👑 TOMBOL FOOTER JUGA DIKUNCI BIAR LANGSUNG BALIK LOGIN */}
-          <TouchableOpacity 
-            onPress={() => {
-              try {
-                router.replace('/login');
-              } catch (e) {
-                router.replace('/');
-              }
-            }} 
-            style={styles.footer}
-          >
+          <TouchableOpacity onPress={() => { try { router.replace('/login'); } catch (e) { router.replace('/'); } }} style={styles.footer}>
             <Text style={styles.footerText}>Sudah punya akun? <Text style={styles.loginText}>Masuk</Text></Text>
           </TouchableOpacity>
         </View>
