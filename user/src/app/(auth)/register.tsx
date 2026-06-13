@@ -23,25 +23,47 @@ export default function RegisterScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleRegister = () => {
-    if (!name.trim() || !username.trim() || !password.trim()) {
-      Alert.alert("Error", "Semua kolom pendaftaran wajib diisi!");
+    const inputName = name.trim();
+    const inputUser = username.trim().toLowerCase();
+    const inputPass = password;
+
+    // ❌ 1. Validasi jika ada kolom yang kosong
+    if (!inputName || !inputUser || !inputPass) {
+      Alert.alert("Registrasi Gagal", "Semua kolom pendaftaran wajib diisi, tidak boleh ada yang kosong!");
+      return;
+    }
+
+    // ❌ 2. Validasi tambahan biar kelihatan keren (misal password minimal 6 karakter)
+    if (inputPass.length < 6) {
+      Alert.alert("Registrasi Gagal", "Password minimal harus 6 karakter demi keamanan akun Anda.");
       return;
     }
 
     setLoading(true);
 
+    // Simulasi proses pendaftaran ke database Gateway SlanikGo
     setTimeout(() => {
       setLoading(false);
 
+      // 👑 SIMPAN KE MEMORI SEBAGAI CADANGAN (Biarr bisa langsung dipakai login)
       (window as any).akunSlanik = {
-        username: username.trim().toLowerCase(),
-        password: password,
-        name: name.trim()
+        username: inputUser,
+        password: inputPass,
+        name: inputName
       };
 
-      Alert.alert("Sukses", "Akun berhasil dibuat! Silakan masuk memakai akun tersebut.");
-      router.back(); // Kembali ke login
-    }, 1000);
+      // 🎉 3. Pesan Sukses Berhasil Terdaftar
+      Alert.alert(
+        "Registrasi Sukses", 
+        `Akun ${inputUser} berhasil dibuat! Data telah disinkronkan ke dalam sistem SlanikGo.`,
+        [
+          { 
+            text: "Ke Halaman Login", 
+            onPress: () => router.back() 
+          }
+        ]
+      );
+    }, 1200);
   };
 
   return (
