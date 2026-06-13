@@ -4,6 +4,13 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 
+// 1. Definisikan interface untuk payload Refresh Token agar terhindar dari error 'any'
+interface JwtRefreshPayload {
+  sub: string;
+  username: string;
+  // Tambahkan property lain di sini jika ada di dalam token Anda
+}
+
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
   Strategy,
@@ -18,11 +25,17 @@ export class JwtRefreshStrategy extends PassportStrategy(
     });
   }
 
-  async validate(req: Request, payload: any) {
+  // 2. Gunakan interface JwtRefreshPayload dan hapus kata kunci 'async'
+  validate(req: Request, payload: JwtRefreshPayload) {
     const refreshToken = req
       .get('Authorization')
       ?.replace('Bearer ', '')
       .trim();
-    return { ...payload, refreshToken };
+
+    return {
+      userId: payload.sub,
+      username: payload.username,
+      refreshToken,
+    };
   }
 }

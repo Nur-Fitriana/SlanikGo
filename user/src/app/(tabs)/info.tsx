@@ -9,16 +9,32 @@ import {
   TouchableOpacity,
   Linking,
   ImageBackground,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function InfoScreen() {
-  const hubungiWhatsApp = (nomor: string) => {
-    Linking.openURL(`https://wa.me/${nomor}`);
+  const hubungiWhatsApp = async (nomor: string) => {
+    const url = `https://wa.me/${nomor}`;
+    const bisaBuka = await Linking.canOpenURL(url);
+    
+    if (bisaBuka) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert("Error", "Tidak dapat membuka WhatsApp. Pastikan aplikasi sudah terinstal.");
+    }
   };
 
-  const bukaPeta = () => {
-    Linking.openURL("https://maps.google.com/?q=Slanik+Waterpark");
+  const bukaPeta = async () => {
+    // Memakai format Google Maps universal agar tidak crash di iOS/Android
+    const url = "https://maps.google.com/?q=Slanik+Waterpark";
+    const bisaBuka = await Linking.canOpenURL(url);
+
+    if (bisaBuka) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert("Error", "Tidak dapat membuka peta.");
+    }
   };
 
   return (
@@ -28,8 +44,9 @@ export default function InfoScreen() {
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
         
         {/* ================= 1. HERO BANNER ================= */}
+        {/* Path di bawah ini melompat keluar dari src/app/(tabs) menuju ke assets/images/ */}
         <ImageBackground 
-          source={require("../assets/image_ebb705.png")} 
+          source={require("../../../assets/images/slanik_hero.png")} 
           style={styles.heroImageBanner}
           resizeMode="cover"
         >
