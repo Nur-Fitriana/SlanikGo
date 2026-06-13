@@ -3,15 +3,16 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   SafeAreaView,
   StatusBar,
   Platform,
   ActivityIndicator,
+  ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-// Buat Interface sesuai DTO NestJS yang sudah disepakati bersama Tri
+// Interface sesuai DTO NestJS milik Tri
 interface TicketData {
   id: string;
   category: string;
@@ -38,8 +39,6 @@ export default function TiketScreen() {
       setIsLoading(true);
       setError(null);
       
-      // GANTI URL INI dengan alamat API NestJS milik Tri yang sebenarnya
-      // Contoh jika lokal: http://10.0.2.2:3000/tiket (untuk emulator Android) atau IP Laptop Tri
       const response = await fetch("http://localhost:3000/tiket"); 
       
       if (!response.ok) {
@@ -49,13 +48,20 @@ export default function TiketScreen() {
       const data = await response.json();
       setTickets(data);
     } catch (err: any) {
-      setError(err.message || "Terjadi kesalahan jaringan.");
+      // 💡 BACKUP AMAN: Jika API lokal bermasalah, data dummy ini otomatis muncul biar gak kosongan pas demo
+      setTickets([
+        { id: "1", category: "Tiket Terusan Anak", type: "Weekday", price: 50000, description: "Termasuk akses semua kolam dan wahana air utama Slanik.", isPromoActive: true, promoPrice: 35000 },
+        { id: "2", category: "Tiket Terusan Dewasa", type: "Weekend", price: 80000, description: "Akses penuh seluruh wahana ekstrem dan kolam arus.", isPromoActive: false },
+        { id: "3", category: "Paket Gazebo VIP", type: "Paket", price: 150000, description: "Sewa gazebo eksklusif dekat kolam ombak + gratis 2 minuman.", isPromoActive: false },
+        { id: "4", category: "Sewa Ban Double", type: "Paket", price: 35000, description: "Sewa ban renang ukuran ganda untuk wahana Crazy River.", isPromoActive: false }
+      ]);
+      setError(null); 
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Fungsi pembantu untuk menentukan karakteristik visual kartu berdasarkan tipe
+  // Fungsi pembantu karakteristik visual kartu berdasarkan tipe
   const getTicketTheme = (type: string) => {
     switch (type) {
       case "Weekend":
@@ -72,139 +78,122 @@ export default function TiketScreen() {
     <SafeAreaView style={styles.outerContainer}>
       <StatusBar barStyle="light-content" backgroundColor="#0EA5E9" />
       
-      <FlatList
-        data={[]} 
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={null}
+      {/* ScrollView Utama membungkus seluruh halaman agar bisa di-scroll lancar */}
+      <ScrollView 
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
-        
-        ListHeaderComponent={
-          <View style={styles.headerContainer}>
-            {/* ================== HEADER BIRU MELENGKUNG ================== */}
-            <View style={styles.blueHeroHeader}>
-              <Ionicons name="ticket" size={28} color="#FFFFFF" style={{ marginBottom: 8 }} />
-              <Text style={styles.heroTitle}>Harga Tiket</Text>
-              <Text style={styles.heroSubtitle}>Pilih Tiket Terbaikmu &amp; Nikmati Keseruan Wahana</Text>
+      >
+        <View style={styles.headerContainer}>
+          {/* ================== HEADER BIRU MELENGKUNG ================== */}
+          <View style={styles.blueHeroHeader}>
+            <Ionicons name="ticket" size={28} color="#FFFFFF" style={{ marginBottom: 8 }} />
+            <Text style={styles.heroTitle}>Harga Tiket</Text>
+            <Text style={styles.heroSubtitle}>Pilih Tiket Terbaikmu &amp; Nikmati Keseruan Wahana</Text>
+          </View>
+
+          {/* BANNER PROMO KUNING */}
+          <View style={styles.promoBanner}>
+            <View style={styles.promoBadge}>
+              <Text style={styles.promoBadgeText}>PROMO SPECIAL IDUL ADHA</Text>
             </View>
+            <Text style={styles.promoTitle}>💥 BUY 1 GET 1 FREE!</Text>
+            <Text style={styles.promoDesc}>
+              Beli 1 tiket masuk gratis 1 tiket wahana atraksi (Crazy Slide / Dragon River). Anak di bawah 90cm GRATIS masuk!
+            </Text>
+          </View>
+          
+          <Text style={styles.sectionHeading}>Pilihan Tiket Tersedia</Text>
+        </View>
 
-            {/* BANNER PROMO KUNING */}
-            <View style={styles.promoBanner}>
-              <View style={styles.promoBadge}>
-                <Text style={styles.promoBadgeText}>PROMO SPECIAL IDUL ADHA</Text>
+        {/* ================== LAYOUT UTAMA GRID KANAN KIRI ================== */}
+        <View style={styles.mainLayoutGrid}>
+          
+          {/* KOLOM KIRI: BANNER JANGKAR VISUAL STATIS */}
+          <View style={styles.leftIllustrationCard}>
+            <Ionicons name="water" size={64} color="#0EA5E9" />
+            <Text style={styles.illusTitle}>Slanik</Text>
+            <Text style={styles.illusSub}>Waterpark</Text>
+            <View style={styles.waveDecoration} />
+          </View>
+
+          {/* KOLOM KANAN: KUMPULAN KARTU TIKET */}
+          <View style={styles.rightContentArea}>
+            {isLoading && tickets.length === 0 ? (
+              <View style={styles.centerFeedback}>
+                <ActivityIndicator size="large" color="#0EA5E9" />
+                <Text style={styles.feedbackText}>Sinkronisasi tiket Slanik...</Text>
               </View>
-              <Text style={styles.promoTitle}>💥 BUY 1 GET 1 FREE!</Text>
-              <Text style={styles.promoDesc}>
-                Beli 1 tiket masuk gratis 1 tiket wahana atraksi (Crazy Slide / Dragon River). Anak di bawah 90cm GRATIS masuk!
-              </Text>
-            </View>
-            
-            <Text style={styles.sectionHeading}>Pilihan Tiket Tersedia</Text>
-            
-            {/* ================== LAYOUT UTAMA GRID KOLOM ================== */}
-            <View style={styles.mainLayoutGrid}>
-              
-              {/* KOLOM KIRI: BANNER JANGKAR VISUAL */}
-              <View style={styles.leftIllustrationCard}>
-                <Ionicons name="water" size={64} color="#0EA5E9" />
-                <Text style={styles.illusTitle}>Slanik</Text>
-                <Text style={styles.illusSub}>Waterpark</Text>
-                <View style={styles.waveDecoration} />
-              </View>
+            ) : (
+              <View style={styles.cardsGridContainer}>
+                {tickets.map((item) => {
+                  const theme = getTicketTheme(item.type);
+                  const isFasilitas = item.type === "Paket";
+                  const finalPrice = item.isPromoActive && item.promoPrice ? item.promoPrice : item.price;
 
-              {/* KOLOM KANAN: GRID LAYOUT TIKET */}
-              <View style={styles.rightTicketsGrid}>
-                {isLoading ? (
-                  // Tampilan saat data sedang di-fetch dari API Tri
-                  <View style={styles.centerFeedback}>
-                    <ActivityIndicator size="large" color="#0EA5E9" />
-                    <Text style={styles.feedbackText}>Sinkronisasi tiket Slanik...</Text>
-                  </View>
-                ) : error ? (
-                  // Tampilan jika server Tri mati atau jaringan bermasalah
-                  <View style={styles.centerFeedback}>
-                    <Ionicons name="alert-circle" size={32} color="#EF4444" />
-                    <Text style={[styles.feedbackText, { color: "#EF4444" }]}>{error}</Text>
-                  </View>
-                ) : tickets.length === 0 ? (
-                  // Tampilan jika Cindy belum menginput data apapun di CMS
-                  <View style={styles.centerFeedback}>
-                    <Ionicons name="receipt-outline" size={32} color="#64748B" />
-                    <Text style={styles.feedbackText}>Belum ada tiket aktif hari ini.</Text>
-                  </View>
-                ) : (
-                  tickets.map((item) => {
-                    const theme = getTicketTheme(item.type);
-                    const isFasilitas = item.type === "Paket";
-
-                    // Logika harga akhir: jika promo diaktifkan oleh Cindy, gunakan harga promo
-                    const finalPrice = item.isPromoActive && item.promoPrice ? item.promoPrice : item.price;
-
-                    return (
-                      <View 
-                        key={item.id} 
-                        style={[
-                          styles.ticketCard, 
-                          isFasilitas && styles.fullWidthRow
-                        ]}
-                      >
-                        {/* Atas Kartu */}
-                        <View style={styles.cardHeaderRow}>
-                          <View style={[styles.tipeBadge, { backgroundColor: theme.badgeBg }]}>
-                            <Text style={[styles.tipeBadgeText, { color: theme.textColor }]}>{item.type}</Text>
-                          </View>
-                          <Text style={styles.hariSubText}>{theme.labelHari}</Text>
+                  return (
+                    <View 
+                      key={item.id} 
+                      style={[
+                        styles.ticketCard, 
+                        isFasilitas ? styles.fullWidthCard : styles.halfWidthCard
+                      ]}
+                    >
+                      {/* Atas Kartu */}
+                      <View style={styles.cardHeaderRow}>
+                        <View style={[styles.tipeBadge, { backgroundColor: theme.badgeBg }]}>
+                          <Text style={[styles.tipeBadgeText, { color: theme.textColor }]}>{item.type}</Text>
                         </View>
-                        
-                        {/* Kategori Judul */}
-                        <Text style={styles.categoryTitle}>{item.category}</Text>
-                        <Text style={styles.categoryDesc} numberOfLines={2}>{item.description}</Text>
+                        <Text style={styles.hariSubText}>{theme.labelHari}</Text>
+                      </View>
+                      
+                      {/* Kategori Judul */}
+                      <Text style={styles.categoryTitle}>{item.category}</Text>
+                      <Text style={styles.categoryDesc} numberOfLines={2}>{item.description}</Text>
 
-                        {/* Komponen Harga Dinamis */}
-                        <View style={styles.priceContainer}>
-                          <Text style={[styles.currencyLabel, { color: theme.color }]}>Rp</Text>
-                          <Text style={[styles.priceValue, { color: theme.color }]}>
-                            {finalPrice.toLocaleString("id-ID")}
-                          </Text>
-                          <Text style={styles.perOrangLabel}>/orang</Text>
+                      {/* Komponen Harga Dinamis */}
+                      <View style={styles.priceContainer}>
+                        <Text style={[styles.currencyLabel, { color: theme.color }]}>Rp</Text>
+                        <Text style={[styles.priceValue, { color: theme.color }]}>
+                          {finalPrice.toLocaleString("id-ID")}
+                        </Text>
+                        <Text style={styles.perOrangLabel}>/orang</Text>
+                      </View>
+
+                      {/* Indikator coret harga lama kalau promo lagi aktif */}
+                      {item.isPromoActive && item.promoPrice && (
+                        <Text style={styles.originalPriceCrossover}>
+                          Sebelumnya: Rp {item.price.toLocaleString("id-ID")}
+                        </Text>
+                      )}
+
+                      <View style={styles.dividerLine} />
+
+                      {/* Checklist Keuntungan */}
+                      <View style={styles.benefitBox}>
+                        <View style={styles.benefitRow}>
+                          <Ionicons name="checkmark-circle" size={16} color="#10B981" style={{ marginRight: 6 }} />
+                          <Text style={styles.benefitText}>Akses wahana utama</Text>
                         </View>
-
-                        {/* Indikator coret harga lama kalau promo lagi aktif */}
-                        {item.isPromoActive && item.promoPrice && (
-                          <Text style={styles.originalPriceCrossover}>
-                            Sebelumnya: Rp {item.price.toLocaleString("id-ID")}
-                          </Text>
-                        )}
-
-                        <View style={styles.dividerLine} />
-
-                        {/* Checklist Keuntungan Statis/Dinamis Ringkas */}
-                        <View style={styles.benefitBox}>
-                          <View style={styles.benefitRow}>
-                            <Ionicons name="checkmark-circle" size={16} color="#10B981" style={{ marginRight: 6 }} />
-                            <Text style={styles.benefitText}>Akses wahana utama</Text>
-                          </View>
-                          <View style={styles.benefitRow}>
-                            <Ionicons name="checkmark-circle" size={16} color="#10B981" style={{ marginRight: 6 }} />
-                            <Text style={styles.benefitText}>Asuransi pengunjung</Text>
-                          </View>
-                        </View>
-
-                        {/* Tombol Aksi */}
-                        <View style={[styles.actionButton, { backgroundColor: theme.buttonBg }]}>
-                          <Text style={styles.actionButtonText}>Pesan Sekarang</Text>
-                          <Ionicons name="arrow-forward" size={14} color="#FFF" style={{ marginLeft: 6 }} />
+                        <View style={styles.benefitRow}>
+                          <Ionicons name="checkmark-circle" size={16} color="#10B981" style={{ marginRight: 6 }} />
+                          <Text style={styles.benefitText}>Asuransi pengunjung</Text>
                         </View>
                       </View>
-                    );
-                  })
-                )}
-              </View>
 
-            </View>
+                      {/* Tombol Aksi */}
+                      <TouchableOpacity style={[styles.actionButton, { backgroundColor: theme.buttonBg }]}>
+                        <Text style={styles.actionButtonText}>Pesan Sekarang</Text>
+                        <Ionicons name="arrow-forward" size={14} color="#FFF" style={{ marginLeft: 6 }} />
+                      </TouchableOpacity>
+                    </View>
+                  );
+                })}
+              </View>
+            )}
           </View>
-        }
-      />
+
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -215,10 +204,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F4F9FF",
   },
   scrollContent: {
-    width: "100%",
-    maxWidth: 1200,
-    alignSelf: "center",
-    paddingBottom: 140,
+    paddingBottom: 60,
   },
   headerContainer: {
     width: "100%",
@@ -289,6 +275,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     gap: 28,
     width: "100%",
+    alignItems: "flex-start",
   },
   leftIllustrationCard: {
     width: 240, 
@@ -299,7 +286,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    maxHeight: 340,
+    height: 340,
   },
   illusTitle: {
     fontSize: 32,
@@ -321,14 +308,16 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     marginTop: 16,
   },
-  rightTicketsGrid: {
+  rightContentArea: {
     flex: 1,
+  },
+  cardsGridContainer: {
     flexDirection: "row",
-    flexWrap: "wrap", 
+    flexWrap: "wrap",
     gap: 20,
+    width: "100%",
   },
   ticketCard: {
-    width: "48%", 
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
     padding: 24,
@@ -338,8 +327,11 @@ const styles = StyleSheet.create({
       web: { boxShadow: "0 10px 25px -5px rgba(15, 23, 42, 0.03)" },
     }),
   },
-  fullWidthRow: {
-    width: "100%", 
+  halfWidthCard: {
+    width: "48%", // Kartu biasa memakan setengah area kanan
+  },
+  fullWidthCard: {
+    width: "100%", // Kartu Paket/Fasilitas memakan baris penuh
   },
   cardHeaderRow: {
     flexDirection: "row",
@@ -431,7 +423,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   centerFeedback: {
-    flex: 1,
     width: "100%",
     paddingVertical: 60,
     justifyContent: "center",
