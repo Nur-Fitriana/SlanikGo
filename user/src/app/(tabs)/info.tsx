@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   Linking,
   ImageBackground,
-  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -28,13 +27,12 @@ export default function InfoScreen() {
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
         
-        {/* ================= 1. HERO BANNER WITH REAL SLANIK IMAGE ================= */}
+        {/* ================= 1. HERO BANNER ================= */}
         <ImageBackground 
-          source={require("../assets/image_ebb705.png")} // Menggunakan file asli image_ebb705.png dari folder assets kamu
+          source={require("../assets/image_ebb705.png")} 
           style={styles.heroImageBanner}
           resizeMode="cover"
         >
-          {/* Overlay gradasi biru agar teks info super kontras & gampang dibaca */}
           <View style={styles.heroOverlay}>
             <View style={styles.heroBadge}>
               <Text style={styles.heroBadgeText}>🌴 THE LARGEST WATERPARK IN LAMPUNG</Text>
@@ -57,48 +55,10 @@ export default function InfoScreen() {
           </View>
         </ImageBackground>
 
-        {/* CONTAINER UTAMA RESPONSIVE WEB */}
+        {/* CONTAINER UTAMA */}
         <View style={styles.fullWebBody}>
 
-          {/* ================= 2. WAHANA UNGGULAN (DENGAN GAMBAR ASLI) ================= */}
-          <View style={styles.sectionBlock}>
-            <Text style={styles.sectionHeading}>📸 Wahana Unggulan</Text>
-            <View style={styles.responsiveGridRow}>
-              
-              {/* Card Wahana 1 - Menggunakan foto asli image_ebb705.png */}
-              <View style={styles.galleryCard}>
-                <Image 
-                  source={require("../assets/image_ebb705.png")} 
-                  style={styles.galleryPhoto} 
-                  resizeMode="cover"
-                />
-                <View style={styles.galleryMeta}>
-                  <Text style={styles.galleryTitle}>⚡ Fast 2 Furious & Spiral Slide</Text>
-                  <Text style={styles.gallerySub}>
-                    Rasakan sensasi seluncuran kuning melingkar yang tinggi dan lintasan balap air ganda yang memacu adrenalin!
-                  </Text>
-                </View>
-              </View>
-
-              {/* Card Wahana 2 - Kolam Anak & Keluarga */}
-              <View style={styles.galleryCard}>
-                <Image 
-                  source={require("../assets/images/slanik_hero.png")}
-                  style={styles.galleryPhoto} 
-                  resizeMode="cover"
-                />
-                <View style={styles.galleryMeta}>
-                  <Text style={styles.galleryTitle}>🌊 Kids Pool & Family Area</Text>
-                  <Text style={styles.gallerySub}>
-                    Kolam renang luas yang aman dilengkapi dengan dekorasi kastel kreatif, pas untuk rekreasi anak dan momen keluarga.
-                  </Text>
-                </View>
-              </View>
-
-            </View>
-          </View>
-
-          {/* ================= 3. JAM OPERASIONAL ================= */}
+          {/* ================= 2. JAM OPERASIONAL ================= */}
           <View style={styles.sectionBlock}>
             <Text style={styles.sectionHeading}>🕒 Jam Operasional</Text>
             <View style={styles.responsiveGridRow}>
@@ -126,7 +86,7 @@ export default function InfoScreen() {
             </View>
           </View>
 
-          {/* ================= 4. HUBUNGI KAMI ================= */}
+          {/* ================= 3. HUBUNGI KAMI ================= */}
           <View style={styles.sectionBlock}>
             <Text style={styles.sectionHeading}>📞 Hubungi Kami</Text>
             <View style={styles.responsiveGridRow}>
@@ -166,7 +126,7 @@ export default function InfoScreen() {
             </View>
           </View>
 
-          {/* ================= 5. LOKASI STRIP BANNER ================= */}
+          {/* ================= 4. LOKASI STRIP BANNER ================= */}
           <View style={styles.sectionBlock}>
             <Text style={styles.sectionHeading}>📍 Lokasi</Text>
             <TouchableOpacity style={styles.fullLocationCard} onPress={bukaPeta} activeOpacity={0.9}>
@@ -195,14 +155,13 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: "#0284C7" },
   scrollView: { flex: 1, backgroundColor: "#F8FAFC" },
 
-  // STYLE HERO BANNER GAMBAR ASLI
   heroImageBanner: {
     width: "100%",
     minHeight: 360,
     justifyContent: "flex-end",
   },
   heroOverlay: {
-    backgroundColor: "rgba(15, 23, 42, 0.45)", // Gelap transparan tipis agar langit cerah dari image_ebb705.png tetap menonjol
+    backgroundColor: "rgba(15, 23, 42, 0.45)", 
     paddingTop: 80,
     paddingBottom: 40,
     paddingHorizontal: "5%",
@@ -239,7 +198,6 @@ const styles = StyleSheet.create({
   },
   statText: { color: "#FFF", fontSize: 12, fontWeight: "600", marginLeft: 5 },
 
-  // BODY RESPONSIVE
   fullWebBody: {
     paddingHorizontal: "5%",
     paddingTop: 35,
@@ -261,42 +219,6 @@ const styles = StyleSheet.create({
     gap: 16,
   },
 
-  // CARD KETERANGAN WAHANA DENGAN REAL COMPONENT IMAGE
-  galleryCard: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 20,
-    overflow: "hidden",
-    borderWidth: 1,
-    borderColor: "#E2E8F0",
-    shadowColor: "#0F172A",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.04,
-    shadowRadius: 10,
-    elevation: 2,
-    flexGrow: 1,
-    flexShrink: 0,
-    flexBasis: 340,
-  },
-  galleryPhoto: {
-    width: "100%",
-    height: 180,
-  },
-  galleryMeta: {
-    padding: 16,
-  },
-  galleryTitle: {
-    fontSize: 15,
-    fontWeight: "800",
-    color: "#1E293B",
-  },
-  gallerySub: {
-    fontSize: 12,
-    color: "#64748B",
-    marginTop: 4,
-    lineHeight: 18,
-  },
-
-  // JAM OPERASIONAL
   gridScheduleCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
@@ -340,7 +262,6 @@ const styles = StyleSheet.create({
   },
   timePillTextOrange: { color: "#D97706", fontSize: 13, fontWeight: "800" },
 
-  // CONTACT ADMIN
   premiumContactCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
@@ -379,7 +300,6 @@ const styles = StyleSheet.create({
   },
   actionChatText: { color: "#0EA5E9", fontSize: 11, fontWeight: "700", marginRight: 4 },
 
-  // LOKASI MAP
   fullLocationCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
