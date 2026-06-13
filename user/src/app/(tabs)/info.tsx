@@ -8,6 +8,7 @@ import {
   StatusBar,
   TouchableOpacity,
   Linking,
+  Image,
   Alert,
   Dimensions,
 } from "react-native";
@@ -28,7 +29,10 @@ export default function InfoScreen() {
   };
 
   const bukaPeta = async () => {
-    const url = "https://goo.gl/maps/SlanikWaterparkLampung"; // Tautan universal peta yang aman
+    // Alamat lengkap disandikan (encoded) agar aman dibaca oleh sistem browser maupun aplikasi Google Maps
+    const alamatLengkap = "Slanik Waterpark, Jl. Raya Karang Anyar No.10, Karang Anyar, Kec. Jati Agung, Kabupaten Lampung Selatan, Lampung 35365";
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(alamatLengkap)}`;
+    
     const bisaBuka = await Linking.canOpenURL(url);
 
     if (bisaBuka) {
@@ -38,26 +42,48 @@ export default function InfoScreen() {
     }
   };
 
-  // Sesuaikan padding atas dengan tinggi banner induk di TabLayout
-  const isWeb = width > 768;
-  const topSpacer = isWeb ? 340 : 240; 
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor="#0284C7" />
 
-      <ScrollView 
-        showsVerticalScrollIndicator={false} 
-        style={styles.scrollView}
-        contentContainerStyle={{ paddingTop: topSpacer, paddingBottom: 100 }} // Memberi ruang agar konten meluncur mulus di bawah banner melayang
-      >
+      <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
         
-        {/* HERO BANNER DOUBLE DI SINI SUDAH DIHAPUS AGAR MENYATU DENGAN LAYOUT INDUK */}
+        {/* ================= 1. HERO BANNER RE-DESIGN (HD & FULL WIDTH) ================= */}
+        <View style={styles.heroContainer}>
+          <Image 
+            source={require("../../../assets/images/slanik_hero.png")} 
+            style={styles.heroImage}
+            resizeMode="cover"
+          />
+          {/* Lapisan gradasi gelap tipis agar teks tetap terbaca tajam */}
+          <View style={styles.heroGradientOverlay}>
+            <View style={styles.heroContentWrapper}>
+              <View style={styles.heroBadge}>
+                <Text style={styles.heroBadgeText}>🌴 THE LARGEST WATERPARK IN LAMPUNG</Text>
+              </View>
+              <Text style={styles.heroMainTitle}>🌊 Slanik Waterpark</Text>
+              <Text style={styles.heroSubTitle}>
+                Tempat Rekreasi Air Terbesar & Terfavorit Keluarga di Lampung
+              </Text>
+
+              <View style={styles.heroStatsRow}>
+                <View style={styles.statItem}>
+                  <Ionicons name="star" size={14} color="#FBBF24" />
+                  <Text style={styles.statText}>4.9 Top Rated 2026</Text>
+                </View>
+                <View style={styles.statItemBlank}>
+                  <Ionicons name="location" size={14} color="#FFF" />
+                  <Text style={styles.statText}>Lampung Selatan</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
 
         {/* CONTAINER UTAMA KONTEN */}
         <View style={styles.fullWebBody}>
 
-          {/* ================= 1. JAM OPERASIONAL ================= */}
+          {/* ================= 2. JAM OPERASIONAL ================= */}
           <View style={styles.sectionBlock}>
             <Text style={styles.sectionHeading}>🕒 Rencanakan Kunjunganmu</Text>
             <View style={styles.responsiveGridRow}>
@@ -87,7 +113,7 @@ export default function InfoScreen() {
             </View>
           </View>
 
-          {/* ================= 2. HUBUNGI KAMI ================= */}
+          {/* ================= 3. HUBUNGI KAMI ================= */}
           <View style={styles.sectionBlock}>
             <Text style={styles.sectionHeading}>📞 Hubungi Tim Humas Slanik</Text>
             <Text style={styles.sectionSubHeading}>
@@ -130,7 +156,7 @@ export default function InfoScreen() {
             </View>
           </View>
 
-          {/* ================= 3. LOKASI STRIP BANNER ================= */}
+          {/* ================= 4. LOKASI STRIP BANNER ================= */}
           <View style={styles.sectionBlock}>
             <Text style={styles.sectionHeading}>📍 Lokasi</Text>
             <TouchableOpacity style={styles.fullLocationCard} onPress={bukaPeta} activeOpacity={0.9}>
@@ -140,7 +166,8 @@ export default function InfoScreen() {
                 </View>
                 <View style={styles.locationMetaDetails}>
                   <Text style={styles.locationMainTitle}>Slanik Waterpark</Text>
-                  <Text style={styles.locationSubTitle}>Jl. Raya Karang Anyar, Jati Agung, Lampung Selatan</Text>
+                  {/* Teks alamat sudah disamakan secara presisi */}
+                  <Text style={styles.locationSubTitle}>Jl. Raya Karang Anyar No.10, Karang Anyar, Kec. Jati Agung, Kabupaten Lampung Selatan, Lampung 35365</Text>
                 </View>
               </View>
               <View style={styles.openMapBadge}>
@@ -156,12 +183,66 @@ export default function InfoScreen() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: "transparent" }, // Diubah transparan agar menyatu dengan background induk
+  safeArea: { flex: 1, backgroundColor: "#0284C7" },
   scrollView: { flex: 1, backgroundColor: "#F8FAFC" },
+
+  heroContainer: {
+    width: "100%",
+    height: width > 768 ? 480 : 320,
+    position: "relative",
+    backgroundColor: "#0284C7",
+    overflow: "hidden",
+  },
+  heroImage: {
+    width: "100%",
+    height: "100%",
+    position: "absolute",
+  },
+  heroGradientOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(15, 23, 42, 0.4)",
+    justifyContent: "flex-end",
+    paddingBottom: 40,
+  },
+  heroContentWrapper: {
+    paddingHorizontal: "8%",
+  },
+  heroBadge: {
+    backgroundColor: "#0284C7",
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 20,
+    alignSelf: "flex-start",
+    marginBottom: 12,
+  },
+  heroBadgeText: { color: "#FFF", fontSize: 11, fontWeight: "800", letterSpacing: 0.8 },
+  heroMainTitle: { color: "#FFF", fontSize: width > 768 ? 46 : 32, fontWeight: "900", letterSpacing: -0.5 },
+  heroSubTitle: { color: "#F1F5F9", fontSize: width > 768 ? 16 : 14, marginTop: 8, fontWeight: "500", maxWidth: 700, lineHeight: 22 },
+  heroStatsRow: { flexDirection: "row", marginTop: 20 },
+  statItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    marginRight: 10,
+  },
+  statItemBlank: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.25)",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    marginRight: 10,
+  },
+  statText: { color: "#FFF", fontSize: 12, fontWeight: "600", marginLeft: 5 },
 
   fullWebBody: {
     paddingHorizontal: "8%",
-    paddingTop: 30,
+    paddingTop: 40,
+    paddingBottom: 60,
   },
   sectionBlock: {
     marginBottom: 40,
