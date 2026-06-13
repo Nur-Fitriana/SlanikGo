@@ -54,8 +54,6 @@ export default function RegisterScreen() {
     setLoading(true);
 
     try {
-      // 👑 NEMBAK API REGISTER ASLI NESTJS (Menyesuaikan port loginmu: 3000)
-      // Catatan: Jika endpoint dari temanmu bukan /auth/register, bisa diganti ke /auth/signup
       const response = await fetch("http://localhost:3000/auth/register", {
         method: "POST",
         headers: {
@@ -72,7 +70,7 @@ export default function RegisterScreen() {
       setLoading(false);
 
       if (response.ok) {
-        // 🎉 JIKA BERHASIL COCOK DENGAN API DATABASE
+
         tampilkanAlert(
           "Registrasi Sukses", 
           `Akun "${inputUser}" berhasil terdaftar di database SlanikGo!`,
