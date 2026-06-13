@@ -8,8 +8,9 @@ import {
   KeyboardAvoidingView, 
   Platform, 
   Dimensions,
-  Alert,
-  ActivityIndicator
+  ActivityIndicator,
+  Keyboard,
+  ToastAndroid // 👑 SUPAYA TULISAN LANGSUNG MUNCUL DI LAYAR EMULATOR ANDROID
 } from 'react-native';
 import { useRouter } from 'expo-router';
 
@@ -21,46 +22,67 @@ export default function RegisterScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  
+  // 👑 STATE TULISAN ERROR (Langsung nempel di layout, gak bakal bisa disembunyikan HP)
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleRegister = () => {
+    Keyboard.dismiss();
+    setErrorMessage('');
+    setSuccessMessage('');
+
     const inputName = name.trim();
-    const inputUser = username.trim().toLowerCase();
+    const inputUser = username.trim(); // 👑 Hapus toLowerCase biar aman sesuai ketikanmu
     const inputPass = password;
 
+    // ❌ 1. TULISAN JIKA KOLOM KURANG / KOSONG
     if (!inputName || !inputUser || !inputPass) {
-      Alert.alert("Registrasi Gagal", "Semua kolom pendaftaran wajib diisi!");
+      setErrorMessage("Semua kolom wajib diisi, tidak boleh kosong!");
+      if (Platform.OS === 'android') {
+        ToastAndroid.show("Kolom pendaftaran kurang!", ToastAndroid.SHORT);
+      }
       return;
     }
 
+    // ❌ 2. TULISAN JIKA PASSWORD KURANG DARI 6 KARAKTER
     if (inputPass.length < 6) {
-      Alert.alert("Registrasi Gagal", "Password minimal harus 6 karakter!");
+      setErrorMessage("Password kurang panjang! Minimal 6 karakter.");
+      if (Platform.OS === 'android') {
+        ToastAndroid.show("Password kurang aman!", ToastAndroid.SHORT);
+      }
       return;
     }
 
     setLoading(true);
 
     setTimeout(() => {
-      // SIMPAN SECARA GLOBAL
+      // Simpan ke memori global
+      if (!(window as any).akunSlanik) {
+        (window as any).akunSlanik = {};
+      }
+      
       (window as any).akunSlanik = {
-        username: inputUser,
+        username: inputUser.toLowerCase(), // simpan versi kecil untuk login
         password: inputPass,
         name: inputName
       };
 
       setLoading(false);
+      
+      // 🎉 3. TULISAN UTAMA SKENARIO BERHASIL
+      setSuccessMessage(`Akun "${inputUser}" Berhasil Disimpan!`);
+      
+      if (Platform.OS === 'android') {
+        ToastAndroid.show("Registrasi Berhasil Disimpan!", ToastAndroid.LONG);
+      }
 
-      // SANGAT PENTING: Alert ini sekarang DIJAMIN akan muncul karena filenya sudah terpisah benar!
-      Alert.alert(
-        "Registrasi Sukses", 
-        `Akun "${inputUser}" berhasil disimpan!`,
-        [
-          { 
-            text: "Ke Halaman Login", 
-            onPress: () => router.back() 
-          }
-        ]
-      );
-    }, 1000);
+      // Beri jeda 1.5 detik biar dosen sempat baca tulisan suksesnya, lalu otomatis balik ke login
+      setTimeout(() => {
+        router.back();
+      }, 1500);
+
+    }, 800);
   };
 
   return (
@@ -83,7 +105,7 @@ export default function RegisterScreen() {
               style={styles.input} 
               placeholder="Nama Anda" 
               value={name} 
-              onChangeText={setName} 
+              onChangeText={(txt) => { setName(txt); setErrorMessage(''); }} 
             />
           </View>
 
@@ -93,7 +115,7 @@ export default function RegisterScreen() {
               style={styles.input} 
               placeholder="Username" 
               value={username} 
-              onChangeText={setUsername} 
+              onChangeText={(txt) => { setUsername(txt); setErrorMessage(''); }}
               autoCapitalize="none"
             />
           </View>
@@ -105,9 +127,13 @@ export default function RegisterScreen() {
               placeholder="••••••••" 
               secureTextEntry 
               value={password} 
-              onChangeText={setPassword} 
+              onChangeText={(txt) => { setPassword(txt); setErrorMessage(''); }} 
             />
           </View>
+
+          {/* 👑 TEMPAT TULISAN ERROR & SUKSES MUNCULsecara Live */}
+          {errorMessage ? <Text style={styles.errorTextTampil}>{errorMessage}</Text> : null}
+          {successMessage ? <Text style={styles.successTextTampil}>{successMessage}</Text> : null}
 
           <TouchableOpacity 
             style={[styles.btnRegister, loading && { opacity: 0.7 }]} 
@@ -141,6 +167,11 @@ const styles = StyleSheet.create({
   inputGroup: { marginBottom: 15 },
   label: { fontSize: 12, fontWeight: '700', color: '#4A5568', marginBottom: 6, marginLeft: 4 },
   input: { backgroundColor: '#F8FAFC', borderRadius: 12, paddingVertical: 10, paddingHorizontal: 15, borderWidth: 1, borderColor: '#EDF2F7', fontSize: 14, color: '#2D3748' },
+  
+  // 👑 STYLE TULISAN BARU
+  errorTextTampil: { color: '#DC2626', fontSize: 13, fontWeight: '600', textAlign: 'center', marginTop: 5, backgroundColor: '#FEE2E2', padding: 8, borderRadius: 8 },
+  successTextTampil: { color: '#15803D', fontSize: 13, fontWeight: '600', textAlign: 'center', marginTop: 5, backgroundColor: '#DCFCE7', padding: 8, borderRadius: 8 },
+
   btnRegister: { backgroundColor: '#0080FF', paddingVertical: 14, borderRadius: 12, alignItems: 'center', marginTop: 15 },
   btnText: { color: '#FFF', fontSize: 15, fontWeight: 'bold' },
   footer: { marginTop: 20, alignItems: 'center' },
