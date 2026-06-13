@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView, 
   Platform, 
   Dimensions,
+  Alert,
   ActivityIndicator,
   Keyboard
 } from 'react-native';
@@ -22,6 +23,16 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Fungsi pembantu pop-up biar pasti muncul di tengah layar Web Browser maupun HP
+  const tampilkanAlert = (judul: string, pesan: string, callback?: () => void) => {
+    if (Platform.OS === "web") {
+      window.alert(`${judul}: ${pesan}`);
+      if (callback) callback();
+    } else {
+      Alert.alert(judul, pesan, callback ? [{ text: "OK", onPress: callback }] : undefined);
+    }
+  };
+
   const handleRegister = async () => {
     Keyboard.dismiss();
 
@@ -29,57 +40,62 @@ export default function RegisterScreen() {
     const inputUser = username.trim().toLowerCase(); 
     const inputPass = password;
 
-    // ❌ 1. Notif Tengah Layar Browser jika data kosong
+    // Validasi input awal di frontend
     if (!inputName || !inputUser || !inputPass) {
-      if (Platform.OS === 'web') {
-        window.alert("Registrasi Gagal: Semua kolom pendaftaran wajib diisi!");
-      }
+      tampilkanAlert("Registrasi Gagal", "Semua kolom pendaftaran wajib diisi!");
       return;
     }
 
-    // ❌ 2. Notif Tengah Layar Browser jika password kurang dari 6 karakter
     if (inputPass.length < 6) {
-      if (Platform.OS === 'web') {
-        window.alert("Registrasi Gagal: Password minimal harus 6 karakter demi keamanan.");
-      }
+      tampilkanAlert("Registrasi Gagal", "Password minimal harus 6 karakter.");
       return;
     }
 
     setLoading(true);
 
     try {
-      // Simulasi delay seolah-olah nembak API
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // 👑 NEMBAK API REGISTER ASLI NESTJS (Menyesuaikan port loginmu: 3000)
+      // Catatan: Jika endpoint dari temanmu bukan /auth/register, bisa diganti ke /auth/signup
+      const response = await fetch("http://localhost:3000/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: inputName,
+          username: inputUser,
+          password: inputPass,
+        }),
+      });
 
-      // Simpan ke memori global runtime browser
-      if (!(window as any).akunSlanik) {
-        (window as any).akunSlanik = {};
-      }
-      
-      (window as any).akunSlanik = {
-        username: inputUser, 
-        password: inputPass,
-        name: inputName
-      };
-
+      const data = await response.json();
       setLoading(false);
-      
-      // 🎉 3. POP-UP DI TENGAH LAYAR BROWSER (PASTI MUNCUL DI CHROME/EDGE)
-      if (Platform.OS === 'web') {
-        window.alert(`Registrasi Sukses!\nAkun "${inputUser}" berhasil dibuat di sistem SlanikGo.`);
-      }
 
-      // Setelah user klik 'OK' di pop-up browser, langsung bersihkan form dan balik ke login
-      setName('');
-      setUsername('');
-      setPassword('');
-      router.back(); 
+      if (response.ok) {
+        // 🎉 JIKA BERHASIL COCOK DENGAN API DATABASE
+        tampilkanAlert(
+          "Registrasi Sukses", 
+          `Akun "${inputUser}" berhasil terdaftar di database SlanikGo!`,
+          () => {
+            setName('');
+            setUsername('');
+            setPassword('');
+            router.back(); // Pindah ke halaman login
+          }
+        );
+      } else {
+        // ❌ JIKA API MENOLAK (Misal username sudah dipake orang lain)
+        const pesanGagal = data.message || "Gagal mendaftarkan akun baru.";
+        tampilkanAlert("Registrasi Ditolak", pesanGagal);
+      }
 
     } catch (error) {
       setLoading(false);
-      if (Platform.OS === 'web') {
-        window.alert("Error Sistem: Gagal menghubungkan ke database registrasi.");
-      }
+      // 🚨 JIKA KONEKSI KE BACKEND/DATABASE MATI
+      tampilkanAlert(
+        "Koneksi Gagal", 
+        "Tidak dapat terhubung ke server API NestJS. Pastikan backend sudah dinyalakan."
+      );
     }
   };
 
