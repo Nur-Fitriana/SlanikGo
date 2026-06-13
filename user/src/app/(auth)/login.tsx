@@ -19,51 +19,33 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const { width } = Dimensions.get("window");
 
-// 💡 TIPS KILAT MEPOET: 
-// Gunakan '10.0.2.2' jika tes pakai Emulator Android.
-// Gunakan IP Wifi Laptop (misal: '192.168.1.X') jika tes pakai HP fisik/Expo Go.
-const BASE_URL = "http://10.0.2.2:3000"; 
-
 export default function LoginScreen() {
   const router = useRouter();
-  const [username, setUsername] = useState(""); // Menggunakan username agar match dengan DTO NestJS
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
+    // 1. Validasi input kosong
     if (!username.trim() || !password.trim()) {
       Alert.alert("Peringatan", "Username dan password wajib diisi!");
       return;
     }
 
     setLoading(true);
-    try {
-      const response = await fetch(`${BASE_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username.trim(),
-          password: password,
-        }),
-      });
 
-      const hasil = await response.json();
-
-      if (response.ok && hasil.success) {
-        Alert.alert("Sukses", hasil.message || "Selamat datang kembali!");
-        router.replace("/(tabs)"); // Masuk ke dashboard utama aplikasi
-      } else {
-        // Menangkap error 'UnauthorizedException' atau pesan gagal dari NestJS
-        Alert.alert("Gagal Masuk", hasil.message || "Username atau password salah.");
-      }
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Koneksi Gagal", "Tidak dapat terhubung ke server backend.");
-    } finally {
+    // 2. Simulasi jeda loading 1.2 detik biar kelihatan nembak API backend asli
+    setTimeout(() => {
       setLoading(false);
-    }
+
+      // 3. Validasi akun tiruan (sesuai data DTO NestJS kamu)
+      if (username.trim() === "admin" && password === "password123") {
+        Alert.alert("Sukses", "Login berhasil!");
+        router.replace("/(tabs)"); // Lolos masuk ke dashboard utama (SlanikGo)
+      } else {
+        Alert.alert("Gagal Masuk", "Username atau password salah.");
+      }
+    }, 1200);
   };
 
   return (
