@@ -2,9 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFasilitasDto } from './dto/create-fasilitas.dto';
 import { UpdateFasilitasDto } from './dto/update-fasilitas.dto';
 
+export interface Fasilitas {
+  id: number;
+  nama_fasilitas: string;
+  deskripsi?: string;
+}
+
 @Injectable()
 export class FasilitasService {
-  private fasilitas = [];
+  private fasilitas: Fasilitas[] = [];
 
   create(createFasilitasDto: CreateFasilitasDto) {
     const newFasilitas = {

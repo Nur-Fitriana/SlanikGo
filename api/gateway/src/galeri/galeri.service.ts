@@ -2,9 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGaleriDto } from './dto/create-galeri.dto';
 import { UpdateGaleriDto } from './dto/update-galeri.dto';
 
+export interface Galeri {
+  id: number;
+  judul: string;
+  url_gambar: string;
+}
+
 @Injectable()
 export class GaleriService {
-  private galeri = [];
+  private galeri: Galeri[] = [];
 
   create(createGaleriDto: CreateGaleriDto) {
     const newGaleri = {

@@ -2,9 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateInfoDto } from './dto/create-info.dto';
 import { UpdateInfoDto } from './dto/update-info.dto';
 
+export interface Info {
+  id: number;
+  judul: string;
+  konten: string;
+}
+
 @Injectable()
 export class InfoService {
-  private infoData = [];
+  private infoData: Info[] = [];
 
   create(createInfoDto: CreateInfoDto) {
     const newInfo = {

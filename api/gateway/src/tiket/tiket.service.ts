@@ -2,9 +2,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTiketDto } from './dto/create-tiket.dto';
 import { UpdateTiketDto } from './dto/update-tiket.dto';
 
+export interface Tiket {
+  id: number;
+  jenis_tiket: string;
+  harga: number;
+  stok: number;
+}
+
 @Injectable()
 export class TiketService {
-  private tiketData = [];
+  private tiketData: Tiket[] = [];
 
   create(createTiketDto: CreateTiketDto) {
     const newTiket = {
