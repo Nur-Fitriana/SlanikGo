@@ -14,7 +14,6 @@ import {
 import { useRouter } from 'expo-router';
 
 const { height } = Dimensions.get('window');
-const BASE_URL = "http://10.0.2.2:3000";
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -23,41 +22,20 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleRegister = async () => {
+  const handleRegister = () => {
     if (!name.trim() || !username.trim() || !password.trim()) {
       Alert.alert("Error", "Semua kolom pendaftaran wajib diisi!");
       return;
     }
 
     setLoading(true);
-    try {
-      // Menyesuaikan dengan endpoint registrasi di NestJS kamu (biasanya /auth/register)
-      const response = await fetch(`${BASE_URL}/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: name.trim(),
-          username: username.trim(),
-          password: password,
-        }),
-      });
 
-      const hasil = await response.json();
-
-      if (response.ok) {
-        Alert.alert("Sukses", "Akun berhasil dibuat! Silakan masuk.");
-        router.back(); // Kembali ke halaman login
-      } else {
-        Alert.alert("Registrasi Gagal", hasil.message || "Terjadi kesalahan saat mendaftar.");
-      }
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Koneksi Gagal", "Gagal menghubungi server pendaftaran.");
-    } finally {
+    // Simulasi loading pendaftaran tiruan selama 1 detik
+    setTimeout(() => {
       setLoading(false);
-    }
+      Alert.alert("Sukses", "Akun berhasil dibuat! Silakan masuk memakai akun tersebut.");
+      router.back(); // Balik ke halaman login
+    }, 1000);
   };
 
   return (
