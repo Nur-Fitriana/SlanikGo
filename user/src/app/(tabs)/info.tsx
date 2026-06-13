@@ -8,6 +8,8 @@ import {
   StatusBar,
   TouchableOpacity,
   Linking,
+  ImageBackground,
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -26,32 +28,77 @@ export default function InfoScreen() {
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
         
-        {/* ================= 1. HERO BANNER FULL LAYAR PC ================= */}
-        <View style={styles.heroBanner}>
-          <View style={styles.heroBadge}>
-            <Text style={styles.heroBadgeText}>🌴 WAHOO! WELCOME TO</Text>
-          </View>
-          <Text style={styles.heroMainTitle}>🌊 Slanik Waterpark</Text>
-          <Text style={styles.heroSubTitle}>
-            Tempat Rekreasi Air Terfavorit di Lampung
-          </Text>
+        {/* ================= 1. HERO BANNER WITH REAL SLANIK IMAGE ================= */}
+        <ImageBackground 
+          source={require("../assets/image_ebb705.png")} // Menggunakan file asli image_ebb705.png dari folder assets kamu
+          style={styles.heroImageBanner}
+          resizeMode="cover"
+        >
+          {/* Overlay gradasi biru agar teks info super kontras & gampang dibaca */}
+          <View style={styles.heroOverlay}>
+            <View style={styles.heroBadge}>
+              <Text style={styles.heroBadgeText}>🌴 THE LARGEST WATERPARK IN LAMPUNG</Text>
+            </View>
+            <Text style={styles.heroMainTitle}>🌊 Slanik Waterpark</Text>
+            <Text style={styles.heroSubTitle}>
+              Tempat Rekreasi Air Terbesar & Terfavorit Keluarga di Lampung
+            </Text>
 
-          <View style={styles.heroStatsRow}>
-            <View style={styles.statItem}>
-              <Ionicons name="star" size={14} color="#FBBF24" />
-              <Text style={styles.statText}>4.9 Top Rated</Text>
-            </View>
-            <View style={[styles.statItem, { backgroundColor: "rgba(255,255,255,0.15)" }]}>
-              <Ionicons name="location" size={14} color="#FFF" />
-              <Text style={styles.statText}>Lampung</Text>
+            <View style={styles.heroStatsRow}>
+              <View style={styles.statItem}>
+                <Ionicons name="star" size={14} color="#FBBF24" />
+                <Text style={styles.statText}>4.9 Top Rated</Text>
+              </View>
+              <View style={styles.statItemBlank}>
+                <Ionicons name="location" size={14} color="#FFF" />
+                <Text style={styles.statText}>Jati Agung, Lamsel</Text>
+              </View>
             </View>
           </View>
-        </View>
+        </ImageBackground>
 
         {/* CONTAINER UTAMA RESPONSIVE WEB */}
         <View style={styles.fullWebBody}>
 
-          {/* ================= 2. JAM OPERASIONAL (BERJEJER KE SAMPING DI WEB) ================= */}
+          {/* ================= 2. WAHANA UNGGULAN (DENGAN GAMBAR ASLI) ================= */}
+          <View style={styles.sectionBlock}>
+            <Text style={styles.sectionHeading}>📸 Wahana Unggulan</Text>
+            <View style={styles.responsiveGridRow}>
+              
+              {/* Card Wahana 1 - Menggunakan foto asli image_ebb705.png */}
+              <View style={styles.galleryCard}>
+                <Image 
+                  source={require("../assets/image_ebb705.png")} 
+                  style={styles.galleryPhoto} 
+                  resizeMode="cover"
+                />
+                <View style={styles.galleryMeta}>
+                  <Text style={styles.galleryTitle}>⚡ Fast 2 Furious & Spiral Slide</Text>
+                  <Text style={styles.gallerySub}>
+                    Rasakan sensasi seluncuran kuning melingkar yang tinggi dan lintasan balap air ganda yang memacu adrenalin!
+                  </Text>
+                </View>
+              </View>
+
+              {/* Card Wahana 2 - Kolam Anak & Keluarga */}
+              <View style={styles.galleryCard}>
+                <Image 
+                  source={require("../assets/images/slanik_hero.png")}
+                  style={styles.galleryPhoto} 
+                  resizeMode="cover"
+                />
+                <View style={styles.galleryMeta}>
+                  <Text style={styles.galleryTitle}>🌊 Kids Pool & Family Area</Text>
+                  <Text style={styles.gallerySub}>
+                    Kolam renang luas yang aman dilengkapi dengan dekorasi kastel kreatif, pas untuk rekreasi anak dan momen keluarga.
+                  </Text>
+                </View>
+              </View>
+
+            </View>
+          </View>
+
+          {/* ================= 3. JAM OPERASIONAL ================= */}
           <View style={styles.sectionBlock}>
             <Text style={styles.sectionHeading}>🕒 Jam Operasional</Text>
             <View style={styles.responsiveGridRow}>
@@ -79,7 +126,7 @@ export default function InfoScreen() {
             </View>
           </View>
 
-          {/* ================= 3. HUBUNGI KAMI (BERJEJER KE SAMPING DI WEB) ================= */}
+          {/* ================= 4. HUBUNGI KAMI ================= */}
           <View style={styles.sectionBlock}>
             <Text style={styles.sectionHeading}>📞 Hubungi Kami</Text>
             <View style={styles.responsiveGridRow}>
@@ -119,7 +166,7 @@ export default function InfoScreen() {
             </View>
           </View>
 
-          {/* ================= 4. LOKASI STRIP (MEMANJANG MEWAH) ================= */}
+          {/* ================= 5. LOKASI STRIP BANNER ================= */}
           <View style={styles.sectionBlock}>
             <Text style={styles.sectionHeading}>📍 Lokasi</Text>
             <TouchableOpacity style={styles.fullLocationCard} onPress={bukaPeta} activeOpacity={0.9}>
@@ -148,29 +195,43 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: "#0284C7" },
   scrollView: { flex: 1, backgroundColor: "#F8FAFC" },
 
-  // BANNER HERO (Menggunakan string persen yang valid)
-  heroBanner: {
-    backgroundColor: "#0284C7",
-    paddingTop: 40,
-    paddingBottom: 60,
+  // STYLE HERO BANNER GAMBAR ASLI
+  heroImageBanner: {
+    width: "100%",
+    minHeight: 360,
+    justifyContent: "flex-end",
+  },
+  heroOverlay: {
+    backgroundColor: "rgba(15, 23, 42, 0.45)", // Gelap transparan tipis agar langit cerah dari image_ebb705.png tetap menonjol
+    paddingTop: 80,
+    paddingBottom: 40,
     paddingHorizontal: "5%",
   },
   heroBadge: {
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    backgroundColor: "#0284C7",
     paddingHorizontal: 12,
     paddingVertical: 5,
     borderRadius: 20,
     alignSelf: "flex-start",
     marginBottom: 12,
   },
-  heroBadgeText: { color: "#FFF", fontSize: 11, fontWeight: "800", letterSpacing: 0.5 },
-  heroMainTitle: { color: "#FFF", fontSize: 36, fontWeight: "900", letterSpacing: -0.5 },
-  heroSubTitle: { color: "#BAE6FD", fontSize: 15, marginTop: 6, fontWeight: "500" },
-  heroStatsRow: { flexDirection: "row", marginTop: 16 },
+  heroBadgeText: { color: "#FFF", fontSize: 10, fontWeight: "800", letterSpacing: 0.8 },
+  heroMainTitle: { color: "#FFF", fontSize: 40, fontWeight: "900", letterSpacing: -0.5 },
+  heroSubTitle: { color: "#F1F5F9", fontSize: 15, marginTop: 8, fontWeight: "500", maxWidth: 650, lineHeight: 22 },
+  heroStatsRow: { flexDirection: "row", marginTop: 20 },
   statItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.15)",
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    marginRight: 10,
+  },
+  statItemBlank: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
@@ -178,23 +239,21 @@ const styles = StyleSheet.create({
   },
   statText: { color: "#FFF", fontSize: 12, fontWeight: "600", marginLeft: 5 },
 
-  // BODY UTAMA HALAMAN WEB
+  // BODY RESPONSIVE
   fullWebBody: {
     paddingHorizontal: "5%",
-    paddingTop: 30,
+    paddingTop: 35,
     paddingBottom: 60,
   },
   sectionBlock: {
     marginBottom: 35,
   },
   sectionHeading: {
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: "800",
     color: "#0F172A",
     marginBottom: 16,
   },
-
-  // GRID CONTAINER UTAMA BIAR KARTU BISA BERJAJAR KANAN-KIRI
   responsiveGridRow: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -202,7 +261,42 @@ const styles = StyleSheet.create({
     gap: 16,
   },
 
-  // KARTU JADWAL OPERASIONAL (GRID)
+  // CARD KETERANGAN WAHANA DENGAN REAL COMPONENT IMAGE
+  galleryCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 20,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "#E2E8F0",
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.04,
+    shadowRadius: 10,
+    elevation: 2,
+    flexGrow: 1,
+    flexShrink: 0,
+    flexBasis: 340,
+  },
+  galleryPhoto: {
+    width: "100%",
+    height: 180,
+  },
+  galleryMeta: {
+    padding: 16,
+  },
+  galleryTitle: {
+    fontSize: 15,
+    fontWeight: "800",
+    color: "#1E293B",
+  },
+  gallerySub: {
+    fontSize: 12,
+    color: "#64748B",
+    marginTop: 4,
+    lineHeight: 18,
+  },
+
+  // JAM OPERASIONAL
   gridScheduleCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
@@ -246,7 +340,7 @@ const styles = StyleSheet.create({
   },
   timePillTextOrange: { color: "#D97706", fontSize: 13, fontWeight: "800" },
 
-  // KARTU CHAT WHATSAPP PREMIUM
+  // CONTACT ADMIN
   premiumContactCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
@@ -285,7 +379,7 @@ const styles = StyleSheet.create({
   },
   actionChatText: { color: "#0EA5E9", fontSize: 11, fontWeight: "700", marginRight: 4 },
 
-  // KARTU LOKASI STRIP MEMANJANG HORIZONTAL
+  // LOKASI MAP
   fullLocationCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
