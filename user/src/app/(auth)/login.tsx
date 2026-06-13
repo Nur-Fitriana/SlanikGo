@@ -23,12 +23,21 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // 👑 FUNGSI PEMBANTU: Biar Alert di web browser beneran muncul di tengah atas layar!
+  const tampilkanAlert = (judul: string, pesan: string) => {
+    if (Platform.OS === "web") {
+      window.alert(`${judul}: ${pesan}`);
+    } else {
+      Alert.alert(judul, pesan);
+    }
+  };
+
   const handleLogin = async () => {
-    const inputUser = username.trim().toLowerCase();
+    const inputUser = username.trim(); // 👑 HAPUS toLowerCase() biar sesuai ketikan asli database API
     const inputPass = password;
 
     if (!inputUser || !inputPass) {
-      Alert.alert("Peringatan", "Username dan password wajib diisi!");
+      tampilkanAlert("Peringatan", "Username dan password wajib diisi!");
       return;
     }
 
@@ -37,7 +46,7 @@ export default function LoginScreen() {
     const akunDaftar = (window as any).akunSlanik;
 
     try {
-      // Ubah 'localhost' ke IP Laptopmu jika kamu tes pakai HP fisik/Expo Go asli
+      // 🚀 PROSES NEMBAK KE API ASLI NESTJS
       const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
         headers: {
@@ -53,29 +62,30 @@ export default function LoginScreen() {
       setLoading(false);
 
       if (response.ok) {
-        Alert.alert("Sukses", "Login berhasil via API Gateway!");
+        tampilkanAlert("Sukses", "Login berhasil via API Gateway!");
         router.replace("/(tabs)"); 
       } else {
-        if (akunDaftar && inputUser === akunDaftar.username && inputPass === akunDaftar.password) {
-          Alert.alert("Sukses", "Login berhasil menggunakan akun baru Anda!");
+        // Cek fallback memori lokal register (jika ada)
+        if (akunDaftar && inputUser.toLowerCase() === akunDaftar.username && inputPass === akunDaftar.password) {
+          tampilkanAlert("Sukses", "Login berhasil menggunakan akun baru Anda!");
           router.replace("/(tabs)"); 
         } else {
           const pesanError = data.message || "Username atau password salah.";
-          Alert.alert("Gagal Masuk", pesanError);
+          tampilkanAlert("Gagal Masuk", pesanError);
         }
       }
 
     } catch (error) {
       setLoading(false);
-      // Mode offline darurat kalau backend nestjs belum dinyalakan/gagal koneksi
+      // 🚨 JIKA BACKEND MASIH BELUM NYALA KARENA EROR CORS ATAU BLOCKED:
       if (
         (inputUser === "admin" && inputPass === "password") || 
-        (akunDaftar && inputUser === akunDaftar.username && inputPass === akunDaftar.password)
+        (akunDaftar && inputUser.toLowerCase() === akunDaftar.username && inputPass === akunDaftar.password)
       ) {
-        Alert.alert("Sukses (Lokal)", "Login berhasil masuk ke sistem!");
+        tampilkanAlert("Sukses (Lokal)", "Login berhasil masuk ke sistem!");
         router.replace("/(tabs)"); 
       } else {
-        Alert.alert(
+        tampilkanAlert(
           "Gagal Masuk", 
           "Username atau password salah, atau koneksi ke server API gagal."
         );
