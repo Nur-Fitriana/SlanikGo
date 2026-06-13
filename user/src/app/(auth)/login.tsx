@@ -17,8 +17,6 @@ import {
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 
-// Tempat penyimpanan akun global sementara di memori HP
-global.registeredUser = global.registeredUser || null;
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -27,7 +25,6 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = () => {
-    // Pastikan menggunakan nama variabel username dan password yang ada di state kamu
     const inputUser = username.trim().toLowerCase();
     const inputPass = password;
 
@@ -38,21 +35,19 @@ export default function LoginScreen() {
 
     setLoading(true);
 
-    // Simulasi loading 1 detik seolah nembak API asli
     setTimeout(() => {
       setLoading(false);
 
-      // Ambil data akun yang baru saja di-registrasi
-      const accountBaru = global.registeredUser;
+      const akunDaftar = (window as any).akunSlanik;
 
       if (
-        (accountBaru && inputUser === accountBaru.username && inputPass === accountBaru.password) || 
-        (inputUser === "admin" && inputPass === "password123")
+        (akunDaftar && inputUser === akunDaftar.username && inputPass === akunDaftar.password) || 
+        (inputUser === "admin" && inputPass === "password")
       ) {
         Alert.alert("Sukses", "Login berhasil!");
-        router.replace("/(tabs)"); // Masuk ke dashboard utama
+        router.replace("/(tabs)"); 
       } else {
-        Alert.alert("Gagal Masuk", "Username atau password salah.");
+        Alert.alert("Gagal Masuk", "Username atau password salah (UnauthorizedException).");
       }
     }, 1000);
   };
