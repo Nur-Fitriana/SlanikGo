@@ -1,19 +1,67 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  StyleSheet, 
+  KeyboardAvoidingView, 
+  Platform, 
+  Dimensions,
+  Alert,
+  ActivityIndicator
+} from 'react-native';
 import { useRouter } from 'expo-router';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const { height } = Dimensions.get('window');
+const BASE_URL = "http://10.0.2.2:3000";
 
 export default function RegisterScreen() {
   const router = useRouter();
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleRegister = async () => {
+    if (!name.trim() || !username.trim() || !password.trim()) {
+      Alert.alert("Error", "Semua kolom pendaftaran wajib diisi!");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Menyesuaikan dengan endpoint registrasi di NestJS kamu (biasanya /auth/register)
+      const response = await fetch(`${BASE_URL}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: name.trim(),
+          username: username.trim(),
+          password: password,
+        }),
+      });
+
+      const hasil = await response.json();
+
+      if (response.ok) {
+        Alert.alert("Sukses", "Akun berhasil dibuat! Silakan masuk.");
+        router.back(); // Kembali ke halaman login
+      } else {
+        Alert.alert("Registrasi Gagal", hasil.message || "Terjadi kesalahan saat mendaftar.");
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Koneksi Gagal", "Gagal menghubungi server pendaftaran.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      {/* Dekorasi Background */}
       <View style={styles.topDecoration} />
       
       <KeyboardAvoidingView 
@@ -58,8 +106,16 @@ export default function RegisterScreen() {
             />
           </View>
 
-          <TouchableOpacity style={styles.btnRegister} onPress={() => alert('Registrasi Berhasil!')}>
-            <Text style={styles.btnText}>Registrasi</Text>
+          <TouchableOpacity 
+            style={[styles.btnRegister, loading && { opacity: 0.7 }]} 
+            onPress={handleRegister}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="#FFFFFF" size="small" />
+            ) : (
+              <Text style={styles.btnText}>Registrasi</Text>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => router.back()} style={styles.footer}>
@@ -72,94 +128,19 @@ export default function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F0F7FF',
-  },
-  topDecoration: {
-    position: 'absolute',
-    top: 0,
-    width: '100%',
-    height: height * 0.4,
-    backgroundColor: '#0080FF',
-    borderBottomLeftRadius: 60,
-    borderBottomRightRadius: 60,
-  },
-  centering: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 25,
-  },
-  registerCard: {
-    width: '100%',
-    maxWidth: 400, // Supaya di web tidak terlalu lebar
-    backgroundColor: '#FFF',
-    borderRadius: 30,
-    padding: 30,
-    // Soft Shadow
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    elevation: 10,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 25,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#1A365D',
-  },
-  subtitle: {
-    fontSize: 13,
-    color: '#718096',
-    marginTop: 5,
-  },
-  inputGroup: {
-    marginBottom: 15,
-  },
-  label: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#4A5568',
-    marginBottom: 6,
-    marginLeft: 4,
-  },
-  input: {
-    backgroundColor: '#F8FAFC',
-    borderRadius: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderWidth: 1,
-    borderColor: '#EDF2F7',
-    fontSize: 14,
-    color: '#2D3748',
-  },
-  btnRegister: {
-    backgroundColor: '#0080FF',
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginTop: 15,
-  },
-  btnText: {
-    color: '#FFF',
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-  footer: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  footerText: {
-    color: '#718096',
-    fontSize: 13,
-  },
-  loginText: {
-    color: '#0080FF',
-    fontWeight: '700',
-  },
+  container: { flex: 1, backgroundColor: '#F0F7FF' },
+  topDecoration: { position: 'absolute', top: 0, width: '100%', height: height * 0.4, backgroundColor: '#0080FF', borderBottomLeftRadius: 60, borderBottomRightRadius: 60 },
+  centering: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 25 },
+  registerCard: { width: '100%', maxWidth: 400, backgroundColor: '#FFF', borderRadius: 30, padding: 30, shadowColor: "#000", shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.1, shadowRadius: 20, elevation: 10 },
+  header: { alignItems: 'center', marginBottom: 25 },
+  title: { fontSize: 24, fontWeight: '800', color: '#1A365D' },
+  subtitle: { fontSize: 13, color: '#718096', marginTop: 5 },
+  inputGroup: { marginBottom: 15 },
+  label: { fontSize: 12, fontWeight: '700', color: '#4A5568', marginBottom: 6, marginLeft: 4 },
+  input: { backgroundColor: '#F8FAFC', borderRadius: 12, paddingVertical: 10, paddingHorizontal: 15, borderWidth: 1, borderColor: '#EDF2F7', fontSize: 14, color: '#2D3748' },
+  btnRegister: { backgroundColor: '#0080FF', paddingVertical: 14, borderRadius: 12, alignItems: 'center', marginTop: 15 },
+  btnText: { color: '#FFF', fontSize: 15, fontWeight: 'bold' },
+  footer: { marginTop: 20, alignItems: 'center' },
+  footerText: { color: '#718096', fontSize: 13 },
+  loginText: { color: '#0080FF', fontWeight: '700' },
 });
