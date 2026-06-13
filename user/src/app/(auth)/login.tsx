@@ -17,7 +17,8 @@ import {
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 
-const { width } = Dimensions.get("window");
+// Tempat penyimpanan akun global sementara di memori HP
+global.registeredUser = global.registeredUser || null;
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -26,31 +27,39 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = () => {
-    // 1. Validasi input kosong
-    if (!username.trim() || !password.trim()) {
+    // Pastikan menggunakan nama variabel username dan password yang ada di state kamu
+    const inputUser = username.trim().toLowerCase();
+    const inputPass = password;
+
+    if (!inputUser || !inputPass) {
       Alert.alert("Peringatan", "Username dan password wajib diisi!");
       return;
     }
 
     setLoading(true);
 
-    // 2. Simulasi jeda loading 1.2 detik biar kelihatan nembak API backend asli
+    // Simulasi loading 1 detik seolah nembak API asli
     setTimeout(() => {
       setLoading(false);
 
-      // 3. Validasi akun tiruan (sesuai data DTO NestJS kamu)
-      if (username.trim() === "admin" && password === "password123") {
+      // Ambil data akun yang baru saja di-registrasi
+      const accountBaru = global.registeredUser;
+
+      if (
+        (accountBaru && inputUser === accountBaru.username && inputPass === accountBaru.password) || 
+        (inputUser === "admin" && inputPass === "password123")
+      ) {
         Alert.alert("Sukses", "Login berhasil!");
-        router.replace("/(tabs)"); // Lolos masuk ke dashboard utama (SlanikGo)
+        router.replace("/(tabs)"); // Masuk ke dashboard utama
       } else {
         Alert.alert("Gagal Masuk", "Username atau password salah.");
       }
-    }, 1200);
+    }, 1000);
   };
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
       <StatusBar barStyle="light-content" backgroundColor="#004AAD" />
